@@ -1,7 +1,7 @@
 package com.yg.auth
 import org.scalatra._
 
-class AuthDemo extends ScalatraServlet with AuthenticationSupport {
+class AuthDemoController extends ScalatraServlet with AuthenticationSupport {
 
   get("/*") {
     val user: User = basicAuth().get

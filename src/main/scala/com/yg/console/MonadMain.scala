@@ -1,6 +1,5 @@
 package com.yg.console
 
-import com.sun.xml.internal.ws.util.CompletedFuture
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global

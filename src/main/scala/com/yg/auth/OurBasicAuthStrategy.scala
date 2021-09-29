@@ -5,7 +5,8 @@ import org.scalatra.auth.{ScentryConfig, ScentrySupport}
 import org.scalatra.ScalatraBase
 import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 
-class OurBasicAuthStrategy(protected override val app: ScalatraBase, realm: String) extends BasicAuthStrategy[User](app, realm) {
+class OurBasicAuthStrategy(protected override val app: ScalatraBase, realm: String)
+  extends BasicAuthStrategy[User](app, realm) {
 
   protected def validate(userName: String, password: String)
                         (implicit request: HttpServletRequest, response: HttpServletResponse): Option[User] = {
