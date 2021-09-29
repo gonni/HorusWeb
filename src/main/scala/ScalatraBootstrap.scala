@@ -5,7 +5,7 @@ import org.scalatra._
 
 import javax.servlet.ServletContext
 import com.mysql.jdbc._
-import com.yg.api.{RestSampleController, SlickApp}
+import com.yg.api.{HttpSampleController, RestSampleController, SlickApp}
 
 //import slick.jdbc.H2Profile.api._
 import slick.jdbc.MySQLProfile.api._
@@ -21,6 +21,7 @@ class ScalatraBootstrap extends LifeCycle {
     val db = Database.forDataSource(cpds, None)
     context.mount(new SlickApp(db), "/*")
     context.mount(new RestSampleController(), "/rest/*")
+    context.mount(new HttpSampleController(), "/html/*")
   }
 
   private def closeDbConnection() {

@@ -80,6 +80,10 @@ object MonadMain extends App {
 
   println("sum ->" + y.flatMap(a => Option(a)))
 
+  val f1: ((Int, Int)) => Int = { case (a, b) => a + b }
+
+  println(s"f1 = ${f1(1, 2)}")
+
   Thread.sleep(10000L)
 }
 

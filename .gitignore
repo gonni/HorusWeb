@@ -74,3 +74,4 @@ project/metals.sbt
 /.lib/
 
 /.bsp/*
+.bsp/*

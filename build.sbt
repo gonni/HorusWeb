@@ -10,6 +10,8 @@ lazy val hello = (project in file("."))
     libraryDependencies ++= Seq(
       "org.scalatra" %% "scalatra" % ScalatraVersion,
       "org.scalatra" %% "scalatra-scalatest" % ScalatraVersion % "test",
+      "org.scalatra" %% "scalatra-json" % "2.8.2",
+      "org.json4s"   %% "json4s-jackson" % "4.0.1",
       "ch.qos.logback" % "logback-classic" % "1.2.3" % "runtime",
       "org.eclipse.jetty" % "jetty-webapp" % "9.4.35.v20201120" % "container",
       "javax.servlet" % "javax.servlet-api" % "3.1.0" % "provided",
@@ -18,7 +20,8 @@ lazy val hello = (project in file("."))
       "com.typesafe.slick" %% "slick-hikaricp" % "3.3.2",
       "com.h2database" % "h2" % "1.4.196",
       "com.mchange" % "c3p0" % "0.9.5.2",
-      "mysql" % "mysql-connector-java" % "5.1.44"
+      "mysql" % "mysql-connector-java" % "5.1.44",
+      "org.scalatra" %% "scalatra-auth" % "2.8.2"
     ),
   )
 
