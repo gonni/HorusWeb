@@ -72,3 +72,5 @@ project/metals.sbt
 
 # paulp script
 /.lib/
+
+/.bsp/*

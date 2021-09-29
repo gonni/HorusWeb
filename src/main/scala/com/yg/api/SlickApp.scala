@@ -1,11 +1,8 @@
-package com.yg
+package com.yg.api
 
 import org.scalatra.{FutureSupport, ScalatraBase, ScalatraServlet}
 import org.slf4j.LoggerFactory
 import slick.jdbc.MySQLProfile.api._
-
-import scala.concurrent._
-import scala.concurrent.duration.Duration
 
 object Tables {
   // Definition of the SUPPLIERS table

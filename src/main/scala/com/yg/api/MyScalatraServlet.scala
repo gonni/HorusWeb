@@ -1,4 +1,4 @@
-package com.yg
+package com.yg.api
 
 import org.scalatra._
 

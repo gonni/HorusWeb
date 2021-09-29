@@ -1,5 +1,6 @@
 package com.yg
 
+import com.yg.api.MyScalatraServlet
 import org.scalatra.test.scalatest._
 
 class MyScalatraServletTests extends ScalatraFunSuite {
