@@ -10,7 +10,7 @@ class OurBasicAuthStrategy(protected override val app: ScalatraBase, realm: Stri
 
   protected def validate(userName: String, password: String)
                         (implicit request: HttpServletRequest, response: HttpServletResponse): Option[User] = {
-    if (userName == "foo" && password == "bar") Some(User("foo"))
+    if (userName == "foo" && password == "bar") Some(User(userName))
     else None
   }
 

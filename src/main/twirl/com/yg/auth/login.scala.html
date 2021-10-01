@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Login</title>
+    </head>
+    <body>
+
+        <p>Please login:</p>
+        <form action="/sessions" method="post">
+            <p>
+                <label>Login:</label>
+                <input type="text" name="username"/><br>
+                <label>Password:</label>
+                <input type="password" name="password"/><br/>
+                <label>Remember Me:</label>
+                <input type="checkbox" name="rememberMe" value="true" />
+            </p>
+            <p>
+                <input type="submit">
+            </p>
+        </form>
+    </body>
+</html>
