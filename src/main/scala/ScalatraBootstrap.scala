@@ -5,8 +5,9 @@ import org.scalatra._
 
 import javax.servlet.ServletContext
 import com.mysql.jdbc._
-import com.yg.api.{HttpSampleController, RestSampleController, SlickApp}
+import com.yg.api._
 import com.yg.auth.AuthDemoController
+import com.yg.scentry._
 
 //import slick.jdbc.H2Profile.api._
 import slick.jdbc.MySQLProfile.api._
@@ -20,11 +21,16 @@ class ScalatraBootstrap extends LifeCycle {
 
   override def init(context: ServletContext) {
     val db = Database.forDataSource(cpds, None)
-    context.mount(new SlickApp(db), "/*")
-    context.mount(new RestSampleController(), "/rest/*")
-    context.mount(new HttpSampleController(), "/html/*")
-    context.mount(new AuthDemoController(), "/sec/*")
+//    context.mount(new SlickApp(db), "/*")
+//    context.mount(new RestSampleController(), "/rest/*")
 
+//    context.mount(new AuthDemoController(), "/sec/*")
+//    context.mount(new FormsController(), "/usr/*")
+
+    context.mount(new ProtectedController(), "/*")
+    context.mount(new SessionsController(), "/sessions/*")
+
+    context.mount(new HttpSampleController(), "/html/*")
   }
 
   private def closeDbConnection() {

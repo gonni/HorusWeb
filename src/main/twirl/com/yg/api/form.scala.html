@@ -1,14 +1,13 @@
 @()(implicit request: javax.servlet.http.HttpServletRequest)
 @import org.scalatra.forms.views._
 
-<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>Form</title>
     </head>
     <body>
-        <form action="/" method="POST" class="form-horizontal">
+        <form action="/usr/" method="POST" class="form-horizontal">
             <div class="form-group @if(error("text").nonEmpty){has-error}">
                 <label class="col-sm-2 control-label" for="text">Text (*):</label>
                 <div class="col-sm-10">
