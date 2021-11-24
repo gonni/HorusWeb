@@ -27,7 +27,8 @@ class ScalatraBootstrap extends LifeCycle {
 //    context.mount(new AuthDemoController(), "/sec/*")
 //    context.mount(new FormsController(), "/usr/*")
 
-    context.mount(new ProtectedController(), "/*")
+//    context.mount(new ProtectedController(), "/*")
+    context.mount(new HttpSampleController(), "/*")
     context.mount(new SessionsController(), "/sessions/*")
 
     context.mount(new HttpSampleController(), "/html/*")

@@ -1,4 +1,4 @@
-val ScalatraVersion = "2.8.0"
+val ScalatraVersion = "2.7.0"
 
 ThisBuild / scalaVersion := "2.13.4"
 ThisBuild / organization := "com.yg"
@@ -23,8 +23,9 @@ lazy val hello = (project in file("."))
       "mysql" % "mysql-connector-java" % "5.1.44",
       "org.scalatra" %% "scalatra-auth" % "2.8.2",
       "org.scalatra" %% "scalatra-forms" % "2.8.2"
-    ),
+    )
   )
 
 enablePlugins(SbtTwirl)
 enablePlugins(JettyPlugin)
+
