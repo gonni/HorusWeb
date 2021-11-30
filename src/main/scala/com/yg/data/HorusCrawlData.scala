@@ -37,17 +37,17 @@ trait CrawlRoute extends ScalatraBase with FutureSupport {
 
   def db: Database
 
-  get("/crawl/db/createTable") {
+  get("/db/createTable") {
     logger.info("create table crawl_unit9")
     db.run(CrawlTables.createSchemaAction)
   }
 
-  get("/crawl/db/load") {
+  get("/db/load") {
     logger.info("insert random data")
     db.run(CrawlTables.insertCrawlSeed)
   }
 
-  get("/crawl/db/crawlUnits") {
+  get("/db/crawlUnits") {
     logger.info("get crawl_unit9")
     contentType = "text/plain"
 
