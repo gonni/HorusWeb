@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory
 import slick.jdbc.MySQLProfile.api._
 
 object CrawlTables {
-  class CrawlSeeds(tag: Tag) extends Table[(Int, String, String, String)](tag, "CRAWL_SEEDS9") {
-    def seedNo = column[Int]("SEED_NO", O.PrimaryKey) // This is the primary key column
+  class CrawlSeeds(tag: Tag) extends Table[(Int, String, String, String)](tag, "CRAWL_SEEDS8") {
+    def seedNo = column[Int]("SEED_NO", O.PrimaryKey, O.AutoInc) // This is the primary key column
     def urlPattern = column[String]("URL_PATTERN")
     def title = column[String]("TITLE")
     def status = column[String]("STATUS")
@@ -20,9 +20,8 @@ object CrawlTables {
   val createSchemaAction = (crawlSeeds.schema).create
 
   val insertCrawlSeed = DBIO.seq(
-    CrawlTables.crawlSeeds ++= Seq(
-      (98, "http://test.yg.com", "Test", "TEST")
-    )
+    CrawlTables.crawlSeeds.map(c => (c.urlPattern, c.title, c.status))
+      += ("http://test.yg.com", "Test_" + System.currentTimeMillis(), "TEST")
   )
 
   val findAllFromCrawlSeeds = {
@@ -30,6 +29,7 @@ object CrawlTables {
       ci <- crawlSeeds
     } yield (ci.seedNo, ci.title, ci.urlPattern, ci.status)
   }
+
 }
 
 trait CrawlRoute extends ScalatraBase with FutureSupport {
@@ -40,6 +40,11 @@ trait CrawlRoute extends ScalatraBase with FutureSupport {
   get("/crawl/db/createTable") {
     logger.info("create table crawl_unit9")
     db.run(CrawlTables.createSchemaAction)
+  }
+
+  get("/crawl/db/load") {
+    logger.info("insert random data")
+    db.run(CrawlTables.insertCrawlSeed)
   }
 
   get("/crawl/db/crawlUnits") {
