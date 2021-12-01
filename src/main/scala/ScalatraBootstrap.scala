@@ -31,6 +31,7 @@ class ScalatraBootstrap extends LifeCycle {
 //    context.mount(new ProtectedController(), "/*")
     context.mount(new HttpSampleController(), "/hell/*")
     context.mount(new HorusCrawlData(db), "/crawl/*")
+    context.mount(new HorusViewController, "/horus/*")
 //    context.mount(new SessionsController(), "/sessions/*")
 
 //    context.mount(new HttpSampleController(), "/html/*")

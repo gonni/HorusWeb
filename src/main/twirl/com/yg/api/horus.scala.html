@@ -1,3 +1,4 @@
+@import com.yg.data.CrawlSeed
 @(crawlSeeds: List[CrawlSeed])
 
 <html lang="en">
@@ -15,11 +16,10 @@
             <tr>
                 <td>@crawlSeed.seedNo</td>
                 <td>@crawlSeed.title</td>
-                <td>@crawlSeed.title</td>
-                <td>@crawlSeed.title</td>
+                <td>@crawlSeed.urlPattern</td>
+                <td>@crawlSeed.status</td>
             </tr>
         }
-
     </table>
 </body>
 </html>
