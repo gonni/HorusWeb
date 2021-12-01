@@ -1,0 +1,25 @@
+@(crawlSeeds: List[CrawlSeed])
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Horus Seeds</title>
+</head>
+<body>
+    <table border="1">
+        <tr>
+            <td>No</td><td>Title</td><td>URL</td><td>STATUS</td>
+        </tr>
+
+        @for(crawlSeed <- crawlSeeds) {
+            <tr>
+                <td>@crawlSeed.seedNo</td>
+                <td>@crawlSeed.title</td>
+                <td>@crawlSeed.title</td>
+                <td>@crawlSeed.title</td>
+            </tr>
+        }
+
+    </table>
+</body>
+</html>
