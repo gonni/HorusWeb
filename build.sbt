@@ -20,7 +20,8 @@ lazy val hello = (project in file("."))
       "com.typesafe.slick" %% "slick-hikaricp" % "3.3.2",
       "com.h2database" % "h2" % "1.4.196",
       "com.mchange" % "c3p0" % "0.9.5.2",
-      "mysql" % "mysql-connector-java" % "5.1.44",
+      //"mysql" % "mysql-connector-java" % "5.1.44",
+      "mysql" % "mysql-connector-java" % "8.0.27",
       "org.scalatra" %% "scalatra-auth" % "2.8.2",
       "org.scalatra" %% "scalatra-forms" % "2.8.2"
     )
