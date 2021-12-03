@@ -21,6 +21,13 @@ object DbHorus {
       += ("http://test.yg.com", "Test_" + System.currentTimeMillis(), "TEST")
   )
 
+  val insertNewSeed = (title: String, url: String, status: String) => {
+    DBIO.seq(
+      CrawlTables.crawlSeeds.map(c => (c.urlPattern, c.title, c.status))
+        += (url, title, status)
+    )
+  }
+
   val findAllFromCrawlSeeds = {
     for {
       ci <- crawlSeeds

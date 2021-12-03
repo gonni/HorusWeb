@@ -36,14 +36,13 @@ trait HorusRoute extends ScalatraBase with FutureSupport {
     val title = params("title")
     val urlPattern = params("urlp")
     val status = params("status")
+//    val paramMap = request.getParameterMap()
+    logger.info(s"Need to Data Add to DB with ($title | $urlPattern | $status)")
 
-
-    val paramMap = request.getParameterMap()
-
-
-    logger.info("Need to Data Add to DB ..")
-//    redirect("/horus/seeds")
-    s"Data($title | $urlPattern | $status) inserted at " + System.currentTimeMillis
+    db.run(DbHorus.insertNewSeed(title, urlPattern, status))
+    // need to wait
+    redirect("/horus/seeds")
+//    s"Data($title | $urlPattern | $status) inserted at " + System.currentTimeMillis
   }
 
   get("/newSeed") {

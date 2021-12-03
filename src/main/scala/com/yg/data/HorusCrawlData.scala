@@ -29,7 +29,6 @@ object CrawlTables {
       ci <- crawlSeeds
     } yield (ci.seedNo, ci.title, ci.urlPattern, ci.status)
   }
-
 }
 
 trait CrawlRoute extends ScalatraBase with FutureSupport {
