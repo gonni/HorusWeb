@@ -24,6 +24,10 @@ object CrawlTables {
       += ("http://test.yg.com", "Test_" + System.currentTimeMillis(), "TEST")
   )
 
+  val insertSample = DBIO.seq(
+    crawlSeeds += (1999, "sample", "sample", "sample")
+  )
+
   val findAllFromCrawlSeeds = {
     for {
       ci <- crawlSeeds
