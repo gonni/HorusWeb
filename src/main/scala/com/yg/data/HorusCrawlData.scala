@@ -3,6 +3,7 @@ package com.yg.data
 import org.scalatra.{FutureSupport, ScalatraBase, ScalatraServlet}
 import org.slf4j.LoggerFactory
 import slick.jdbc.MySQLProfile.api._
+import slick.lifted.ProvenShape
 
 object CrawlTables {
   class CrawlSeeds(tag: Tag) extends Table[(Int, String, String, String)](tag, "CRAWL_SEEDS8") {
@@ -12,7 +13,23 @@ object CrawlTables {
     def status = column[String]("STATUS")
 
     // Every table needs a * projection with the same type as the table's type parameter
-    def * = (seedNo, urlPattern, title, status)
+    def * : ProvenShape[(Int, String, String, String)] = (seedNo, urlPattern, title, status)
+    def aa : ProvenShape[(Int, String, String, String)] = (seedNo, urlPattern, title, status)
+  }
+
+  case class CrawlSeed(seedNo: Option[Int], urlPattern: String, title: String, status: String)
+
+  class CrawlSeeds1(tag: Tag) extends Table[CrawlSeed](tag, "CRAWL_SEEDS8") {
+    def seedNo = column[Int]("SEED_NO", O.PrimaryKey, O.AutoInc) // This is the primary key column
+    def urlPattern = column[String]("URL_PATTERN")
+    def title = column[String]("TITLE")
+    def status = column[String]("STATUS")
+
+    // Every table needs a * projection with the same type as the table's type parameter
+    def * : ProvenShape[CrawlSeed] = (seedNo.?, urlPattern, title, status) <>
+      (CrawlSeed.tupled, CrawlSeed.unapply)
+
+    def *2 = (seedNo, urlPattern, title, status)
   }
 
   val crawlSeeds = TableQuery[CrawlSeeds]

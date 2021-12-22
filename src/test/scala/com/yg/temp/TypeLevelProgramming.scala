@@ -1,6 +1,33 @@
 package com.yg.temp
 
-object TypeLevelProgramming extends App {
+
+
+object Tmain extends App {
+  println("Active ..")
+
+  val vtable = new VirtualTable
+  println("==>" + vtable.getColType)
+
+  type Hell = (Int, String, String)
+
+  def foo: Hell = (1, "AB", "CD")
+  println(foo)
+}
+
+abstract class Table[T] {
+  final type TableElement = T
+  def getColType : TableElement
+}
+
+class VirtualTable extends Table[(Int, String, String)] {
+  override def getColType: TableElement = {
+    println("Detected getColType")
+    (9, "AB", "CD")
+  }
+}
+
+
+object TypeLevelProgramming {
 //  val a = (1, 2, "AAA")
 //  println(a._1)
 //  println(a.productIterator.toList)
