@@ -4,10 +4,7 @@ import com.yg.data._
 import org.scalatra._
 import org.slf4j.LoggerFactory
 import slick.jdbc.MySQLProfile.api._
-
-import java.util
 import scala.collection.mutable.{ArrayBuffer, ListBuffer}
-//import scala.concurrent.ExecutionContext.Implicits.global
 
 trait HorusRoute extends ScalatraBase with FutureSupport {
   val logger = LoggerFactory.getLogger(getClass)
