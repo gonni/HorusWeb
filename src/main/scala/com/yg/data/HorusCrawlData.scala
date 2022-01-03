@@ -3,6 +3,9 @@ package com.yg.data
 import org.scalatra.{FutureSupport, ScalatraBase, ScalatraServlet}
 import org.slf4j.LoggerFactory
 import slick.jdbc.MySQLProfile.api._
+import slick.lifted
+import slick.lifted.ProvenShape
+
 
 object CrawlTables {
   class CrawlSeeds(tag: Tag) extends Table[(Int, String, String, String)](tag, "CRAWL_SEEDS8") {
@@ -12,16 +15,36 @@ object CrawlTables {
     def status = column[String]("STATUS")
 
     // Every table needs a * projection with the same type as the table's type parameter
+//    def * = ProvenShape.proveShapeOf(seedNo, urlPattern, title, status)
     def * = (seedNo, urlPattern, title, status)
+    //def * = (seedNo, urlPattern, title, status) <> (???, ???)
+
   }
 
-  val crawlSeeds = TableQuery[CrawlSeeds]
+  case class CrawlSeed(
+                        seedNo: Option[Int],
+                        urlPattern: String,
+                        title: String,
+                        status: String
+                      )
+
+  class CrawlSeeds2(tag: Tag) extends Table[CrawlSeed](tag, "CRAWL_SEEDS8") {
+    def seedNo = column[Int]("SEED_NO", O.PrimaryKey, O.AutoInc) // This is the primary key column
+    def urlPattern = column[String]("URL_PATTERN")
+    def title = column[String]("TITLE")
+    def status = column[String]("STATUS")
+
+    def * =
+      (seedNo.?, urlPattern, title, status) <> (CrawlSeed.tupled, CrawlSeed.unapply)
+  }
+
+  val crawlSeeds = lifted.TableQuery[CrawlSeeds]
 
   val createSchemaAction = (crawlSeeds.schema).create
 
   val insertCrawlSeed = DBIO.seq(
     CrawlTables.crawlSeeds.map(c => (c.urlPattern, c.title, c.status))
-      += ("http://test.yg.com", "Test_" + System.currentTimeMillis(), "TEST")
+      += ("http://test2.yg.com", "Test2_" + System.currentTimeMillis(), "TEST2")
   )
 
   val findAllFromCrawlSeeds = {
