@@ -1,5 +1,7 @@
 package com.yg.vs
 
+import com.yg.vs1.PreVsDef._
+
 object Virtual extends TupleShapeImplicits with RepShapeImplicits {
   val types = new JdbcTypes
   implicit def intCon = types.intJdbcType
@@ -12,15 +14,16 @@ object Virtual extends TupleShapeImplicits with RepShapeImplicits {
     //    def lastName = column[String]("LAST_NAME")
     //    def status = column[String]("STATUS")
 
-    def *
-    = ProvenShape.proveShapeOf(id, firstName)
+//    def *
+//    = ProvenShape.proveShapeOf(id, firstName)
 
-    //    def * = ProvenShape.proveShapeOf(id, firstName)(tuple2Shape(Shape.repColumnShape, Shape.repColumnShape))
+        def * = ProvenShape.proveShapeOf(id, firstName)(tuple2Shape(Shape.repColumnShape, Shape.repColumnShape))
     //    def * = (id, firstName)
   }
 
   def main(args: Array[String]): Unit = {
-
+    val a = "AAA"
+    a.display
   }
 }
 
