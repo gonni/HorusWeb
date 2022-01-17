@@ -25,7 +25,7 @@ class ScalatraBootstrap extends LifeCycle {
 //    context.mount(new SlickApp(db), "/*")
 //    context.mount(new RestSampleController(), "/rest/*")
 
-    context.mount(new AuthDemoController(), "/*")
+//    context.mount(new AuthDemoController(), "/*")
 //    context.mount(new FormsController(), "/usr/*")
 
 //    context.mount(new ProtectedController(), "/*")
