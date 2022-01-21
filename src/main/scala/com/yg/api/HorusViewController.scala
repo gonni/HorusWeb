@@ -52,8 +52,6 @@ class HorusViewController(val db: Database) extends ScalatraServlet with FutureS
 //  val logger2 = LoggerFactory.getLogger(getClass)
   protected implicit def executor = scala.concurrent.ExecutionContext.Implicits.global
 
-
-
   get("/d/seeds") {
     "AA"
   }
