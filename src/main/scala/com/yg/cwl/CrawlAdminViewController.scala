@@ -17,19 +17,18 @@ trait CrawlAdminViewProcessing extends ScalatraServlet with FutureSupport {
 
     var lss = ArrayBuffer[CrawlSeed]()
     db.run(DbHorus.findAllFromCrawlSeeds.result) map {
-      xs => xs map {
-        case(a, b, c, d) => {
-          lss += CrawlSeed(a, b, c, d)
+        xs => xs map {
+          case(a, b, c, d) => {
+            lss += CrawlSeed(a, b, c, d)
+          }
         }
-      }
+        com.yg.cwl.html.seeds.render(lss)
     }
-
-    com.yg.cwl.html.seeds(lss)
   }
 
-  post("/seed/new") {
-//    com.yg.cwl.html.seeds()
-    "AAA"
+  get("/seed/new") {
+    logger.info("Request create & manage new seed")
+    com.yg.cwl.html.seedInput.render()
   }
 }
 

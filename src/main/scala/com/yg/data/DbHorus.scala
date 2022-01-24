@@ -49,6 +49,6 @@ object DbHorus {
   val findAllFromCrawlSeeds = {
     for {
       ci <- crawlSeeds
-    } yield (ci.seedNo, ci.title, ci.urlPattern, ci.status)
+    } yield (ci.seedNo, ci.urlPattern, ci.title, ci.status)
   }
 }

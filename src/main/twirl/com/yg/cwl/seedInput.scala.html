@@ -1,6 +1,5 @@
 @import com.yg.data.CrawlSeed
 @import scala.collection.mutable.ArrayBuffer
-@(crawlSeeds: ArrayBuffer[CrawlSeed])
 
 <!DOCTYPE html>
 <html lang="en">
@@ -127,28 +126,24 @@
         </div>
 
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <h2>Crawl Seeds</h2>
+            <h2>Input Seed</h2>
             <div class="table-responsive">
-                <table class="table table-striped table-sm">
-                    <thead>
-                        <tr>
-                            <th scope="col">No</th>
-                            <th scope="col">Title</th>
-                            <th scope="col">UrlPattern</th>
-                            <th scope="col">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for(crawlSeed <- crawlSeeds) {
-                            <tr>
-                                <td>@crawlSeed.seedNo</td>
-                                <td>@crawlSeed.title</td>
-                                <td>@crawlSeed.urlPattern</td>
-                                <td>@crawlSeed.status</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                <form>
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="exampleInputPassword1">
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                        <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
             </div>
         </main>
     </body>
