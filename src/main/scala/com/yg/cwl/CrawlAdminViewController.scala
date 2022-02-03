@@ -23,13 +23,14 @@ trait CrawlAdminViewProcessing extends ScalatraServlet with FutureSupport {
             lss += CrawlSeed(a, b, c, d)
           }
         }
-        com.yg.cwl.html.seeds.render(lss)
+        layouts.html.dashboard.render("Seeds", com.yg.cwl.html.seeds.render(lss))
     }
   }
 
   get("/seed/new") {
     logger.info("Request create & manage new seed")
-    com.yg.cwl.html.seedInput.render()
+    val main = com.yg.cwl.html.seedInput.render()
+    layouts.html.dashboard.render("Dashboard Template Main", main)
   }
 
   get("/main0") {
