@@ -3,6 +3,7 @@ package com.yg.cwl
 import com.yg.data.{CrawlSeed, DbHorus}
 import org.scalatra._
 import org.slf4j.LoggerFactory
+import play.twirl.api.Html
 import slick.jdbc.MySQLProfile.api._
 
 import scala.collection.mutable.ArrayBuffer
@@ -29,6 +30,16 @@ trait CrawlAdminViewProcessing extends ScalatraServlet with FutureSupport {
   get("/seed/new") {
     logger.info("Request create & manage new seed")
     com.yg.cwl.html.seedInput.render()
+  }
+
+  get("/main") {
+    logger.info("Requested Main HTML Template ..")
+
+//    val body : Html
+//    = Html("<h1>This text is made by Template Body</h1>")
+
+    val body = layouts.html.rttf.render()
+    layouts.html.crawlframe.render("Template Main", body)
   }
 }
 
