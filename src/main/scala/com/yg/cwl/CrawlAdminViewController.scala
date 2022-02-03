@@ -32,7 +32,7 @@ trait CrawlAdminViewProcessing extends ScalatraServlet with FutureSupport {
     com.yg.cwl.html.seedInput.render()
   }
 
-  get("/main") {
+  get("/main0") {
     logger.info("Requested Main HTML Template ..")
 
 //    val body : Html
@@ -40,6 +40,12 @@ trait CrawlAdminViewProcessing extends ScalatraServlet with FutureSupport {
 
     val body = layouts.html.rttf.render()
     layouts.html.crawlframe.render("Template Main", body)
+  }
+
+  get("/main") {
+    logger.info("Requested Main Layout HTML Template ..")
+    val main = com.yg.cwl.html.main.render()
+    layouts.html.dashboard.render("Dashboard Template Main", main)
   }
 }
 
