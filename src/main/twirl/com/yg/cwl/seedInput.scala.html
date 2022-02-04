@@ -1,12 +1,17 @@
-@()
+@()(implicit request: javax.servlet.http.HttpServletRequest)
+@import org.scalatra.forms.views._
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <h2>New Seeds</h2>
     <div class="table-responsive">
-        <form>
+        <form method="get" action="/admin/crawl/seed/new">
 
             <div class="mb-3">
                 <label for="crawlTitle" class="form-label">Crawl Title</label>
                 <input type="text" class="form-control" id="crawlTitle">
+                <div class="col-sm-10">
+                    @Html(text("title", "class" -> "form-control"))
+                    <span class="error">@error("title")</span>
+                </div>
             </div>
 
             <div class="mb-3">
@@ -15,14 +20,58 @@
                 <div id="emailHelp" class="form-text">
                     ex) https://finance.naver.com/news/news_list.nhn?mode=LSS3D&amp;section_id=101&amp;section_id2=258&amp;section_id3=402
                 </div>
+                <div class="col-sm-10">
+                    @Html(text("lblUrlPattern", "class" -> "form-control"))
+                    <span class="error">@error("title")</span>
+                </div>
             </div>
 
+            <div class="mb-3">
+                <label for="listUrlPattern" class="form-label">List.UrlPatternFilter</label>
+                <input type="text" class="form-control" id="listUrlPattern">
+                <div id="emailHelp" class="form-text">
+                    ex) ^(https:\/\/finance.naver.com\/news\/news_read.nhn\?article_id=).*$
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="listTopAreaFilter" class="form-label">List.TopAreaFilter</label>
+                <input type="text" class="form-control" id="listTopAreaFilter">
+                <div id="emailHelp" class="form-text">
+                    ex) ul.realtimeNewsList
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="contTitleInPage" class="form-label">Cont.TitleInPage</label>
+                <input type="text" class="form-control" id="contTitleInPage">
+                <div id="emailHelp" class="form-text">
+                    ex) div.article_info > h3
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="contMainCont" class="form-label">Cont.MainContent</label>
+                <input type="text" class="form-control" id="contMainCont">
+                <div id="emailHelp" class="form-text">
+                    ex) div#content
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="contDateOnPage" class="form-label">Cont.DateOnPage</label>
+                <input type="text" class="form-control" id="contDateOnPage">
+                <div id="emailHelp" class="form-text">
+                    ex) span.article_date
+                </div>
+            </div>
+            <!--
             <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="exampleCheck1">
                 <label class="form-check-label" for="exampleCheck1">Check me out</label>
             </div>
-
-            <button type="submit" class="btn btn-primary">Submit</button>
+            -->
+            <button type="submit" class="btn btn-primary">Validate</button>
         </form>
     </div>
 </main>
