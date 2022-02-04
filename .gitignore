@@ -75,3 +75,5 @@ project/metals.sbt
 
 /.bsp/*
 .bsp/*
+
+src/main/resources/c3p0.properties
