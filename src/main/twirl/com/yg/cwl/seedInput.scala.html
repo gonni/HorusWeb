@@ -1,28 +1,30 @@
 @()(implicit request: javax.servlet.http.HttpServletRequest)
+
 @import org.scalatra.forms.views._
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <h2>New Seeds</h2>
     <div class="table-responsive">
-        <form method="get" action="/admin/crawl/seed/new">
+        <form method="get" action="/admin/crawl/seed/validate">
 
             <div class="mb-3">
                 <label for="crawlTitle" class="form-label">Crawl Title</label>
-                <input type="text" class="form-control" id="crawlTitle">
+                <!-- <input type="text" class="form-control" id="crawlTitle"> -->
                 <div class="col-sm-10">
-                    @Html(text("title", "class" -> "form-control"))
+                    @Html(text("crawlTitle", "class" -> "form-control"))
                     <span class="error">@error("title")</span>
                 </div>
             </div>
 
             <div class="mb-3">
                 <label for="urlPattern" class="form-label">URL Pattern</label>
-                <input type="text" class="form-control" id="urlPattern">
+                <!-- <input type="text" class="form-control" id="urlPattern"> -->
+
+                <div class="col-sm-10">
+                    @Html(text("urlPattern", "class" -> "form-control"))
+                    <span class="error">@error("title")</span>
+                </div>
                 <div id="emailHelp" class="form-text">
                     ex) https://finance.naver.com/news/news_list.nhn?mode=LSS3D&amp;section_id=101&amp;section_id2=258&amp;section_id3=402
-                </div>
-                <div class="col-sm-10">
-                    @Html(text("lblUrlPattern", "class" -> "form-control"))
-                    <span class="error">@error("title")</span>
                 </div>
             </div>
 

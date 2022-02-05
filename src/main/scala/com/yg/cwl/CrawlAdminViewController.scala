@@ -32,54 +32,47 @@ trait CrawlAdminViewProcessing extends ScalatraServlet
 
   get("/seed/new") {
     logger.info("Request create & manage new seed")
-    val main = com.yg.cwl.html.seedInput.render()
+    val main = com.yg.cwl.html.seedInput()
     layouts.html.dashboard.render("Dashboard Template Main", main)
+
   }
 
   case class ValidateNewSeedForm (
     crawlTitle: String,
     urlPattern: String,
-    listUrlPattern: Option[String],
-    listTopAreaFilter: Option[String],
-    contTitleInPage: Option[String],
-    contMainCont: Option[String],
-    contDateOnPage: Option[String]
+//    listUrlPattern: Option[String],
+//    listTopAreaFilter: Option[String],
+//    contTitleInPage: Option[String],
+//    contMainCont: Option[String],
+//    contDateOnPage: Option[String]
   )
 
   val newSeedForm = mapping(
     "crawlTitle" -> label("title", text(required, maxlength(10))),
-    "urlPattern" -> label("lblUrlPattern", text(required, maxlength(20))),
-    "listUrlPattern" -> label("", ???),
-    "listTopAreaFilter" -> label("", ???),
-    "contTitleInPage" -> label("", ???),
-    "contMainCont" -> label("", ???),
-    "contDateOnPage" -> label("", ???),
+    "urlPattern" -> label("urlPattern", text(required, maxlength(20))),
+//    "listUrlPattern" -> label("", ???),
+//    "listTopAreaFilter" -> label("", ???),
+//    "contTitleInPage" -> label("", ???),
+//    "contMainCont" -> label("", ???),
+//    "contDateOnPage" -> label("", ???),
   )(ValidateNewSeedForm.apply)
 
-  post("/seed/validate") {
+  get("/seed/validate") {
     logger.info("Add new seed action detected ..")
-
-//    validate(newSeedForm)(
-//      errors : Seq[(String, String)] => {
-////        BadRequest(html.error(errors))
-//        ???
-//      },
-//      form : ValidateNewSeedForm => {
-//        ???
-//      }
-//    )
-
-//    validate(newSeedForm)(
-//      hasErrors: Seq[(String, String)] => {
-//        ???
-//      },
-//      successes: ValidateNewSeedForm => {
-//        ???
-//      }
-//    )
+//
+    validate(newSeedForm)(
+      errors => {
+        logger.info("detected FAIL")
+        BadRequest(html.error)
+      },
+      newSeedForm => {
+        logger.info("detected success")
+        html.message("Success", "New Seed Validated!!", "Nobody here")
+      }
+    )
   }
 
-  get("/main0") {
+  get("/error") {
     logger.info("Requested Main HTML Template ..")
 
 //    val body : Html
