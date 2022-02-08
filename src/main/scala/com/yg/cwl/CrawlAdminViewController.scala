@@ -1,6 +1,6 @@
 package com.yg.cwl
 
-import com.yg.data.{CrawlSeed, DbHorus}
+import com.yg.data.{CrawlSeed, DbHorus, HorusSlick}
 import org.scalatra._
 import org.slf4j.LoggerFactory
 import play.twirl.api.Html
@@ -9,6 +9,8 @@ import org.scalatra.forms._
 import org.scalatra.i18n.I18nSupport
 
 import scala.collection.mutable.ArrayBuffer
+import scala.concurrent.{Await}
+import scala.concurrent.duration.Duration
 
 trait CrawlAdminViewProcessing extends ScalatraServlet
   with FormSupport with I18nSupport with FutureSupport{
@@ -71,6 +73,21 @@ trait CrawlAdminViewProcessing extends ScalatraServlet
       }
     )
   }
+
+  get("/seed/register") {
+    logger.info("Register new action detected ..")
+
+    val seedId = Await.result(
+      db.run(HorusSlick.register(
+        HorusSlick.CrawlSeed(None, "http://testUrl", "testTitle", "INT"),
+        "a", "b").transactionally
+      ),
+      Duration.Inf
+    )
+
+    html.message("Success", "New Seed Registerd", "Registered to DB as a id " + seedId.get)
+  }
+
 
   get("/error") {
     logger.info("Requested Main HTML Template ..")

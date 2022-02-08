@@ -99,10 +99,10 @@ object HorusSlick {
   def insertWrapperRule(wrapperRule: WrapperRule) =
     tblWrapperRules += wrapperRule
 
-  def register(crawlSeed: CrawlSeed, wrapperRule: WrapperRule) = {
+  def register(crawlSeed: CrawlSeed, a: String, b: String) = {
     for {
       seedId <- insertNewSeed(crawlSeed)
-      _ <- insertWrapperRule(wrapperRule)
+      _ <- insertWrapperRule(WrapperRule(None, seedId.get, a, b, "C", new Date(System.currentTimeMillis)))
     } yield seedId
   }
 //  val insertAllNewSeed = (title: String, urlPattern: String, rule: Map[String, String]) => {

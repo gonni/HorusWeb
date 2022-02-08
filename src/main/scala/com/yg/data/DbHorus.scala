@@ -2,7 +2,7 @@ package com.yg.data
 
 import slick.jdbc.MySQLProfile.api._
 object DbHorus {
-  class CrawlSeeds(tag: Tag) extends Table[(Int, String, String, String)](tag, "CRAWL_SEEDS8") {
+  class CrawlSeeds(tag: Tag) extends Table[(Int, String, String, String)](tag, "CRAWL_SEEDS") {
     def seedNo = column[Int]("SEED_NO", O.PrimaryKey, O.AutoInc) // This is the primary key column
     def urlPattern = column[String]("URL_PATTERN")
     def title = column[String]("TITLE")
@@ -20,7 +20,7 @@ object DbHorus {
                         status: String
                       )
 
-  class CrawlSeeds2(tag: Tag) extends Table[CrawlSeed](tag, "CRAWL_SEEDS8") {
+  class CrawlSeeds2(tag: Tag) extends Table[CrawlSeed](tag, "CRAWL_SEEDS") {
     def seedNo = column[Int]("SEED_NO", O.PrimaryKey, O.AutoInc) // This is the primary key column
     def urlPattern = column[String]("URL_PATTERN")
     def title = column[String]("TITLE")
