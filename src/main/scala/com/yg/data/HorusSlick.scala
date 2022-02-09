@@ -99,12 +99,24 @@ object HorusSlick {
   def insertWrapperRule(wrapperRule: WrapperRule) =
     tblWrapperRules += wrapperRule
 
+  def insertWrapperRules(wrapperRules: List[WrapperRule]) =
+    tblWrapperRules ++= wrapperRules
+
   def register(crawlSeed: CrawlSeed, a: String, b: String) = {
     for {
       seedId <- insertNewSeed(crawlSeed)
       _ <- insertWrapperRule(WrapperRule(None, seedId.get, a, b, "C", new Date(System.currentTimeMillis)))
     } yield seedId
   }
+
+  def registerAll(crawlSeed: CrawlSeed, wrapperRules: Map[String, String]) = {
+    for {
+      seedId <- insertNewSeed(crawlSeed)
+      _ <- insertWrapperRules(wrapperRules.map{case(k, v) =>
+        WrapperRule(None, seedId.get, "a", "b", "C", new Date(System.currentTimeMillis))})
+    } yield seedId
+  }
+
 //  val insertAllNewSeed = (title: String, urlPattern: String, rule: Map[String, String]) => {
 //    (for(
 //      seedNo <- ((tblCrawlSeeds returning tblCrawlSeeds.map(_.seedNo)) += CrawlSeed(None, urlPattern, title, "TS"))

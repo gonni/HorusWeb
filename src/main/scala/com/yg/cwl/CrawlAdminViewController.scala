@@ -42,21 +42,21 @@ trait CrawlAdminViewProcessing extends ScalatraServlet
   case class ValidateNewSeedForm (
     crawlTitle: String,
     urlPattern: String,
-//    listUrlPattern: Option[String],
-//    listTopAreaFilter: Option[String],
-//    contTitleInPage: Option[String],
-//    contMainCont: Option[String],
-//    contDateOnPage: Option[String]
+    listUrlPattern: String,
+    listTopAreaFilter: String,
+    contTitleInPage: String,
+    contMainCont: String,
+    contDateOnPage: String
   )
 
   val newSeedForm = mapping(
     "crawlTitle" -> label("title", text(required, maxlength(10))),
     "urlPattern" -> label("urlPattern", text(required, maxlength(20))),
-//    "listUrlPattern" -> label("", ???),
-//    "listTopAreaFilter" -> label("", ???),
-//    "contTitleInPage" -> label("", ???),
-//    "contMainCont" -> label("", ???),
-//    "contDateOnPage" -> label("", ???),
+    "listUrlPattern" -> label("listUrlPattern", text()),
+    "listTopAreaFilter" -> label("listTopAreaFilter", text()),
+    "contTitleInPage" -> label("contTitleInPage", text()),
+    "contMainCont" -> label("contMainCont", text()),
+    "contDateOnPage" -> label("contDateOnPage", text()),
   )(ValidateNewSeedForm.apply)
 
   get("/seed/validate") {
@@ -69,23 +69,41 @@ trait CrawlAdminViewProcessing extends ScalatraServlet
       },
       newSeedForm => {
         logger.info("detected success")
-        html.message("Success", "New Seed Validated!!", "Nobody here")
+        html.message("Success", "New Seed Validated!!", s"Form -> ${newSeedForm}")
       }
     )
   }
 
   get("/seed/register") {
-    logger.info("Register new action detected ..")
+    logger.info(s"Register new action detected with ${newSeedForm}")
 
-    val seedId = Await.result(
-      db.run(HorusSlick.register(
-        HorusSlick.CrawlSeed(None, "http://testUrl", "testTitle", "INT"),
-        "a", "b").transactionally
-      ),
-      Duration.Inf
+    validate(newSeedForm)(
+      errors => {
+        logger.info("detected FAIL")
+//        BadRequest(html.error)
+        html.message("Seed Creation Failed", "Detected Invalid Parameters !!", s"Form -> ${newSeedForm}")
+      },
+      newSeedForm => {
+        logger.info("detected success")
+
+        val seedId = Await.result(
+          db.run(HorusSlick.register(
+            HorusSlick.CrawlSeed(None, newSeedForm.urlPattern, newSeedForm.crawlTitle, "TEST"),
+            "a", "b").transactionally
+          ),
+          Duration.Inf
+        )
+
+        html.message("Success", "New Seed Validated!!", s"Form -> ${newSeedForm}")
+      }
     )
 
-    html.message("Success", "New Seed Registerd", "Registered to DB as a id " + seedId.get)
+
+
+
+
+    redirect("/admin/crawl/seeds")
+//    html.message("Success", "New Seed Registerd", "Registered to DB as a id " + seedId.get)
   }
 
 

@@ -4,7 +4,7 @@
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <h2>New Seeds</h2>
     <div class="table-responsive">
-        <form method="get" action="/admin/crawl/seed/validate">
+        <form method="get" action="/admin/crawl/seed/register">
 
             <div class="mb-3">
                 <label for="crawlTitle" class="form-label">Crawl Title</label>
@@ -30,7 +30,8 @@
 
             <div class="mb-3">
                 <label for="listUrlPattern" class="form-label">List.UrlPatternFilter</label>
-                <input type="text" class="form-control" id="listUrlPattern">
+                <!-- <input type="text" class="form-control" id="listUrlPattern"> -->
+                @Html(text("listUrlPattern", "class" -> "form-control"))
                 <div id="emailHelp" class="form-text">
                     ex) ^(https:\/\/finance.naver.com\/news\/news_read.nhn\?article_id=).*$
                 </div>
@@ -38,7 +39,8 @@
 
             <div class="mb-3">
                 <label for="listTopAreaFilter" class="form-label">List.TopAreaFilter</label>
-                <input type="text" class="form-control" id="listTopAreaFilter">
+                <!-- <input type="text" class="form-control" id="listTopAreaFilter"> -->
+                @Html(text("listTopAreaFilter", "class" -> "form-control"))
                 <div id="emailHelp" class="form-text">
                     ex) ul.realtimeNewsList
                 </div>
@@ -46,7 +48,8 @@
 
             <div class="mb-3">
                 <label for="contTitleInPage" class="form-label">Cont.TitleInPage</label>
-                <input type="text" class="form-control" id="contTitleInPage">
+                <!-- <input type="text" class="form-control" id="contTitleInPage"> -->
+                @Html(text("contTitleInPage", "class" -> "form-control"))
                 <div id="emailHelp" class="form-text">
                     ex) div.article_info > h3
                 </div>
@@ -54,7 +57,8 @@
 
             <div class="mb-3">
                 <label for="contMainCont" class="form-label">Cont.MainContent</label>
-                <input type="text" class="form-control" id="contMainCont">
+                <!-- <input type="text" class="form-control" id="contMainCont"> -->
+                @Html(text("contMainCont", "class" -> "form-control"))
                 <div id="emailHelp" class="form-text">
                     ex) div#content
                 </div>
@@ -62,7 +66,8 @@
 
             <div class="mb-3">
                 <label for="contDateOnPage" class="form-label">Cont.DateOnPage</label>
-                <input type="text" class="form-control" id="contDateOnPage">
+                <!-- <input type="text" class="form-control" id="contDateOnPage"> -->
+                @Html(text("contDateOnPage", "class" -> "form-control"))
                 <div id="emailHelp" class="form-text">
                     ex) span.article_date
                 </div>
