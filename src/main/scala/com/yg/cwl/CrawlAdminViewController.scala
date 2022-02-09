@@ -8,8 +8,9 @@ import slick.jdbc.MySQLProfile.api._
 import org.scalatra.forms._
 import org.scalatra.i18n.I18nSupport
 
+import scala.:+
 import scala.collection.mutable.ArrayBuffer
-import scala.concurrent.{Await}
+import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
 trait CrawlAdminViewProcessing extends ScalatraServlet
@@ -84,12 +85,28 @@ trait CrawlAdminViewProcessing extends ScalatraServlet
         html.message("Seed Creation Failed", "Detected Invalid Parameters !!", s"Form -> ${newSeedForm}")
       },
       newSeedForm => {
-        logger.info("detected success")
+        logger.info(s"detected success with ${newSeedForm}")
+
+//        val seedId = Await.result(
+//          db.run(HorusSlick.register(
+//            HorusSlick.CrawlSeed(None, newSeedForm.urlPattern, newSeedForm.crawlTitle, "TEST"),
+//            "a", "b").transactionally
+//          ),
+//          Duration.Inf
+//        )
+
+        var params = List[(String, String)]()
+        if(newSeedForm.listUrlPattern != null)
+          params :+ ("TEST_LIST_URL_PATTERN", newSeedForm.listUrlPattern)
+        if(newSeedForm.listTopAreaFilter != null)
+          params :+ ("TEST_LIST_URL_PATTERN", newSeedForm.listTopAreaFilter)
+
+        logger.info(s"Params -> ${params}")
 
         val seedId = Await.result(
-          db.run(HorusSlick.register(
+          db.run(HorusSlick.registerAll(
             HorusSlick.CrawlSeed(None, newSeedForm.urlPattern, newSeedForm.crawlTitle, "TEST"),
-            "a", "b").transactionally
+            params).transactionally
           ),
           Duration.Inf
         )

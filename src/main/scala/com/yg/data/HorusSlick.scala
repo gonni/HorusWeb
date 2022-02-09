@@ -109,11 +109,12 @@ object HorusSlick {
     } yield seedId
   }
 
-  def registerAll(crawlSeed: CrawlSeed, wrapperRules: Map[String, String]) = {
+  def registerAll(crawlSeed: CrawlSeed, wrapperRules: List[(String, String)]) = {
     for {
       seedId <- insertNewSeed(crawlSeed)
-      _ <- insertWrapperRules(wrapperRules.map{case(k, v) =>
-        WrapperRule(None, seedId.get, "a", "b", "C", new Date(System.currentTimeMillis))})
+      _ <- insertWrapperRules(wrapperRules.map{case(k, v) => {
+        println(s"k:v = ${k} : ${v}");
+        WrapperRule(None, seedId.get, k, v, "Unknown", new Date(System.currentTimeMillis))}})
     } yield seedId
   }
 
