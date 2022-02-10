@@ -96,10 +96,10 @@ trait CrawlAdminViewProcessing extends ScalatraServlet
 //        )
 
         var params = List[(String, String)]()
-        if(newSeedForm.listUrlPattern != null)
-          params :+ ("TEST_LIST_URL_PATTERN", newSeedForm.listUrlPattern)
-        if(newSeedForm.listTopAreaFilter != null)
-          params :+ ("TEST_LIST_URL_PATTERN", newSeedForm.listTopAreaFilter)
+        if(newSeedForm.listUrlPattern != null && newSeedForm.listUrlPattern.trim.length > 0)
+          params = params :+ ("TEST_LIST_URL_PATTERN", newSeedForm.listUrlPattern)
+        if(newSeedForm.listTopAreaFilter != null && newSeedForm.listTopAreaFilter.trim.length > 0)
+          params = params :+ ("TEST_LIST_URL_PATTERN", newSeedForm.listTopAreaFilter)
 
         logger.info(s"Params -> ${params}")
 
@@ -111,15 +111,10 @@ trait CrawlAdminViewProcessing extends ScalatraServlet
           Duration.Inf
         )
 
-        html.message("Success", "New Seed Validated!!", s"Form -> ${newSeedForm}")
+//        html.message("Success", "New Seed Validated!!", s"Form -> ${newSeedForm}")
+        redirect("/admin/crawl/seeds")
       }
     )
-
-
-
-
-
-    redirect("/admin/crawl/seeds")
 //    html.message("Success", "New Seed Registerd", "Registered to DB as a id " + seedId.get)
   }
 
