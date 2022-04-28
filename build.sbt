@@ -30,3 +30,5 @@ lazy val hello = (project in file("."))
 enablePlugins(SbtTwirl)
 enablePlugins(JettyPlugin)
 
+containerPort in Jetty := 8090
+

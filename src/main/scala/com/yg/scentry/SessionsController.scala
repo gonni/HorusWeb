@@ -18,17 +18,7 @@ class SessionsController extends ScalatraServlet with AuthenticationSupport {
 
     contentType="text/html"
     <html>
-      <p>Please login:</p>
-      <form action="/sessions" method="post">
-        <p>
-          <input type="text" name="login" /><br/>
-          <input type="password" name="password" /><br/>
-          <label>Remember Me:</label><input type="checkbox" name="rememberMe" value="true" />
-        </p>
-        <p>
-          <input type="submit" />
-        </p>
-      </form>
+
     </html>
   }
 
