@@ -1,4 +1,5 @@
 val ScalatraVersion = "2.7.0"
+val akkaVersion = "2.5.26"
 
 ThisBuild / scalaVersion := "2.13.4"
 ThisBuild / organization := "com.yg"
@@ -23,7 +24,11 @@ lazy val hello = (project in file("."))
       //"mysql" % "mysql-connector-java" % "5.1.44",
       "mysql" % "mysql-connector-java" % "8.0.27",
       "org.scalatra" %% "scalatra-auth" % "2.8.2",
-      "org.scalatra" %% "scalatra-forms" % "2.8.2"
+      "org.scalatra" %% "scalatra-forms" % "2.8.2",
+      // akka + influxdb
+      "com.typesafe.akka" %% "akka-stream" % akkaVersion,
+      "com.typesafe.akka" %% "akka-actor" % akkaVersion,
+      "com.influxdb" % "influxdb-client-scala_2.13" % "6.0.0"
     )
   )
 
