@@ -1,5 +1,6 @@
 val ScalatraVersion = "2.7.0"
 val akkaVersion = "2.5.26"
+val akkaHttpVersion = "10.1.11"
 
 ThisBuild / scalaVersion := "2.13.4"
 ThisBuild / organization := "com.yg"
@@ -28,6 +29,8 @@ lazy val hello = (project in file("."))
       // akka + influxdb
       "com.typesafe.akka" %% "akka-stream" % akkaVersion,
       "com.typesafe.akka" %% "akka-actor" % akkaVersion,
+      "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
+      "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion,
       "com.influxdb" % "influxdb-client-scala_2.13" % "6.0.0",
       "org.json4s" %% "json4s-jackson" % "4.1.0-M1"
     )
