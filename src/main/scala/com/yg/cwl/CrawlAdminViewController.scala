@@ -40,6 +40,12 @@ trait CrawlAdminViewProcessing extends ScalatraServlet
 
   }
 
+  get("/seed/pagelab") {
+    logger.info("Request Research Page Wrapping ..")
+    val main = com.yg.cwl.html.researchPage()
+    layouts.html.dashboard.render("Research Page DOM", main)
+  }
+
   case class ValidateNewSeedForm (
     crawlTitle: String,
     urlPattern: String,

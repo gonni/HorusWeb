@@ -28,7 +28,8 @@ lazy val hello = (project in file("."))
       // akka + influxdb
       "com.typesafe.akka" %% "akka-stream" % akkaVersion,
       "com.typesafe.akka" %% "akka-actor" % akkaVersion,
-      "com.influxdb" % "influxdb-client-scala_2.13" % "6.0.0"
+      "com.influxdb" % "influxdb-client-scala_2.13" % "6.0.0",
+      "org.json4s" %% "json4s-jackson" % "4.1.0-M1"
     )
   )
 

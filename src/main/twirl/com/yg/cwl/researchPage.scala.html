@@ -1,0 +1,61 @@
+@()(implicit request: javax.servlet.http.HttpServletRequest)
+
+@import org.scalatra.forms.views._
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <h3>Doc Lab</h3>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Anchors</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Content</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">MultiBus</button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="table-responsive">
+                <form method="post" action="/admin/config/seed/list/validate">
+
+                    <div class="mb-3">
+                        <label for="urlPattern" class="form-label">URL Pattern</label>
+                            <!-- <input type="text" class="form-control" id="urlPattern"> -->
+
+                        <div class="col-sm-10">
+                            @Html(text("urlPattern", "class" -> "form-control"))
+                            <span class="error">@error("title")</span>
+                        </div>
+                        <div id="emailHelp" class="form-text">
+                            ex) https://finance.naver.com/news/news_list.nhn?mode=LSS3D&amp;section_id=101&amp;section_id2=258&amp;section_id3=402
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="listUrlPattern" class="form-label">List.UrlPatternFilter</label>
+                            <!-- <input type="text" class="form-control" id="listUrlPattern"> -->
+                        @Html(text("listUrlPattern", "class" -> "form-control"))
+                        <div id="emailHelp" class="form-text">
+                            ex) ^(https:\/\/finance.naver.com\/news\/news_read.nhn\?article_id=).*$
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="listTopAreaFilter" class="form-label">List.TopAreaFilter</label>
+                            <!-- <input type="text" class="form-control" id="listTopAreaFilter"> -->
+                        @Html(text("listTopAreaFilter", "class" -> "form-control"))
+                        <div id="emailHelp" class="form-text">
+                            ex) ul.realtimeNewsList
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Validate</button>
+                </form>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">TBD</div>
+        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">Nil</div>
+    </div>
+</main>
