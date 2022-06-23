@@ -1,6 +1,52 @@
 @()(implicit request: javax.servlet.http.HttpServletRequest)
-
 @import org.scalatra.forms.views._
+
+<script>
+    function crawlList() {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/core/crawl/list');
+        xhr.setRequestHeader('content-type', 'application/json');
+
+        let reqBody = JSON.stringify({
+            targetSeedUrl: 'https://news.naver.com/main/list.naver?mode=LS2D&sid2=263&sid1=101&mid=sec&listType=title&date=20220621&page=1',
+            filterCrawlUrlRxPattern: '^(https://n.news.naver.com/mnews/).*$',
+            filterDomGroupAttr: 'ul.type02'
+        });
+        console.log('send json ->' + reqBody);
+        xhr.send(reqBody);
+
+        xhr.onload = () => {
+            if (xhr.status === 200 || xhr.status === 201) {
+                let table = document.getElementById("cralwedResult") ;
+                let jsRes = JSON.parse(xhr.response) ;
+                console.log('jsRes -> ' + jsRes.lstCrawls.length)
+
+                let lstCu = jsRes.lstCrawls
+                for(let i=0; i< lstCu.length; i++) {
+                    console.log(lstCu[i].url + ":" + lstCu[i].anchorText)
+                    let tr = document.createElement("tr") ;
+
+                    let td1 = document.createElement("td") ;
+                    td1.appendChild(document.createTextNode(lstCu[i].anchorText));
+
+                    let td2 = document.createElement("td") ;
+                    td2.appendChild(document.createTextNode(lstCu[i].url));
+
+                    tr.appendChild(document.createTextNode(''+ i)) ;
+                    tr.appendChild(td1) ;
+                    tr.appendChild(td2) ;
+
+                    table.appendChild(tr);
+                }
+                //document.querySelector('pre').textContent = xhr.response;
+            } else {
+                console.error('Error', xhr.status, xhr.statusText);
+            }
+        };
+    }
+</script>
+
+
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <h3>Doc Lab</h3>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -18,7 +64,7 @@
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="table-responsive">
-                <form method="post" action="/admin/config/seed/list/validate">
+                <!-- <form method="post" action="/admin/config/seed/list/validate"> -->
 
                     <div class="mb-3">
                         <label for="urlPattern" class="form-label">URL Pattern</label>
@@ -51,11 +97,16 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Validate</button>
-                </form>
+                    <button type="submit" class="btn btn-primary" onclick="crawlList()">Validate</button>
+                <!-- </form> -->
+                <table border='2' id="cralwedResult" >
+                </table>
             </div>
+
         </div>
         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">TBD</div>
         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">Nil</div>
     </div>
+    <pre></pre>
+
 </main>
