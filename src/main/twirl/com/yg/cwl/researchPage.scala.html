@@ -7,10 +7,16 @@
         xhr.open('POST', '/core/crawl/list');
         xhr.setRequestHeader('content-type', 'application/json');
 
+        let targetUrl = document.getElementById('urlPattern').value;
+        let listUrlPattern = document.getElementById('listUrlPattern').value;
+        let areaFilter = document.getElementById('listTopAreaFilter').value;
+
+        console.log(targetUrl + ' | ' + listUrlPattern + ' | ' + areaFilter) ;
+
         let reqBody = JSON.stringify({
-            targetSeedUrl: 'https://news.naver.com/main/list.naver?mode=LS2D&sid2=263&sid1=101&mid=sec&listType=title&date=20220621&page=1',
-            filterCrawlUrlRxPattern: '^(https://n.news.naver.com/mnews/).*$',
-            filterDomGroupAttr: 'ul.type02'
+            targetSeedUrl: targetUrl,
+            filterCrawlUrlRxPattern: listUrlPattern,
+            filterDomGroupAttr: areaFilter
         });
         console.log('send json ->' + reqBody);
         xhr.send(reqBody);
@@ -71,29 +77,29 @@
                             <!-- <input type="text" class="form-control" id="urlPattern"> -->
 
                         <div class="col-sm-10">
-                            @Html(text("urlPattern", "class" -> "form-control"))
+                            @Html(text("urlPattern", "class" -> "form-control", "id" -> "urlPattern"))
                             <span class="error">@error("title")</span>
                         </div>
                         <div id="emailHelp" class="form-text">
-                            ex) https://finance.naver.com/news/news_list.nhn?mode=LSS3D&amp;section_id=101&amp;section_id2=258&amp;section_id3=402
+                            ex) https://news.naver.com/main/list.naver?mode=LS2D&sid2=263&sid1=101&mid=sec&listType=title&date=20220621&page=1
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <label for="listUrlPattern" class="form-label">List.UrlPatternFilter</label>
                             <!-- <input type="text" class="form-control" id="listUrlPattern"> -->
-                        @Html(text("listUrlPattern", "class" -> "form-control"))
+                        @Html(text("listUrlPattern", "class" -> "form-control", "id" -> "listUrlPattern"))
                         <div id="emailHelp" class="form-text">
-                            ex) ^(https:\/\/finance.naver.com\/news\/news_read.nhn\?article_id=).*$
+                            ex) ^(https://n.news.naver.com/mnews/).*$
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <label for="listTopAreaFilter" class="form-label">List.TopAreaFilter</label>
                             <!-- <input type="text" class="form-control" id="listTopAreaFilter"> -->
-                        @Html(text("listTopAreaFilter", "class" -> "form-control"))
+                        @Html(text("listTopAreaFilter", "class" -> "form-control", "id" -> "listTopAreaFilter"))
                         <div id="emailHelp" class="form-text">
-                            ex) ul.realtimeNewsList
+                            ex) ul.type02
                         </div>
                     </div>
 
