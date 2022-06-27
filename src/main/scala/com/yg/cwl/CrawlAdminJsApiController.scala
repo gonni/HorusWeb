@@ -20,4 +20,11 @@ class CrawlAdminJsApiController extends ScalatraServlet with JacksonJsonSupport 
     CrawlCoreClient.crawlListUrl(req)
   }
 
+  //TODO need to fix
+  post("/crawl/content") {
+    val req = parsedBody.extract[CrawlPageWrapOption]
+    logger.info(s"req: ${req}")
+    CrawlCoreClient.crawlListUrl(req)
+  }
+
 }
