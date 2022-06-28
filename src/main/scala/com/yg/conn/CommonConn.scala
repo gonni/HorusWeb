@@ -16,10 +16,7 @@ object CommonConn {
   def writeData(url: String, bodyData: String): String = {
     val request = HttpRequest(
       method = HttpMethods.POST,
-      //      uri = RuntimeConfig().getString("cpa_admin.cpa_api_write_url"),
-      //      uri = "http://localhost:8086/write?db=mydb",
       uri = url,
-//      headers = List(headers.`Content-Type`.apply(ContentTypes.`application/json`)),
       entity = HttpEntity(ContentTypes.`application/json`, bodyData)
     )
 

@@ -66,15 +66,62 @@
         let reqBody = JSON.stringify({
             targetUrl: _targetUrl,
             docTitle: _docTitle,
-            docDatetime: _docDatetime
-            contentGrp:
+            docDatetime: _docDatetime,
+            contentGrp: _contentGrp
         });
         console.log('send json ->' + reqBody);
         xhr.send(reqBody);
 
         xhr.onload = () => {
+            console.log('result -> ' + xhr.status) ;
             if (xhr.status === 200 || xhr.status === 201) {
-                console.log('response -> ' + xhr.response)
+                let table = document.getElementById("cralwedContentResult") ;
+                let jsContRes = JSON.parse(xhr.response) ;
+
+                if(jsContRes != null && jsContRes.status != 500) {
+                    let tr1 = document.createElement("tr") ;
+                    let td1 = document.createElement("td") ;
+                    td1.appendChild(document.createTextNode("Target URL")) ;
+                    tr1.appendChild(td1);
+                    let td2 = document.createElement("td") ;
+                    td2.appendChild(document.createTextNode(_targetUrl)) ;
+                    tr1.appendChild(td2);
+                    table.appendChild(tr1);
+
+                    let tr2 = document.createElement("tr") ;
+                    td1 = document.createElement("td") ;
+                    td1.appendChild(document.createTextNode("Doc Title")) ;
+                    tr2.appendChild(td1);
+                    td2 = document.createElement("td") ;
+                    td2.appendChild(document.createTextNode(jsContRes.titleOnContent)) ;
+                    tr2.appendChild(td2);
+                    table.appendChild(tr2);
+
+                    let tr3 = document.createElement("tr") ;
+                    td1 = document.createElement("td") ;
+                    td1.appendChild(document.createTextNode("Doc Datetime")) ;
+                    tr3.appendChild(td1);
+                    td2 = document.createElement("td") ;
+                    td2.appendChild(document.createTextNode(jsContRes.dateOnContent)) ;
+                    tr3.appendChild(td2);
+                    table.appendChild(tr3);
+
+                    let tr4 = document.createElement("tr") ;
+                    td1 = document.createElement("td") ;
+                    td1.appendChild(document.createTextNode("Content Group")) ;
+                    tr4.appendChild(td1);
+                    td2 = document.createElement("td") ;
+                    td2.appendChild(document.createTextNode(jsContRes.content)) ;
+                    tr4.appendChild(td2);
+                    table.appendChild(tr4);
+
+                } else {
+                    let tr = document.createElement("tr") ;
+                    let td = document.createElement("td") ;
+                    td.appendChild(document.createTextNode("Invalid Wrappper ..")) ;
+                    tr.appendChild(td);
+                    table.appendChild(tr);
+                }
             }
         };
     }
