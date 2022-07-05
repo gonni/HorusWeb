@@ -74,7 +74,7 @@
 
         xhr.onload = () => {
             console.log('result -> ' + xhr.status) ;
-            if (xhr.status === 200 || xhr.status === 201) {
+            if (xhr.status == 200 || xhr.status == 201) {
                 let table = document.getElementById("cralwedContentResult") ;
                 let jsContRes = JSON.parse(xhr.response) ;
 
