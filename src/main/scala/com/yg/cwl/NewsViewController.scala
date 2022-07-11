@@ -17,8 +17,12 @@ trait NewsViewProcessing extends ScalatraServlet
   get("/hot") {
     val seedNo = params("seedNo").toInt
     logger.info("Request Hot-News {}", seedNo)
-    db.run(DbHorusCrawled.findAll(seedNo)) map {xs =>
-      println(xs)
+    db.run(DbHorusCrawled.findAll2.result) map {xs =>
+      xs map {
+        row => {
+          println("row " + row)
+        }
+      }
     }
 
     val newsPage =com.yg.report.html.news.render()
