@@ -51,4 +51,8 @@ object DbHorus {
       ci <- crawlSeeds
     } yield (ci.seedNo, ci.urlPattern, ci.title, ci.status)
   }
+
+
+
+
 }
