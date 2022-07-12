@@ -1,7 +1,28 @@
-@()
+@import com.yg.data.DbHorusCrawled.CrawlUnit
+@(crawlUnits : Seq[CrawlUnit])
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-    <div>
-    Hella, This is news page template !
+    <br>
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">CrawlNo</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">regDate</th>
+                    <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(crawlUnit <- crawlUnits) {
+                    <tr>
+                        <td>@crawlUnit.crawlNo</td>
+                        <td><a href="@crawlUnit.url"> @crawlUnit.anchorText</a></td>
+                        <td>@crawlUnit.regDate</td>
+                        <td>@crawlUnit.status</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </main>

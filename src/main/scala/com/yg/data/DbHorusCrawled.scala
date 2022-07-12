@@ -43,8 +43,10 @@ object DbHorusCrawled {
   val createSchemaAction = (crawlUnitsQuery.schema).create
 
   def findAll(seedNo: Long) = crawlUnitsQuery.filter(_.seedNo === seedNo)
+    .sortBy(_.crawlNo.desc)
     .drop(0)
     .take(20)
+
 
   val findAll2 = {
     for{

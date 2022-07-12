@@ -9,7 +9,8 @@ import org.slf4j.LoggerFactory
 import org.scalatra.i18n.I18nSupport
 import slick.jdbc.MySQLProfile.api._
 
-import scala.concurrent.Future
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
 
 trait NewsViewProcessing extends ScalatraServlet
   with FormSupport with I18nSupport with FutureSupport {
@@ -20,35 +21,18 @@ trait NewsViewProcessing extends ScalatraServlet
   get("/hot") {
     val seedNo = params("seedNo").toInt
     logger.info(" -> Request Hot-News {}", seedNo)
-//    db.run(DbHorusCrawled.findAll(9).map(row => (row.url, row.anchorText)).result) map {
-//      rows => {
-//        rows map {
-//          row => println(row)
+
+    val res : Future[Seq[CrawlUnit]] = db.run[Seq[CrawlUnit]](DbHorusCrawled.findAll(seedNo).result)
+//    res.foreach(a => {
+//      a map {
+//        ab => {
+//          println("===>" + ab)
 //        }
 //      }
-//    }
+//    })
+    val syncRes = Await.result(res, Duration.Inf)
 
-//    db.run(DbHorusCrawled.findAll2.result).map {rows => {
-//      rows.map(println)
-//    }}
-
-//    println("-----")
-
-//    db.run(DbHorusCrawled.findAll3(9L).result).map(
-//      println
-//    )
-
-    val res : Future[Seq[CrawlUnit]] = db.run[Seq[CrawlUnit]](DbHorusCrawled.findAll(9).result)
-    res.foreach(a => {
-      a map {
-        ab => {
-          println("===>" + ab)
-        }
-      }
-    })
-
-
-    val newsPage =com.yg.report.html.news.render()
+    val newsPage =com.yg.report.html.news.render(syncRes)
     layouts.html.dashboard.render("News", newsPage)
   }
 }
