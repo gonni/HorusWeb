@@ -148,37 +148,38 @@
             <div class="table-responsive">
                 <!-- <form method="post" action="/admin/config/seed/list/validate"> -->
 
-                    <div class="mb-3">
-                        <label for="urlPattern" class="form-label">URL Pattern</label>
-                            <!-- <input type="text" class="form-control" id="urlPattern"> -->
+                <div class="mb-3">
+                    <label for="urlPattern" class="form-label">URL Pattern</label>
+                        <!-- <input type="text" class="form-control" id="urlPattern"> -->
 
-                        <div class="col-sm-10">
-                            @Html(text("urlPattern", "class" -> "form-control", "id" -> "urlPattern"))
-                        </div>
-                        <div id="emailHelp" class="form-text">
-                            ex) https://news.naver.com/main/list.naver?mode=LS2D&sid2=263&sid1=101&mid=sec&listType=title&date=20220621&page=1
-                        </div>
+                    <div class="col-sm-10">
+                        @Html(text("urlPattern", "class" -> "form-control", "id" -> "urlPattern"))
                     </div>
-
-                    <div class="mb-3">
-                        <label for="listUrlPattern" class="form-label">List.UrlPatternFilter</label>
-                            <!-- <input type="text" class="form-control" id="listUrlPattern"> -->
-                        @Html(text("listUrlPattern", "class" -> "form-control", "id" -> "listUrlPattern"))
-                        <div id="emailHelp" class="form-text">
-                            ex) ^(https://n.news.naver.com/mnews/).*$
-                        </div>
+                    <div id="emailHelp" class="form-text">
+                        ex) https://news.naver.com/main/list.naver?mode=LS2D&sid2=263&sid1=101&mid=sec&listType=title&date=20220621&page=1
                     </div>
+                </div>
 
-                    <div class="mb-3">
-                        <label for="listTopAreaFilter" class="form-label">List.TopAreaFilter</label>
-                            <!-- <input type="text" class="form-control" id="listTopAreaFilter"> -->
-                        @Html(text("listTopAreaFilter", "class" -> "form-control", "id" -> "listTopAreaFilter"))
-                        <div id="emailHelp" class="form-text">
-                            ex) ul.type02
-                        </div>
+                <div class="mb-3">
+                    <label for="listUrlPattern" class="form-label">List.UrlPatternFilter</label>
+                        <!-- <input type="text" class="form-control" id="listUrlPattern"> -->
+                    @Html(text("listUrlPattern", "class" -> "form-control", "id" -> "listUrlPattern"))
+                    <div id="emailHelp" class="form-text">
+                        ex) ^(https://n.news.naver.com/mnews/).*$
                     </div>
+                </div>
 
-                    <button type="submit" class="btn btn-primary" onclick="crawlList()">Validate</button>
+                <div class="mb-3">
+                    <label for="listTopAreaFilter" class="form-label">List.TopAreaFilter</label>
+                        <!-- <input type="text" class="form-control" id="listTopAreaFilter"> -->
+                    @Html(text("listTopAreaFilter", "class" -> "form-control", "id" -> "listTopAreaFilter"))
+                    <div id="emailHelp" class="form-text">
+                        ex) ul.type02
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" onclick="crawlList()">Validate</button>
+                <button type="submit" class="btn btn-primary" onclick="crawlList()">Save</button>
                 <!-- </form> -->
                 <table border='2' id="cralwedResult" >
                 </table>

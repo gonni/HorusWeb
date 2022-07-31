@@ -1,6 +1,7 @@
 package com.yg.cwl
 
 import com.yg.conn.{CrawlContentWrapOption, CrawlCoreClient, CrawlListWrapOption}
+import com.yg.data.{CrawlContentWrapOption, CrawlListWrapOption}
 import org.scalatra._
 import org.json4s.{DefaultFormats, Formats}
 import org.scalatra.json._
@@ -27,4 +28,34 @@ class CrawlAdminJsApiController extends ScalatraServlet with JacksonJsonSupport 
     CrawlCoreClient.crawlContentPage(req)
   }
 
+  // Config
+  post("/crawl/list/conf/save") {
+    val req = parsedBody.extract[CrawlListWrapOption]
+    logger.info(s"req: ${req}")
+
+
+
+  }
+
+  post("/crawl/content/conf/save") {
+    val req = parsedBody.extract[CrawlContentWrapOption]
+    logger.info(s"req: ${req}")
+
+
+    ;
+  }
+
+  // Job Control
+  get("/crawl/rt/schedule") {
+    val seedNo = params("seedNo").toInt
+    logger.info(s"request with {}", seedNo)
+    CrawlCoreClient.startCrawlJob(seedNo)
+//    "recv seedNo = " + seedNo
+  }
+
+  get("/crawl/rt/schedule/stop") {
+    val seedNo = params("seedNo").toInt
+    logger.info(s"request with {}", seedNo)
+    CrawlCoreClient.stopCrawlJob(seedNo)
+  }
 }

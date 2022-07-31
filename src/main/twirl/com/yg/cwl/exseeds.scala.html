@@ -1,0 +1,82 @@
+@import com.yg.data.CrawlSeed
+@import scala.collection.mutable.ArrayBuffer
+@import com.yg.data.CrawlSeedWithJob
+@(crawlSeeds: ArrayBuffer[CrawlSeedWithJob])
+
+<script>
+    function startCrawlJob(seedId) {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", '/core/crawl/rt/schedule?seedNo=' + seedId);
+
+        xhr.onload = () => {
+            if (xhr.status === 200 || xhr.status === 201) {
+                let resMsg = xhr.response
+                console.log('response msg :' + resMsg)
+                document.getElementById('runCtrl_' + seedId).textContent = resMsg;
+
+            } else {
+                document.getElementById('runCtrl_' + seedId).textContent = 'FAILED';
+            }
+        }
+
+        xhr.send();
+    }
+
+    function stopCrawlJob(seedId) {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", '/core/crawl/rt/schedule/stop?seedNo=' + seedId);
+
+        xhr.onload = () => {
+            if (xhr.status === 200 || xhr.status === 201) {
+                let resMsg = xhr.response
+                console.log('response msg :' + resMsg)
+                document.getElementById('runCtrl_' + seedId).textContent = resMsg;
+
+            } else {
+                document.getElementById('runCtrl_' + seedId).textContent = 'FAILED';
+            }
+        }
+
+        xhr.send();
+    }
+
+</script>
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <!-- <h2>Crawl Seeds</h2> -->
+    <br>
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">UrlPattern</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Control</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @for(crawlSeed <- crawlSeeds) {
+                    <tr>
+                        <td>@crawlSeed.seedNo</td>
+                        <td>@crawlSeed.title</td>
+                        <td>@crawlSeed.urlPattern</td>
+                        <td>@crawlSeed.status</td>
+                        @if(crawlSeed.crawlJobStatus.length > 0) {
+                            <td><a href="#" id="runCtrl_@crawlSeed.seedNo" onclick="stopCrawlJob(@crawlSeed.seedNo)">
+                                Stop</a></td>
+                        } else {
+                            <td><a href="#" id="runCtrl_@crawlSeed.seedNo" onclick="startCrawlJob(@crawlSeed.seedNo)">
+                                Start</a></td>
+                        }
+                    </tr>
+                    <tr>
+                        <td colspan="4">@crawlSeed.crawlJobStatus.mkString(", ")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</main>

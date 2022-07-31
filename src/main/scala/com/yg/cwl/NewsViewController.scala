@@ -23,13 +23,6 @@ trait NewsViewProcessing extends ScalatraServlet
     logger.info(" -> Request Hot-News {}", seedNo)
 
     val res : Future[Seq[CrawlUnit]] = db.run[Seq[CrawlUnit]](DbHorusCrawled.findAll(seedNo).result)
-//    res.foreach(a => {
-//      a map {
-//        ab => {
-//          println("===>" + ab)
-//        }
-//      }
-//    })
     val syncRes = Await.result(res, Duration.Inf)
 
     val newsPage =com.yg.report.html.news.render(syncRes)

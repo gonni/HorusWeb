@@ -1,6 +1,7 @@
 package com.yg.cwl
 
-import com.yg.data.{CrawlSeed, DbHorus, HorusSlick}
+import com.yg.conn.CrawlCoreClient
+import com.yg.data.{CrawlSeed, CrawlSeedWithJob, DbHorus, HorusSlick}
 import org.scalatra._
 import org.slf4j.LoggerFactory
 import play.twirl.api.Html
@@ -16,7 +17,6 @@ import scala.concurrent.duration.Duration
 trait CrawlAdminViewProcessing extends ScalatraServlet
   with FormSupport with I18nSupport with FutureSupport{
   val logger = LoggerFactory.getLogger(getClass)
-
   def db: Database
 
   get("/seeds") {
@@ -32,6 +32,31 @@ trait CrawlAdminViewProcessing extends ScalatraServlet
         layouts.html.dashboard.render("Seeds", com.yg.cwl.html.seeds.render(lss))
     }
   }
+
+
+
+  get("/exseeds") {
+    logger.info("Request eXseeds by Admin ..")
+
+    val jobInfo = CrawlCoreClient.crawlJobStatus(21)
+    def getJobStatus(seedNo : Int) = {
+      jobInfo.filter(_.seedNo == seedNo)
+    }
+
+    val lss = ArrayBuffer[CrawlSeedWithJob]()
+    db.run(DbHorus.findAllFromCrawlSeeds.result) map {
+      xs => xs map {
+        case(a, b, c, d) => {
+          val jobs = getJobStatus(a)
+          lss += CrawlSeedWithJob(a, b, c, d, jobs)
+        }
+      }
+        layouts.html.dashboard.render("Seeds", com.yg.cwl.html.exseeds.render(lss))
+    }
+
+  }
+
+
 
   get("/seed/new") {
     logger.info("Request create & manage new seed")
@@ -92,14 +117,6 @@ trait CrawlAdminViewProcessing extends ScalatraServlet
       },
       newSeedForm => {
         logger.info(s"detected success with ${newSeedForm}")
-
-//        val seedId = Await.result(
-//          db.run(HorusSlick.register(
-//            HorusSlick.CrawlSeed(None, newSeedForm.urlPattern, newSeedForm.crawlTitle, "TEST"),
-//            "a", "b").transactionally
-//          ),
-//          Duration.Inf
-//        )
 
         var params = List[(String, String)]()
         if(newSeedForm.listUrlPattern != null && newSeedForm.listUrlPattern.trim.length > 0)
