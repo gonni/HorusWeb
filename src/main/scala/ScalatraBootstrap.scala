@@ -7,7 +7,7 @@ import javax.servlet.ServletContext
 import com.mysql.jdbc._
 import com.yg.api._
 import com.yg.auth.AuthDemoController
-import com.yg.cwl.{CrawlAdminDataController, CrawlAdminJsApiController, CrawlAdminViewController, NewsViewController, ReportViewController}
+import com.yg.cwl.{CrawlAdminDataController, CrawlAdminJsApiController, CrawlAdminViewController, CrawlConfController, NewsViewController, ReportViewController}
 import com.yg.data.HorusCrawlData
 import com.yg.scentry._
 
@@ -34,6 +34,7 @@ class ScalatraBootstrap extends LifeCycle {
     context.mount(new HorusCrawlData(db), "/crawl/*")
     context.mount(new NewsViewController(db), "/news/*")
     context.mount(new CrawlAdminJsApiController, "/core/*")
+    context.mount(new CrawlConfController(db), "/conf/")
     context.mount(new CrawlAdminViewController(db), "/admin/crawl/*")
     context.mount(new CrawlAdminDataController, "/admin/config/*")
     context.mount(new ReportViewController(db), "/v/report")

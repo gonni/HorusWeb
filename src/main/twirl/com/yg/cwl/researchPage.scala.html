@@ -2,11 +2,80 @@
 @import org.scalatra.forms.views._
 
 <script>
+    function saveNewCrawlList() {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/conf/crawl/list/wrapper/save');
+        xhr.setRequestHeader('content-type', 'application/json');
+
+        let crawlName = document.getElementById('crawlName').value;
+        let targetUrl = document.getElementById('urlPattern').value;
+        let listUrlPattern = document.getElementById('listUrlPattern').value;
+        let areaFilter = document.getElementById('listTopAreaFilter').value;
+
+        console.log(crawlName + '|' + targetUrl + ' | ' + listUrlPattern + ' | ' + areaFilter) ;
+
+        let reqBody = JSON.stringify({
+            crawlName: crawlName,
+            targetSeedUrl: targetUrl,
+            filterCrawlUrlRxPattern: listUrlPattern,
+            filterDomGroupAttr: areaFilter
+        });
+
+        console.log('send json ->' + reqBody);
+        xhr.send(reqBody);
+
+        xhr.onload = () => {
+            if (xhr.status === 200 || xhr.status === 201) {
+                let jsRes = JSON.parse(xhr.response) ;
+                console.log('jsRes -> ' + jsRes)
+                document.getElementById("seedNo").value = jsRes.seedNo;
+            } else {
+                console.error('Error', xhr.status, xhr.statusText);
+            }
+        }
+
+    }
+
+    function saveNewContentWrapper() {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/conf/crawl/content/wrapper/save');
+        xhr.setRequestHeader('content-type', 'application/json');
+
+        let _seedNo = document.getElementById('seedNo').value
+        let _targetUrl = document.getElementById('targetUrl').value;
+        let _docTitle = document.getElementById('docTitle').value;
+        let _docDatetime = document.getElementById('docDatetime').value;
+        let _contentGrp = document.getElementById('contentGrp').value;
+
+        console.log(_targetUrl + ' | ' + _docTitle + ' | ' + _docDatetime + ' | ' + _contentGrp) ;
+
+        let reqBody = JSON.stringify({
+            seedNo: parseInt(_seedNo, 10),
+            targetUrl: _targetUrl,
+            docTitle: _docTitle,
+            docDatetime: _docDatetime,
+            contentGrp: _contentGrp
+        });
+        console.log('send json ->' + reqBody);
+        xhr.send(reqBody);
+
+        xhr.onload = () => {
+            console.log('result -> ' + xhr.status) ;
+            if (xhr.status == 200 || xhr.status == 201) {
+                let res = xhr.response ;
+                alert("Result :" + res)
+            } else {
+                log.info("Internal Error ..");
+            }
+        }
+    }
+
     function crawlList() {
         const xhr = new XMLHttpRequest();
         xhr.open('POST', '/core/crawl/list');
         xhr.setRequestHeader('content-type', 'application/json');
 
+        let crawlName = document.getElementById('crawlName').value;
         let targetUrl = document.getElementById('urlPattern').value;
         let listUrlPattern = document.getElementById('listUrlPattern').value;
         let areaFilter = document.getElementById('listTopAreaFilter').value;
@@ -149,6 +218,18 @@
                 <!-- <form method="post" action="/admin/config/seed/list/validate"> -->
 
                 <div class="mb-3">
+                    <label for="crawlName" class="form-label">Crawl Name</label>
+                        <!-- <input type="text" class="form-control" id="urlPattern"> -->
+
+                    <div class="col-sm-10">
+                    @Html(text("crawlName", "class" -> "form-control", "id" -> "crawlName"))
+                    </div>
+                    <div id="emailHelp" class="form-text">
+                        ex) 네이버뉴>속보>전체
+                    </div>
+                </div>
+
+                <div class="mb-3">
                     <label for="urlPattern" class="form-label">URL Pattern</label>
                         <!-- <input type="text" class="form-control" id="urlPattern"> -->
 
@@ -179,7 +260,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary" onclick="crawlList()">Validate</button>
-                <button type="submit" class="btn btn-primary" onclick="crawlList()">Save</button>
+                <button type="submit" class="btn btn-primary" onclick="saveNewCrawlList()">Save</button>
                 <!-- </form> -->
                 <table border='2' id="cralwedResult" >
                 </table>
@@ -190,6 +271,18 @@
         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             <div class="table-responsive">
                     <!-- <form method="post" action="/admin/config/seed/list/validate"> -->
+
+                <div class="mb-3">
+                    <label for="seedNo" class="form-label">SeedNo</label>
+                        <!-- <input type="text" class="form-control" id="urlPattern"> -->
+
+                    <div class="col-sm-10">
+                    @Html(text("seedNo", "class" -> "form-control", "id" -> "seedNo"))
+                    </div>
+                    <div class="form-text">
+                        ex) 13
+                    </div>
+                </div>
 
                 <div class="mb-3">
                     <label for="targetUrl" class="form-label">Content URL</label>
@@ -240,6 +333,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary" onclick="crawlContent()">Validate</button>
+                <button type="submit" class="btn btn-primary" onclick="saveNewContentWrapper()">Save</button>
 
                 <table border='2' id="cralwedContentResult" >
                 </table>

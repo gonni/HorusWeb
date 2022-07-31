@@ -8,7 +8,7 @@ import slick.lifted.ProvenShape
 
 
 object CrawlTables {
-  class CrawlSeeds(tag: Tag) extends Table[(Int, String, String, String)](tag, "CRAWL_SEEDS8") {
+  class CrawlSeeds(tag: Tag) extends Table[(Int, String, String, String)](tag, "CRAWL_SEEDS") {
     def seedNo = column[Int]("SEED_NO", O.PrimaryKey, O.AutoInc) // This is the primary key column
     def urlPattern = column[String]("URL_PATTERN")
     def title = column[String]("TITLE")
@@ -28,7 +28,7 @@ object CrawlTables {
                         status: String
                       )
 
-  class CrawlSeeds2(tag: Tag) extends Table[CrawlSeed](tag, "CRAWL_SEEDS8") {
+  class CrawlSeeds2(tag: Tag) extends Table[CrawlSeed](tag, "CRAWL_SEEDS") {
     def seedNo = column[Int]("SEED_NO", O.PrimaryKey, O.AutoInc) // This is the primary key column
     def urlPattern = column[String]("URL_PATTERN")
     def title = column[String]("TITLE")

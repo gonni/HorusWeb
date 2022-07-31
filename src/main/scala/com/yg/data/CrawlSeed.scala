@@ -11,7 +11,22 @@ case class CrawlListWrapOption(
                                 filterDomGroupAttr: String
                               )
 
+case class CrawlListWrapOptionConf(
+                                  crawlName: String,
+                                targetSeedUrl: String,
+                                filterCrawlUrlRxPattern: String,
+                                filterDomGroupAttr: String
+                              )
+
 case class CrawlContentWrapOption(
+                                   targetUrl: String,
+                                   docTitle: String,
+                                   docDatetime: String,
+                                   contentGrp: String
+                                 )
+
+case class CrawlContentWrapOptionConf(
+                                     seedNo: Int,
                                    targetUrl: String,
                                    docTitle: String,
                                    docDatetime: String,
