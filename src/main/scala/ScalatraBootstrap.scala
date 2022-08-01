@@ -7,8 +7,9 @@ import javax.servlet.ServletContext
 import com.mysql.jdbc._
 import com.yg.api._
 import com.yg.auth.AuthDemoController
-import com.yg.cwl.{CrawlAdminDataController, CrawlAdminJsApiController, CrawlAdminViewController, CrawlConfController, NewsViewController, ReportViewController}
+import com.yg.cwl.{CrawlAdminDataController, CrawlAdminJsApiController, CrawlAdminViewController, CrawlConfController, ReportViewController}
 import com.yg.data.HorusCrawlData
+import com.yg.news.NewsViewController
 import com.yg.scentry._
 
 //import slick.jdbc.H2Profile.api._

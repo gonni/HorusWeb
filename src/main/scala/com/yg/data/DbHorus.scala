@@ -3,6 +3,7 @@ package com.yg.data
 import slick.jdbc.MySQLProfile.api._
 import java.sql.Timestamp
 
+
 object DbHorus {
 //  class CrawlSeeds(tag: Tag) extends Table[(Int, String, String, String)](tag, "CRAWL_SEEDS") {
 //    def seedNo = column[Int]("SEED_NO", O.PrimaryKey, O.AutoInc) // This is the primary key column

@@ -1,12 +1,11 @@
-package com.yg.cwl
+package com.yg.news
 
-import com.yg.api.SlickRoutes
 import com.yg.data.DbHorusCrawled
 import com.yg.data.DbHorusCrawled.CrawlUnit
 import org.scalatra.forms.FormSupport
+import org.scalatra.i18n.I18nSupport
 import org.scalatra.{FutureSupport, ScalatraServlet}
 import org.slf4j.LoggerFactory
-import org.scalatra.i18n.I18nSupport
 import slick.jdbc.MySQLProfile.api._
 
 import scala.concurrent.duration.Duration
@@ -18,6 +17,7 @@ trait NewsViewProcessing extends ScalatraServlet
 
   def db: Database
 
+  // latest newslist list
   get("/hot") {
     val seedNo = params("seedNo").toInt
     logger.info(" -> Request Hot-News {}", seedNo)
@@ -25,9 +25,17 @@ trait NewsViewProcessing extends ScalatraServlet
     val res : Future[Seq[CrawlUnit]] = db.run[Seq[CrawlUnit]](DbHorusCrawled.findAll(seedNo).result)
     val syncRes = Await.result(res, Duration.Inf)
 
-    val newsPage =com.yg.report.html.news.render(syncRes)
+    val newsPage =com.yg.news.html.newslist.render(syncRes)
     layouts.html.dashboard.render("News", newsPage)
   }
+
+  // newslist details
+//  get("/details") {
+//    logger.info("")
+//    val newsPage = com.yg.news.html.newsview.render()
+//    layouts.html.dashboard.render("News Datail", newsPage)
+//  }
+
 }
 
 class NewsViewController(val db: Database) extends ScalatraServlet with FutureSupport with NewsViewProcessing {
