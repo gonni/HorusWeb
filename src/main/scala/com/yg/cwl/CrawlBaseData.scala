@@ -6,13 +6,13 @@ import slick.jdbc.MySQLProfile.api._
 
 object Tables {
   // Definition of the SUPPLIERS table
-  class CrawlUnit(tag: Tag) extends Table[(Int, String)](tag, "crawl_unit1") {
-    def id: Rep[Int] = column[Int]("CRAWL_NO", O.PrimaryKey)
-    def url = column[String]("SUP_NAME")
-
-
-    override def * = (id, url)
-  }
+//  class CrawlUnit(tag: Tag) extends Table[(Int, String)](tag, "crawl_unit1") {
+//    def id: Rep[Int] = column[Int]("CRAWL_NO", O.PrimaryKey)
+//    def url = column[String]("SUP_NAME")
+//
+//
+//    override def * = (id, url)
+//  }
 
 
   class Suppliers(tag: Tag) extends Table[(Int, String, String, String, String, String)](tag, "SUPPLIERS") {
