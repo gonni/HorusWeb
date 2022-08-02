@@ -1,5 +1,5 @@
 package com.yg.conn
 
-class NlpCoreClient {
-
+trait NlpCoreClient {
+  def getTopicScore(sentence: String) = {}
 }
