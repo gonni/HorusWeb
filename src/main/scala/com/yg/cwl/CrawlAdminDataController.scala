@@ -1,6 +1,5 @@
 package com.yg.cwl
 
-import com.yg.data.{CrawlSeed, DbHorus, HorusSlick}
 import org.scalatra._
 import org.slf4j.LoggerFactory
 import play.twirl.api.Html

@@ -1,7 +1,7 @@
 package com.yg.cwl
 
-import com.yg.data.DbHorus.{CrawlSeed, WrapperRule, crawlSeeds, insertNewSeed, insertNewSeedAndGetId, insertWrapperRule}
-import com.yg.data.{CrawlContentWrapOption, CrawlContentWrapOptionConf, CrawlListWrapOption, CrawlListWrapOptionConf, DbHorus}
+import com.yg.data.SeedWrapRepo.{CrawlSeed, WrapperRule, crawlSeeds, insertNewSeed, insertNewSeedAndGetId, insertWrapperRule}
+import com.yg.data.{CrawlContentWrapOption, CrawlContentWrapOptionConf, CrawlListWrapOption, CrawlListWrapOptionConf, SeedWrapRepo}
 import org.json4s.{DefaultFormats, Formats}
 import org.scalatra.{FutureSupport, ScalatraServlet}
 import org.scalatra.forms.FormSupport

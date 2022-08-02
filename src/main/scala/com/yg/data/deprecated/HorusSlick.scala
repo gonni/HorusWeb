@@ -1,4 +1,4 @@
-package com.yg.data
+package com.yg.data.deprecated
 
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.{Future, Await}
@@ -10,7 +10,6 @@ import slick.basic.DatabasePublisher
 import slick.jdbc.MySQLProfile.api._
 
 import java.sql.Date
-
 object HorusSlick {
 
   case class CrawlSeed(seedNo: Option[Int], urlPattern: String, title: String, status: String)
@@ -19,8 +18,11 @@ object HorusSlick {
     extends Table[(Int, String, String, String)](tag, "CRAWL_SEEDS") {
 
     def seedNo = column[Int]("SEED_NO", O.PrimaryKey, O.AutoInc) // This is the primary key column
+
     def urlPattern = column[String]("URL_PATTERN")
+
     def title = column[String]("TITLE")
+
     def status = column[String]("STATUS")
 
     // Every table needs a * projection with the same type as the table's type parameter
@@ -31,8 +33,11 @@ object HorusSlick {
     extends Table[CrawlSeed](tag, "CRAWL_SEEDS") {
 
     def seedNo = column[Option[Int]]("SEED_NO", O.PrimaryKey, O.AutoInc) // This is the primary key column
+
     def urlPattern = column[String]("URL_PATTERN")
+
     def title = column[String]("TITLE")
+
     def status = column[String]("STATUS")
 
     // Every table needs a * projection with the same type as the table's type parameter
@@ -44,10 +49,15 @@ object HorusSlick {
     extends Table[WrapperRule](tag, "WRAPPER_RULE") {
 
     def wrapperNo = column[Option[Int]]("WRAPPER_NO", O.PrimaryKey, O.AutoInc) // This is the primary key column
+
     def seedNo = column[Int]("SEED_NO")
+
     def wrapType = column[String]("WRAP_TYPE")
+
     def wrapVal = column[String]("WRAP_VAL")
+
     def wrapName = column[String]("WRAP_NAME")
+
     def regDt = column[Date]("REG_DT")
 
     // Every table needs a * projection with the same type as the table's type parameter
@@ -65,10 +75,15 @@ object HorusSlick {
     extends Table[(Option[Int], Int, String, String, String, Date)](tag, "WRAPPER_RULE") {
 
     def wrapperNo = column[Option[Int]]("WRAPPER_NO", O.PrimaryKey, O.AutoInc) // This is the primary key column
+
     def seedNo = column[Int]("SEED_NO")
+
     def wrapType = column[String]("WRAP_TYPE")
+
     def wrapVal = column[String]("WRAP_VAL")
+
     def wrapName = column[String]("WRAP_NAME")
+
     def regDt = column[Date]("REG_DT")
 
     // Every table needs a * projection with the same type as the table's type parameter
@@ -78,21 +93,11 @@ object HorusSlick {
   val tblCrawlSeeds = TableQuery[CrawlSeedsV2]
   val tblWrapperRules = TableQuery[WrapperRulesV2]
 
-  val a = (for{
+  val a = (for {
     isRes <- tblCrawlSeeds.map(c => (c.title, c.urlPattern, c.status)) += ("AA", "BB", "CC")
 
   } yield ()).transactionally
 
-//  val insertNewSeed = DBIO.seq(
-//
-//  )
-
-
-//  val newSeed = (tblCrawlSeeds returning tblCrawlSeeds.map(_.seedNo)) += CrawlSeed(None, urlPattern, title, "TS")
-
-//  def insertNewSeed = (crawlSeed: CrawlSeed) => {
-//    (tblCrawlSeeds returning tblCrawlSeeds.map(_.seedNo)) += crawlSeed
-//  }
   def insertNewSeed(crawlSeed: CrawlSeed) =
     (tblCrawlSeeds returning tblCrawlSeeds.map(_.seedNo)) += crawlSeed
 
@@ -112,18 +117,12 @@ object HorusSlick {
   def registerAll(crawlSeed: CrawlSeed, wrapperRules: List[(String, String)]) = {
     for {
       seedId <- insertNewSeed(crawlSeed)
-      _ <- insertWrapperRules(wrapperRules.map{case(k, v) => {
+      _ <- insertWrapperRules(wrapperRules.map { case (k, v) => {
         println(s"k:v = ${k} : ${v}");
-        WrapperRule(None, seedId.get, k, v, "Unknown", new Date(System.currentTimeMillis))}})
+        WrapperRule(None, seedId.get, k, v, "Unknown", new Date(System.currentTimeMillis))
+      }
+      })
     } yield seedId
   }
-
-//  val insertAllNewSeed = (title: String, urlPattern: String, rule: Map[String, String]) => {
-//    (for(
-//      seedNo <- ((tblCrawlSeeds returning tblCrawlSeeds.map(_.seedNo)) += CrawlSeed(None, urlPattern, title, "TS"))
-//      _ <- (tblWrapperRules.map(m => (m.wrapperNo, m.seedNo)) += (1, 2))
-//    ) yield())
-//
-//  }
 
 }

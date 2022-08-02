@@ -17,7 +17,7 @@ trait HorusRoute extends ScalatraBase with FutureSupport {
 
 //    var ls = new util.ArrayList[CrawlSeed]()
     var lss = ArrayBuffer[CrawlSeed]()
-    db.run(DbHorus.findAllFromCrawlSeeds.result) map {
+    db.run(SeedWrapRepo.findAllFromCrawlSeeds.result) map {
           xs => xs map {
             case(a, b, c, d) => {
 //              println("aaa")
@@ -36,7 +36,7 @@ trait HorusRoute extends ScalatraBase with FutureSupport {
 //    val paramMap = request.getParameterMap()
     logger.info(s"Need to Data Add to DB with ($title | $urlPattern | $status)")
 
-    db.run(DbHorus.insertNewSeed(title, urlPattern, status))
+    db.run(SeedWrapRepo.insertNewSeed(title, urlPattern, status))
     // need to wait
     redirect("/horus/seeds")
 //    s"Data($title | $urlPattern | $status) inserted at " + System.currentTimeMillis

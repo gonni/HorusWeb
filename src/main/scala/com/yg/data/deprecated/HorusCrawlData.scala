@@ -1,10 +1,9 @@
-package com.yg.data
+package com.yg.data.deprecated
 
 import org.scalatra.{FutureSupport, ScalatraBase, ScalatraServlet}
 import org.slf4j.LoggerFactory
 import slick.jdbc.MySQLProfile.api._
 import slick.lifted
-import slick.lifted.ProvenShape
 
 
 object CrawlTables {

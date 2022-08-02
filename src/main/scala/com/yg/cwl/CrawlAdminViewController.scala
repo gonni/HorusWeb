@@ -1,7 +1,8 @@
 package com.yg.cwl
 
 import com.yg.conn.CrawlCoreClient
-import com.yg.data.{CrawlSeed, CrawlSeedWithJob, DbHorus, HorusSlick}
+import com.yg.data.deprecated.HorusSlick
+import com.yg.data.{CrawlSeed, CrawlSeedWithJob, SeedWrapRepo}
 import org.scalatra._
 import org.slf4j.LoggerFactory
 import play.twirl.api.Html
@@ -23,7 +24,7 @@ trait CrawlAdminViewProcessing extends ScalatraServlet
     logger.info("Request seeds by Admin ..")
 
     var lss = ArrayBuffer[CrawlSeed]()
-    db.run(DbHorus.findAllFromCrawlSeeds.result) map {
+    db.run(SeedWrapRepo.findAllFromCrawlSeeds.result) map {
         xs => xs map {
           case(a, b, c, d) => {
             lss += CrawlSeed(a, b, c, d)
@@ -44,7 +45,7 @@ trait CrawlAdminViewProcessing extends ScalatraServlet
     }
 
     val lss = ArrayBuffer[CrawlSeedWithJob]()
-    db.run(DbHorus.findAllFromCrawlSeeds.result) map {
+    db.run(SeedWrapRepo.findAllFromCrawlSeeds.result) map {
       xs => xs map {
         case(a, b, c, d) => {
           val jobs = getJobStatus(a)

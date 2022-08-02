@@ -1,7 +1,7 @@
 package com.yg.news
 
-import com.yg.data.DbHorusCrawled
-import com.yg.data.DbHorusCrawled.CrawlUnit
+import com.yg.data.CrawledRepo
+import com.yg.data.CrawledRepo.CrawlUnit
 import org.scalatra.forms.FormSupport
 import org.scalatra.i18n.I18nSupport
 import org.scalatra.{FutureSupport, ScalatraServlet}
@@ -22,7 +22,7 @@ trait NewsViewProcessing extends ScalatraServlet
     val seedNo = params("seedNo").toInt
     logger.info(" -> Request Hot-News {}", seedNo)
 
-    val res : Future[Seq[CrawlUnit]] = db.run[Seq[CrawlUnit]](DbHorusCrawled.findAll(seedNo).result)
+    val res : Future[Seq[CrawlUnit]] = db.run[Seq[CrawlUnit]](CrawledRepo.findAll(seedNo).result)
     val syncRes = Await.result(res, Duration.Inf)
 
     val newsPage =com.yg.news.html.newslist.render(syncRes)

@@ -1,10 +1,12 @@
 package com.yg.data
 
+import com.yg.data.deprecated.CrawlTables
 import slick.jdbc.MySQLProfile.api._
+
 import java.sql.Timestamp
 
 
-object DbHorus {
+object SeedWrapRepo {
 //  class CrawlSeeds(tag: Tag) extends Table[(Int, String, String, String)](tag, "CRAWL_SEEDS") {
 //    def seedNo = column[Int]("SEED_NO", O.PrimaryKey, O.AutoInc) // This is the primary key column
 //    def urlPattern = column[String]("URL_PATTERN")

@@ -5,20 +5,20 @@ import slick.jdbc.MySQLProfile.api._
 import java.sql.Timestamp
 import java.time.LocalDateTime
 
-object DbHorusCrawled {
+object CrawledRepo {
   case class CrawlUnit(
-                        crawlNo: Long,
-                        url: Option[String],
-                        anchorText: Option[String],
-                        anchorImg: Option[String],
-                        status: Option[String],
-                        seedNo: Long,
-                        pageDate: Option[String],
-                        regDate: Option[Timestamp],
-                        updDate: Option[Timestamp],
-                        pageText: Option[String],
-                        pageTitle: Option[String],
-                        parsedPageDate: Option[Timestamp]
+                        crawlNo: Long = -1L,
+                        url: Option[String] = None,
+                        anchorText: Option[String] = None,
+                        anchorImg: Option[String] = None,
+                        status: Option[String] = None,
+                        seedNo: Long = -1L,
+                        pageDate: Option[String]= None,
+                        regDate: Option[Timestamp] = None,
+                        updDate: Option[Timestamp] = None,
+                        pageText: Option[String] = None,
+                        pageTitle: Option[String] = None,
+                        parsedPageDate: Option[Timestamp] = None
                       )
 
   class CrawlUnitTableSchema(tag: Tag) extends Table[CrawlUnit](tag, None,"CRAWL_UNIT1") {
@@ -47,12 +47,13 @@ object DbHorusCrawled {
     .drop(0)
     .take(20)
 
+  def getCrawledData(crawlNo: Long) = crawlUnitsQuery.filter(_.crawlNo === crawlNo)
 
-  val findAll2 = {
-    for{
-      cu <- crawlUnitsQuery.filter(_.seedNo === 9L)
-    } yield (cu.crawlNo, cu.url, cu.anchorText, cu.regDate)
-  }
+//  val findAll2 = {
+//    for{
+//      cu <- crawlUnitsQuery.filter(_.seedNo === 9L)
+//    } yield (cu.crawlNo, cu.url, cu.anchorText, cu.regDate)
+//  }
 
 
 }
