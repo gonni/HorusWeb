@@ -1,7 +1,8 @@
 package com.yg.news
 
-import com.yg.data.CrawledRepo
+import com.yg.data.{CrawledRepo, NewsRepo}
 import com.yg.data.CrawledRepo.CrawlUnit
+import com.yg.data.NewsRepo.NewsClick
 import org.scalatra.forms.FormSupport
 import org.scalatra.i18n.I18nSupport
 import org.scalatra.{FutureSupport, ScalatraServlet}
@@ -29,13 +30,22 @@ trait NewsViewProcessing extends ScalatraServlet
     layouts.html.dashboard.render("News", newsPage)
   }
 
-  // newslist details
-//  get("/details") {
-//    logger.info("")
-//    val newsPage = com.yg.news.html.newsview.render()
-//    layouts.html.dashboard.render("News Datail", newsPage)
-//  }
+  get("/pick") {
+    val clientIp = request.getRemoteAddr
+    logger.info(s"Requested recommended news ..${clientIp}")
 
+    val res : Future[Seq[CrawlUnit]] = db.run[Seq[CrawlUnit]](CrawledRepo.findAll(9).take(5).result)
+    val syncRes = Await.result(res, Duration.Inf)
+
+    syncRes.foreach(cu => {
+      db.run(NewsRepo.insertClickLog(Seq(NewsClick(userId = clientIp, pageCd = "ROPN", newsId = cu.crawlNo.toInt))))
+    })
+
+//    db.run(NewsRepo.insertClickLog(Seq(NewsClick(userId = clientIp, pageCd = "RCLK", newsId = newsId))))
+
+    val newsPage =com.yg.news.html.recoNews.render(syncRes)
+    layouts.html.dashboard.render("Pick 5", newsPage)
+  }
 }
 
 class NewsViewController(val db: Database) extends ScalatraServlet with FutureSupport with NewsViewProcessing {

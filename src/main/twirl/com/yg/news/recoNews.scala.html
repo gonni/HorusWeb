@@ -1,0 +1,86 @@
+@import com.yg.data.CrawledRepo.CrawlUnit
+@(crawlUnits : Seq[CrawlUnit])
+
+<script>
+function getNewsDetails(crawlNo) {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", '/news/api/news/pick/details?newsId=' + crawlNo)
+
+    xhr.onload = () => {
+        if(xhr.status === 200 || xhr.status === 201) {
+            let msg = xhr.response
+            console.log('response -> ' + msg)
+            let jsRes = JSON.parse(msg)
+
+            document.getElementById('newsModalTitle').innerText = jsRes.anchorText
+            document.getElementById('modalNewsBody').innerText = jsRes.pageText
+            document.getElementById('pageDate').innerText = jsRes.pageDate
+            document.getElementById('originLink').innerHTML =
+                    '<a href="' + jsRes.url + '" target="blank">' + jsRes.url + '</a>'
+        }
+    }
+
+    xhr.send()
+}
+</script>
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <br>
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">CrawlNo</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">regDate</th>
+                    <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(crawlUnit <- crawlUnits) {
+                    <tr>
+                        <td>@crawlUnit.crawlNo</td>
+                            <!-- <td><a href="@crawlUnit.url"> @crawlUnit.anchorText</a></td> -->
+                        <td><a onclick="getNewsDetails(@crawlUnit.crawlNo)"
+                        data-bs-toggle="modal" data-bs-target="#exampleModal"> @crawlUnit.anchorText</a></td>
+                        <td>@crawlUnit.regDate</td>
+                        <td>@crawlUnit.status</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</main>
+
+    <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newsModalTitle">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="card">
+                <div class="card-body" id="pageDate">
+                    NA
+                </div>
+            </div>
+
+            <div class="modal-body" id="modalNewsBody" >
+                Nil ..
+            </div>
+
+            <div class="card">
+                <div class="card-body" id="originLink">
+                    NA
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+            </div>
+        </div>
+    </div>
+</div>

@@ -26,13 +26,27 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
   get("/news/details") {
     val clientIp = request.getRemoteAddr
     val newsId = params("newsId").toInt
-    logger.info("Detected API NewsDetails: {} from {}", newsId, clientIp)
+    logger.info(s"Detected API NewsDetails: ${newsId} from ${clientIp}")
     val dbRes = db.run(CrawledRepo.getCrawledData(newsId).result)
     val newsData = Await.result(dbRes, Duration.Inf).headOption
-    logger.info("NewsData : {}", newsData)
+    logger.info(s"NewsData : {}", newsData)
 
     //TODO need to impl db.run in transaction
     db.run(NewsRepo.insertClickLog(Seq(NewsClick(userId = clientIp, newsId = newsId))))
+
+    newsData.getOrElse(CrawlUnit(crawlNo = newsId, status = Option("NotExist") ))
+  }
+
+  get("/news/pick/details") {
+    val clientIp = request.getRemoteAddr
+    val newsId = params("newsId").toInt
+    logger.info(s"Detected API NewsDetails: ${newsId} from ${clientIp}")
+    val dbRes = db.run(CrawledRepo.getCrawledData(newsId).result)
+    val newsData = Await.result(dbRes, Duration.Inf).headOption
+    logger.info(s"NewsData : {}", newsData)
+
+    //TODO need to impl db.run in transaction
+    db.run(NewsRepo.insertClickLog(Seq(NewsClick(userId = clientIp, pageCd = "RCLK", newsId = newsId))))
 
     newsData.getOrElse(CrawlUnit(crawlNo = newsId, status = Option("NotExist") ))
   }
@@ -42,11 +56,17 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
     val newsId = params("newsId").toInt
     val news: CrawlUnit = getNewsData(newsId, clientIp)
 
+    def getTopicScores(sentence: Option[String]): List[TopicScore] = {
+      val topicResult = NlpCoreClient.getTopicScoreJs(sentence.getOrElse("NULL_INPUT"))
+      topicResult.termScores.filter(_.score > 0.0).sortWith(_.score > _.score)
+    }
+
+    AnalyzedNews(news, getTopicScores(news.anchorText), getTopicScores(news.pageText).filter(_.score > 2.3))
   }
 
   case class AnalyzedNews(newsData: CrawlUnit,
-                          anchorTopicScore : List[String],
-                          contentTopicScore: List[String])
+                          anchorTopicScore : List[TopicScore],
+                          contentTopicScore: List[TopicScore])
 
   def getNewsData(newsId: Int, clientIp: String) = {
     logger.info("Detected API NewsDetails: {} from {}", newsId, clientIp)
@@ -60,12 +80,8 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
     newsData.getOrElse(CrawlUnit(crawlNo = newsId, status = Option("NotExist") ))
   }
 
-  get("/api/news/click") {
-
-  }
-
-
-
+//  get("/api/news/click") {
+//  }
 
 }
 

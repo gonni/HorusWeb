@@ -23,6 +23,47 @@
         xhr.send()
     }
 
+    function getNewsDetailsWithAnalysis(crawlNo) {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", '/news/api/news/analysis?newsId=' + crawlNo)
+
+        xhr.onload = () => {
+            if(xhr.status === 200 || xhr.status === 201) {
+                let msg = xhr.response
+                console.log('response -> ' + msg)
+                let jsRes = JSON.parse(msg)
+
+                let newsData = jsRes.newsData
+                document.getElementById('newsModalTitle').innerText = newsData.anchorText
+                document.getElementById('modalNewsBody').innerText = newsData.pageText
+                document.getElementById('pageDate').innerText = newsData.pageDate
+                document.getElementById('originLink').innerHTML =
+                        '<a href="' + newsData.url + '" target="blank">' + newsData.url + '</a>'
+
+                let lstAnchorTopicScore = jsRes.anchorTopicScore
+
+                console.log('lst->' + lstAnchorTopicScore)
+                let strTopicHtml = ''
+                for(ts in lstAnchorTopicScore) {
+                    strTopicHtml += lstAnchorTopicScore[ts].topic + '<span class="badge bg-primary">'
+                            + (lstAnchorTopicScore[ts].score).toFixed(2) + '</span> '
+                }
+                document.getElementById('titleTopicScore').innerHTML = strTopicHtml
+
+                let lstContTopicScore = jsRes.contentTopicScore
+                let strContHtml = ''
+                for(ts in lstContTopicScore) {
+                    strContHtml += lstContTopicScore[ts].topic + '<span class="badge bg-warning">'
+                            + (lstContTopicScore[ts].score).toFixed(2) + '</span> '
+                }
+
+                document.getElementById('contTopicScore').innerHTML = strContHtml
+            }
+        }
+
+        xhr.send()
+    }
+
 </script>
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
@@ -42,7 +83,7 @@
                     <tr>
                         <td>@crawlUnit.crawlNo</td>
                         <!-- <td><a href="@crawlUnit.url"> @crawlUnit.anchorText</a></td> -->
-                        <td><a onclick="getNewsDetails(@crawlUnit.crawlNo)"
+                        <td><a onclick="getNewsDetailsWithAnalysis(@crawlUnit.crawlNo)"
                             data-bs-toggle="modal" data-bs-target="#exampleModal"> @crawlUnit.anchorText</a></td>
                         <td>@crawlUnit.regDate</td>
                         <td>@crawlUnit.status</td>
@@ -63,6 +104,12 @@
             </div>
 
             <div class="card">
+                <div class="card-body" id="titleTopicScore">
+                    NA
+                </div>
+            </div>
+
+            <div class="card">
                 <div class="card-body" id="pageDate">
                     NA
                 </div>
@@ -70,6 +117,12 @@
 
             <div class="modal-body" id="modalNewsBody" >
                 Nil ..
+            </div>
+
+            <div class="card">
+                <div class="card-body" id="contTopicScore">
+                    NA
+                </div>
             </div>
 
             <div class="card">
