@@ -1,5 +1,6 @@
 package com.yg.news
 
+import com.yg.conn.InfluxClient
 import com.yg.data.{CrawledRepo, NewsRepo}
 import com.yg.data.CrawledRepo.CrawlUnit
 import com.yg.data.NewsRepo.NewsClick
@@ -46,6 +47,16 @@ trait NewsViewProcessing extends ScalatraServlet
     val newsPage =com.yg.news.html.recoNews.render(syncRes)
     layouts.html.dashboard.render("Pick 5", newsPage)
   }
+
+  get("/termMonitor") {
+    val clientIp = request.getRemoteAddr
+    logger.info(s"Requested recommended news ..${clientIp}")
+    val highTerms = InfluxClient.getHighTerms("-10h", 10)
+
+    val mainPage = com.yg.news.html.newsTerm.render()
+    layouts.html.dashboard.render("NewsStream", mainPage)
+  }
+
 }
 
 class NewsViewController(val db: Database) extends ScalatraServlet with FutureSupport with NewsViewProcessing {
