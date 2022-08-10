@@ -9,7 +9,7 @@ import com.yg.api._
 import com.yg.auth.AuthDemoController
 import com.yg.cwl.{CrawlAdminDataController, CrawlAdminJsApiController, CrawlAdminViewController, CrawlConfController, ReportViewController}
 import com.yg.data.deprecated.HorusCrawlData
-import com.yg.news.{NewsJsController, NewsViewController}
+import com.yg.news.{NewsDataApiController, NewsJsController, NewsViewController}
 import com.yg.scentry._
 
 //import slick.jdbc.H2Profile.api._
@@ -24,13 +24,8 @@ class ScalatraBootstrap extends LifeCycle {
 
   override def init(context: ServletContext) {
     val db = Database.forDataSource(cpds, None)
-//    context.mount(new SlickApp(db), "/*")
-//    context.mount(new RestSampleController(), "/rest/*")
 
-//    context.mount(new AuthDemoController(), "/*")
-//    context.mount(new FormsController(), "/usr/*")
-
-//    context.mount(new ProtectedController(), "/*")
+    context.mount(new NewsDataApiController, "/news/data/*")
     context.mount(new HttpSampleController(), "/hell/*")
     context.mount(new HorusCrawlData(db), "/crawl/*")
     context.mount(new NewsViewController(db), "/news/*")
@@ -41,9 +36,6 @@ class ScalatraBootstrap extends LifeCycle {
     context.mount(new CrawlAdminDataController, "/admin/config/*")
     context.mount(new ReportViewController(db), "/v/report")
     context.mount(new HorusViewController(db), "/horus/*")  // db connection
-//    context.mount(new SessionsController(), "/sessions/*")
-
-//    context.mount(new HttpSampleController(), "/html/*")
 
   }
 

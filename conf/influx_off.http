@@ -56,5 +56,18 @@ from(bucket:"tfStudySample")
 
 ###
 
+POST http://localhost:8086/api/v2/query?org=xwaves
+Authorization: Token CwgQWYIZKOcSpdlxwpfZfvDWQXpsfTlt7o2GD5hFAs4rTvHDF-7cfwmIQnmdocqL__5uoabCFGuf_GYzFQfxIA==
+Accept: application/csv
+Content-Type: application/vnd.flux
+
+from(bucket: "tfStudySample")
+  |> range(start: 1660115640)
+  |> filter(fn: (r) => r["_measurement"] == "term_tf")
+  |> filter(fn: (r) => r["_field"] == "tf")
+  |> filter(fn: (r) => r["seedId"] == "9")
+  |> filter(fn: (r) => r["term"] == "비" )
+  |> aggregateWindow(every: 1m, fn: sum, createEmpty: true)
+  |> yield(name: "sum")
 
 

@@ -6,6 +6,7 @@
 
     <h1>Realtime TermCount</h1>
     <div id="top1term"></div>
+    <div id="top10term"></div>
     <div id="example1"></div>
 </main>
 
@@ -13,16 +14,15 @@
 <script src="/assets/js/cubism.v1.js"></script>
 <script src="/assets/js/highlight.min.js"></script>
 <script>
-        var serverDelayTime = 0; //System.currentTimeMillis() - startDate.getTime()
+    var serverDelayTime = 0; //System.currentTimeMillis() - startDate.getTime()
 
-        var context = cubism.context()
+    var context = cubism.context()
                 .serverDelay(serverDelayTime)
                 .clientDelay(0)
-                .step(30000)
+                .step(60000)
                 .size(960);
 
-
-        function random(name) {
+    function random(name) {
         var value = 0,
                 values = [],
                 i = 0,
@@ -44,14 +44,16 @@
     function loadTermCountData(term) {
         var value = 0, values = [], i = 0, last;
         return context.metric(function(start, stop, step, callback) {
-            d3.csv('/news/api/termCount?term='+ term, function (rows) {
+            start = +start, stop = +stop;
+            console.log(start + "/" + stop + "/" + step);
+            d3.csv('/news/data/api/termCount?term='+ term + '&start=' + start + '&stop=' + stop + '&step=' + step, function (rows) {
                 rows = rows.map(function (d) {
                     return [d.Date, +d.Hits];
                 });
                 if (isNaN(last)) last = start;
 
                 rows.forEach(function (data) {
-                    value = d[1];
+                    value = data[1];
                     values.push(value);
                 });
 
@@ -65,12 +67,11 @@
     var context = cubism.context()
             .serverDelay(0)
             .clientDelay(0)
-            .step(1e3)
-            .size(960);
+            .step(60000)
+            .size(500);
 
-    var foo = random("foo"),
-            bar = random("bar");
-
+    var foo = random("foo"), bar = random("bar");
+    /**
     d3.select("#example1").call(function(div) {
 
         div.append("div")
@@ -88,6 +89,29 @@
                 .call(context.rule());
 
     });
+    **/
+
+    d3.select("#top10term").call(function(div) {
+
+        div.append("div")
+                .attr("class", "axis")
+                .call(context.axis().orient("top"));
+
+        div.selectAll(".horizon")
+                .data([loadTermCountData("서울"), loadTermCountData("비"), loadTermCountData("폭우"), loadTermCountData("대통령"), loadTermCountData("증가")])
+                .enter().append("div")
+                .attr("class", "horizon")
+                .call(context.horizon()
+                        .height(50)
+                        .mode("mirror")
+                        .colors(["#04FB04","#3182bd","#6baed6","#bdd7e7","#bae4b3","#74c476","#31a354","#FB0404"])
+                        .extent([0, 50]));
+
+        div.append("div")
+                .attr("class", "rule")
+                .call(context.rule());
+
+    });
 
     d3.select("#top1term").call(function(div) {
 
@@ -99,8 +123,8 @@
                         .height(50)
                         .mode("mirror")
                         .colors(["#04FB04","#3182bd","#6baed6","#bdd7e7","#bae4b3","#74c476","#31a354","#FB0404"])
-                        .title("결제창진입")
-                        .extent([0, 100]));
+                        .title("서울")
+                        .extent([0, 50]));
     });
 
 
