@@ -67,7 +67,6 @@ object InfluxClient {
         |  |> range(start: ${startDt}, stop: ${endDt})
         |  |> filter(fn: (r) => r["_measurement"] == "term_tf")
         |  |> filter(fn: (r) => r["_field"] == "tf")
-        |  |> filter(fn: (r) => r["seedId"] == "9")
         |  |> filter(fn: (r) => r["term"] == "${term}")
         |  |> aggregateWindow(every: ${windowSizeDt}, fn: sum, createEmpty: true)
         |  |> yield(name: "sum")
