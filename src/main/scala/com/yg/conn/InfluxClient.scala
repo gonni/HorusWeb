@@ -23,7 +23,7 @@ object InfluxClient {
   val org = "YG"
   val bucket = "tfStudySample"
 
-  val client = InfluxDBClientScalaFactory.create("http://localhost:8086", token.toCharArray, org, bucket)
+  val client = InfluxDBClientScalaFactory.create("http://192.168.35.123:8086", token.toCharArray, org, bucket)
 
   case class TermCount(term: String, count: Long)
 

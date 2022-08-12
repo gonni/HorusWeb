@@ -1,4 +1,5 @@
-@()
+@import com.yg.conn.InfluxClient.TermCount
+@(highTerms: Seq[TermCount])
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700">
@@ -42,6 +43,7 @@
     }
 
     function loadTermCountData(term) {
+
         var value = 0, values = [], i = 0, last;
         return context.metric(function(start, stop, step, callback) {
             start = +start, stop = +stop;
@@ -92,13 +94,19 @@
     **/
 
     d3.select("#top10term").call(function(div) {
+        let arr = []
+        @for(highTerm <- highTerms) {
+            arr.push(loadTermCountData("@highTerm.term"))
+        }
+        console.log("arr => " + arr)
 
         div.append("div")
                 .attr("class", "axis")
                 .call(context.axis().orient("top"));
 
         div.selectAll(".horizon")
-                .data([loadTermCountData("서울"), loadTermCountData("비"), loadTermCountData("폭우"), loadTermCountData("대통령"), loadTermCountData("증가")])
+                // .data([loadTermCountData("서울"), loadTermCountData("비"), loadTermCountData("폭우"), loadTermCountData("대통령"), loadTermCountData("증가")])
+                .data(arr)
                 .enter().append("div")
                 .attr("class", "horizon")
                 .call(context.horizon()

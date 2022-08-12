@@ -51,9 +51,10 @@ trait NewsViewProcessing extends ScalatraServlet
   get("/termMonitor") {
     val clientIp = request.getRemoteAddr
     logger.info(s"Requested recommended news ..${clientIp}")
-    val highTerms = InfluxClient.getHighTerms("-10h", 10)
+    val highTerms = InfluxClient.getHighTerms("-1h", 30)
+    logger.info("highTerms -> " + highTerms.mkString(" | "))
 
-    val mainPage = com.yg.news.html.newsTerm.render()
+    val mainPage = com.yg.news.html.newsTerm.render(highTerms)
     layouts.html.dashboard.render("NewsStream", mainPage)
   }
 
