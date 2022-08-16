@@ -26,7 +26,6 @@ object CommonConn {
 //      res.entity.dataBytes.map(_.utf8String).
 //      val data = res.entity.dataBytes.map(_.utf8String).runForeach(data => println(data))
 //      data.value.getOrElse("[]").toString
-      "Succ"
       Await.result(Unmarshal(res.entity).to[String], Duration.Inf)
     } else {
       println("Detected Error ..")
