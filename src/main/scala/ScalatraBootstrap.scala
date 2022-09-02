@@ -23,6 +23,13 @@ class ScalatraBootstrap extends LifeCycle {
   logger.info("Created c3p0 connection pool")
 
   override def init(context: ServletContext) {
+    val rtConf = RuntimeConfig()
+    println("-------------------------------------------")
+    println(s"Horus Web - ${RuntimeConfig().getString("profile.name")}")
+    println("-------------------------------------------")
+    println(RuntimeConfig())
+    println("-------------------------------------------")
+
     val db = Database.forDataSource(cpds, None)
 
     context.mount(new NewsDataApiController, "/news/data/*")
