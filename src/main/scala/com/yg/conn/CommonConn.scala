@@ -23,9 +23,6 @@ object CommonConn {
     val status = res.status.value
     if(status == "200 OK") {
       println("Dive into 200 OK")
-//      res.entity.dataBytes.map(_.utf8String).
-//      val data = res.entity.dataBytes.map(_.utf8String).runForeach(data => println(data))
-//      data.value.getOrElse("[]").toString
       Await.result(Unmarshal(res.entity).to[String], Duration.Inf)
     } else {
       println("Detected Error ..")

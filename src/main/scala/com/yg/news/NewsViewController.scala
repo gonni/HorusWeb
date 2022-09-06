@@ -1,6 +1,6 @@
 package com.yg.news
 
-import com.yg.conn.InfluxClient
+import com.yg.conn.{CrawlCoreClient, InfluxClient, MabScore}
 import com.yg.data.{CrawledRepo, NewsRepo}
 import com.yg.data.CrawledRepo.CrawlUnit
 import com.yg.data.NewsRepo.NewsClick
@@ -12,6 +12,7 @@ import slick.jdbc.MySQLProfile.api._
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
+
 
 trait NewsViewProcessing extends ScalatraServlet
   with FormSupport with I18nSupport with FutureSupport {
@@ -33,18 +34,27 @@ trait NewsViewProcessing extends ScalatraServlet
 
   get("/pick") {
     val clientIp = request.getRemoteAddr
+    val cnt = params("cnt").toInt
     logger.info(s"Requested recommended news ..${clientIp}")
 
-    val res : Future[Seq[CrawlUnit]] = db.run[Seq[CrawlUnit]](CrawledRepo.findAll(9).take(5).result)
+    val res : Future[Seq[CrawlUnit]] = db.run[Seq[CrawlUnit]](CrawledRepo.findAll(9).take(cnt).result)
     val syncRes = Await.result(res, Duration.Inf)
 
+    // insert show item
     syncRes.foreach(cu => {
       db.run(NewsRepo.insertClickLog(Seq(NewsClick(userId = clientIp, pageCd = "ROPN", newsId = cu.crawlNo.toInt))))
     })
 
-//    db.run(NewsRepo.insertClickLog(Seq(NewsClick(userId = clientIp, pageCd = "RCLK", newsId = newsId))))
+    val mabScores = CrawlCoreClient.mabScoreJs(cnt)
 
-    val newsPage =com.yg.news.html.recoNews.render(syncRes)
+    val mergedUnit  = syncRes.flatMap(r => mabScores.map(s => {
+      if(String.valueOf(r.crawlNo) == s.itemId) {
+        MergedUnit(r, s)
+      }
+    })).filter(r => r != ()).collect {case a: MergedUnit => a}
+
+//    val newsPage =com.yg.news.html.recoNews.render(syncRes, mergedUnit)
+    val newsPage =com.yg.news.html.recoNews.render(mergedUnit)
     layouts.html.dashboard.render("Pick 5", newsPage)
   }
 
@@ -59,6 +69,7 @@ trait NewsViewProcessing extends ScalatraServlet
   }
 
 }
+case class MergedUnit (crawlUnit: CrawlUnit, mabScore: MabScore)
 
 class NewsViewController(val db: Database) extends ScalatraServlet with FutureSupport with NewsViewProcessing {
   protected implicit def executor = scala.concurrent.ExecutionContext.Implicits.global

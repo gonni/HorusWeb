@@ -1,35 +1,42 @@
 @import com.yg.data.CrawledRepo.CrawlUnit
-@(crawlUnits : Seq[CrawlUnit])
+@import com.yg.conn.MabScore
+
+@import com.yg.news.MergedUnit
+@(mergedUnit: Seq[MergedUnit])
 
 <script>
-function getNewsDetails(crawlNo) {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", '/news/api/news/pick/details?newsId=' + crawlNo)
-
-    xhr.onload = () => {
-        if(xhr.status === 200 || xhr.status === 201) {
-            let msg = xhr.response
-            console.log('response -> ' + msg)
-            let jsRes = JSON.parse(msg)
-
-            document.getElementById('newsModalTitle').innerText = jsRes.anchorText
-            document.getElementById('modalNewsBody').innerText = jsRes.pageText
-            document.getElementById('pageDate').innerText = jsRes.pageDate
-            document.getElementById('originLink').innerHTML =
-                    '<a href="' + jsRes.url + '" target="blank">' + jsRes.url + '</a>'
-        }
+    function modalClosed() {
+        location.reload()
     }
 
-    xhr.send()
-}
+    function getNewsDetails(crawlNo) {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", '/news/api/news/pick/details?newsId=' + crawlNo)
+        xhr.onload = () => {
+            if(xhr.status === 200 || xhr.status === 201) {
+                let msg = xhr.response
+                console.log('response -> ' + msg)
+                let jsRes = JSON.parse(msg)
+
+                document.getElementById('newsModalTitle').innerText = jsRes.anchorText
+                document.getElementById('modalNewsBody').innerText = jsRes.pageText
+                document.getElementById('pageDate').innerText = jsRes.pageDate
+                document.getElementById('originLink').innerHTML =
+                        '<a href="' + jsRes.url + '" target="blank">' + jsRes.url + '</a>'
+            }
+        }
+        xhr.send()
+    }
 </script>
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <br>
     <div class="table-responsive">
+        <P1>추천 View 영역</P1>
         <table class="table table-striped table-sm">
             <thead>
                 <tr>
+                    <th scope="col">Order</th>
                     <th scope="col">CrawlNo</th>
                     <th scope="col">Title</th>
                     <th scope="col">regDate</th>
@@ -37,14 +44,43 @@ function getNewsDetails(crawlNo) {
                 </tr>
             </thead>
             <tbody>
-                @for(crawlUnit <- crawlUnits) {
+                @for((mu, index) <- mergedUnit.sortBy(m=>m.mabScore.mabScore)(Ordering[Double].reverse).zipWithIndex) {
                     <tr>
-                        <td>@crawlUnit.crawlNo</td>
-                            <!-- <td><a href="@crawlUnit.url"> @crawlUnit.anchorText</a></td> -->
-                        <td><a onclick="getNewsDetails(@crawlUnit.crawlNo)"
-                        data-bs-toggle="modal" data-bs-target="#exampleModal"> @crawlUnit.anchorText</a></td>
-                        <td>@crawlUnit.regDate</td>
-                        <td>@crawlUnit.status</td>
+                        <td>@index</td>
+                        <td>@mu.crawlUnit.crawlNo</td>
+                            <!-- <td><a href="@mu.crawlUnit.url"> @mu.crawlUnit.anchorText</a></td> -->
+                        <td><a onclick="getNewsDetails(@mu.crawlUnit.crawlNo)"
+                        data-bs-toggle="modal" data-bs-target="#exampleModal"> @mu.crawlUnit.anchorText</a></td>
+                        <td>@mu.crawlUnit.regDate</td>
+                        <td>@mu.crawlUnit.status</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <br>
+        <p1>추천 후보 아이템</p1>
+        <br>
+        <br>
+        <p1>MAB Scores</p1>
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">ItemNo</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">NonClicked</th>
+                    <th scope="col">Clicked</th>
+                    <th scope="col">Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(mu <- mergedUnit) {
+                    <tr>
+                        <td>@mu.mabScore.itemId</td>
+                        <td>@mu.crawlUnit.anchorText</td>
+                        <td>@mu.mabScore.cntNonClick</td>
+                        <td>@mu.mabScore.cntClick</td>
+                        <td>@mu.mabScore.mabScore</td>
                     </tr>
                 }
             </tbody>
@@ -58,7 +94,7 @@ function getNewsDetails(crawlNo) {
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="newsModalTitle">Modal title</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="modalClosed()"></button>
             </div>
 
             <div class="card">
@@ -78,7 +114,7 @@ function getNewsDetails(crawlNo) {
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="modalClosed()">Close</button>
                     <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
             </div>
         </div>

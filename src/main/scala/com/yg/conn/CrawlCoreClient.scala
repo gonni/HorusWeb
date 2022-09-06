@@ -46,6 +46,13 @@ object CrawlCoreClient {
     strResponse
   }
 
+  def mabScoreJs(cntItems: Int) = {
+    val strResponse = CommonConn.getData("http://localhost:8070/mab/runtime/score/v2?cnt=" + cntItems)
+    logger.info(s"Get response from MABscore ${strResponse}")
+    read[Seq[MabScore]](strResponse)
+//    strResponse
+  }
+
 //  def sentenceTopicScore(sentence: String) = {
 //    val jsBody = write(TopicScoreRequest(sentence))
 //    logger.info(s"Sentence body for topic score -> ${jsBody}");
@@ -58,10 +65,17 @@ object CrawlCoreClient {
   def main(args: Array[String]): Unit = {
 //    sentenceTopicScore("우크라 곡물 첫 선적 완료…금명간 수출 개시 예상")
     println("json response =>")
-    crawlJobStatus(21).foreach(println)
+//    crawlJobStatus(21).foreach(println)
+
+    println(mabScoreJs(6))
+
+    CommonConn.system.terminate()
   }
 
 }
+
+case class MabScore(itemId: String, cntNonClick: Long, cntClick: Long, mabScore: Double)
+
 case class CrawlJobStatus(
                          docType: String,
                          crawlStatus: String,
