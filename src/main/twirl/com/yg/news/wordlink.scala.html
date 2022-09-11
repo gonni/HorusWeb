@@ -1,0 +1,60 @@
+
+<head>
+    <style> body { margin: 0; } </style>
+
+    <script src="//unpkg.com/three"></script>
+    <script src="//unpkg.com/three-spritetext"></script>
+
+    <script src="//unpkg.com/3d-force-graph"></script>
+        <!--<script src="../../dist/3d-force-graph.js"></script>-->
+</head>
+
+<body>
+    <div id="3d-graph"></div>
+
+    <script>
+    // Random tree
+    const N = 300;
+    const gData = {
+        nodes: [...Array(N).keys()].map(i => ({ id: i })),
+        links: [...Array(N).keys()]
+                .filter(id => id)
+                .map(id => ({
+                    source: id,
+                    target: Math.round(Math.random() * (id-1))
+                }))
+    };
+    const distance = 700;
+
+
+    let isRotationActive = true;
+    const Graph = ForceGraph3D()
+    (document.getElementById('3d-graph'))
+            .jsonUrl('/assets/data/miserables.json')
+            .nodeAutoColorBy('group')
+            .cameraPosition({ z: distance })
+            .nodeThreeObject(node => {
+                const sprite = new SpriteText(node.id);
+                sprite.material.depthWrite = false; // make sprite background transparent
+                sprite.color = node.color;
+                sprite.textHeight = 8;
+                return sprite;
+            });
+
+    // Spread nodes a little wider
+    Graph.d3Force('charge').strength(-120);
+
+    // Set Animated
+    // camera orbit
+    let angle = 0;
+    setInterval(() => {
+        if (isRotationActive) {
+            Graph.cameraPosition({
+                x: distance * Math.sin(angle),
+                z: distance * Math.cos(angle)
+            });
+            angle += Math.PI / 1000;
+        }
+    }, 30);
+  </script>
+</body>

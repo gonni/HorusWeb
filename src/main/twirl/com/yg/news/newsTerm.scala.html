@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700">
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
 
-    <h1>Realtime TermCount</h1>
+    <h3>Realtime TermCount Rank Top30</h3>
     <div id="top1term"></div>
     <div id="top10term"></div>
     <div id="example1"></div>
@@ -70,7 +70,7 @@
             .serverDelay(0)
             .clientDelay(0)
             .step(60000)
-            .size(500);
+            .size(1000);
 
     var foo = random("foo"), bar = random("bar");
     /**
@@ -123,7 +123,7 @@
 
     d3.select("#top1term").call(function(div) {
 
-        div.datum(loadTermCountData("서울")) ;
+        div.datum(loadTermCountData("속보")) ;
 
         div.append("div")
                 .attr("class", "horizon")
@@ -131,7 +131,7 @@
                         .height(50)
                         .mode("mirror")
                         .colors(["#04FB04","#3182bd","#6baed6","#bdd7e7","#bae4b3","#74c476","#31a354","#FB0404"])
-                        .title("서울")
+                        .title("속보")
                         .extent([0, 50]));
     });
 

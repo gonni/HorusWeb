@@ -80,9 +80,6 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
     newsData.getOrElse(CrawlUnit(crawlNo = newsId, status = Option("NotExist") ))
   }
 
-//  get("/api/news/click") {
-//  }
-
 }
 
 class NewsJsController(val db: Database) extends ScalatraServlet with FutureSupport with NewsDataProcessing {

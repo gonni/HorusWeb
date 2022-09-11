@@ -6,6 +6,7 @@ import com.influxdb.annotations.{Column, Measurement}
 import com.influxdb.client.domain.WritePrecision
 import com.influxdb.client.scala.InfluxDBClientScalaFactory
 import com.influxdb.client.write.Point
+import com.yg.RuntimeConfig
 
 import java.sql.Timestamp
 import java.time.format.DateTimeFormatter
@@ -17,13 +18,15 @@ import scala.concurrent.duration.Duration
 object InfluxClient {
   implicit val system: ActorSystem = ActorSystem("examples")
 
-//  val token = "CwgQWYIZKOcSpdlxwpfZfvDWQXpsfTlt7o2GD5hFAs4rTvHDF-7cfwmIQnmdocqL__5uoabCFGuf_GYzFQfxIA=="
-//  val org = "xwaves"
-  val token = "lhb_6bgvAirOy1tb4fZ1FtWGR4VbTDDb0QEXCGJsRJcHJmO4RN1SYh4_ob-lnJUOLBKX4-SFFnVkv3H_up6UWQ=="
-  val org = "YG"
+//  val token = "lhb_6bgvAirOy1tb4fZ1FtWGR4VbTDDb0QEXCGJsRJcHJmO4RN1SYh4_ob-lnJUOLBKX4-SFFnVkv3H_up6UWQ=="
+//  val org = "YG"
+//  val bucket = "tfStudySample"
+  val url = RuntimeConfig("influx.url")
+  val token = RuntimeConfig("influx.authToken")
+  val org = RuntimeConfig("influx.org")
   val bucket = "tfStudySample"
 
-  val client = InfluxDBClientScalaFactory.create("http://192.168.35.123:8086", token.toCharArray, org, bucket)
+  val client = InfluxDBClientScalaFactory.create(url, token.toCharArray, org, bucket)
 
   case class TermCount(term: String, count: Long)
 

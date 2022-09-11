@@ -58,6 +58,24 @@ trait NewsViewProcessing extends ScalatraServlet
     layouts.html.dashboard.render("NewsStream", mainPage)
   }
 
+  get("/topics") {
+    logger.info("detected topic viewer ..")
+
+    com.yg.news.html.newsTopic.render()
+  }
+
+  get("/net") {
+    logger.info("detected wordnet ..")
+
+    com.yg.news.html.wordnet.render()
+  }
+
+  get("/link") {
+    logger.info("detected wordlink ..")
+
+    com.yg.news.html.wordlink.render()
+  }
+
 }
 
 class NewsViewController(val db: Database) extends ScalatraServlet with FutureSupport with NewsViewProcessing {

@@ -30,9 +30,13 @@ class ScalatraBootstrap extends LifeCycle {
     println(RuntimeConfig())
     println("-------------------------------------------")
 
-    val db = Database.forDataSource(cpds, None)
+//    val db = Database.forDataSource(cpds, None)
+    val db = Database.forURL(url = RuntimeConfig("mysql.url"),
+      user = RuntimeConfig("mysql.user"),
+      password = RuntimeConfig("mysql.password"),
+      driver = "com.mysql.jdbc.Driver")
 
-    context.mount(new NewsDataApiController, "/news/data/*")
+    context.mount(new NewsDataApiController(db), "/news/data/*")
     context.mount(new HttpSampleController(), "/hell/*")
     context.mount(new HorusCrawlData(db), "/crawl/*")
     context.mount(new NewsViewController(db), "/news/*")
