@@ -3,13 +3,14 @@ package com.yg.news
 import com.yg.conn._
 import com.yg.data.CrawledRepo.CrawlUnit
 import com.yg.data.NewsRepo.NewsClick
-import com.yg.data.{CrawlContentWrapOption, CrawlListWrapOption, CrawledRepo, NewsRepo}
+import com.yg.data.{CrawlContentWrapOption, CrawlListWrapOption, CrawledRepo, DtRepo, NewsRepo}
 import org.scalatra._
 import org.json4s.{DefaultFormats, Formats}
 import org.scalatra.json._
 import org.slf4j.LoggerFactory
 import slick.jdbc.MySQLProfile.api._
 
+import scala.collection.mutable
 import scala.concurrent.Await
 import scala.concurrent.duration.{Duration, DurationInt}
 
@@ -80,6 +81,59 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
     newsData.getOrElse(CrawlUnit(crawlNo = newsId, status = Option("NotExist") ))
   }
 
+  get("/news/termdist") {
+    logger.info("Detected Term-Dist data ..")
+    val lt = Await.result(db.run(DtRepo.latestTdGrpTs1.head), Duration.Inf).grpGs
+    println("Time Group => " + lt)
+    val res = db.run(DtRepo.termDists(lt).result)
+    val termDists = Await.result(res, Duration.Inf)
+
+    val nodes = Await.result(db.run(DtRepo.getDistBaseTerm(lt).result), Duration.Inf)
+    val setTerm = mutable.Set[String]()
+
+    var dNodes = Array[Node](Node("NEWS", 1000))
+    var dLink = Array[Link]()
+
+    var i = 0;
+    nodes.foreach(term => {
+//      if(setTerm.contains(term)) {
+//        println("Not Contain")
+//      }
+      i = i + 1
+      setTerm += term
+      dNodes = dNodes :+ Node(term, i)
+      dLink = dLink :+ Link(term, "NEWS", 3)
+
+      val comps = Await.result(db.run(DtRepo.getCompTerms(lt, term, 10)), Duration.Inf)
+      for (elem <- comps) {
+        if(!setTerm.contains(elem.compTerm)) {
+          dNodes = dNodes :+ Node(elem.compTerm, i)
+          setTerm += elem.compTerm
+        } else {
+          println(s"duplicated : ${elem.compTerm}")
+        }
+        dLink = dLink :+ Link(elem.compTerm, elem.baseTerm, (elem.distVal * 5).toInt)
+      }
+    })
+
+    dNodes.foreach(println)
+
+
+
+//    setTerm.foreach(println)
+//    nodes.foreach(println)
+//    var i = 0
+//    val lstNodes = nodes.map(strNode => {
+//      Node(strNode, {(i += 1); i})
+//    })
+
+
+    WordLink(dNodes, dLink)
+  }
+
+  case class WordLink(nodes: Array[Node], links: Array[Link])
+  case class Node(id: String, group: Int)
+  case class Link(source: String, target: String, value: Int)
 }
 
 class NewsJsController(val db: Database) extends ScalatraServlet with FutureSupport with NewsDataProcessing {

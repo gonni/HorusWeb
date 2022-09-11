@@ -57,11 +57,7 @@ trait NewsWebDataProcessing extends ScalatraServlet with FutureSupport {
       sb.append("flare.topic" + e.topicNo + "." + e.term + "," + (e.score * 10000).toInt + "\n")
     }
 
-
-
     println("Body->\n" + sb)
-
-
     "id,value\n" + sb
   }
 

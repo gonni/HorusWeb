@@ -28,10 +28,44 @@ object DtRepo {
       (LdaTopic.tupled, LdaTopic.unapply)
   }
 
+  case class TermDist(
+                     termNo: Option[Int],
+                     baseTerm: String,
+                     compTerm: String,
+                     distVal: Double,
+                     tRangeMinAgo: Int,
+                     seedNo: Int,
+                     grpGs: Long
+                     )
+
+  class TermDistBinding(tag: Tag) extends Table[TermDist](tag, "TERM_DIST") {
+    def termNo = column[Int]("TERM_NO",  O.PrimaryKey, O.AutoInc)
+    def baseTerm = column[String]("BASE_TERM")
+    def compTerm = column[String]("COMP_TERM")
+    def distVal = column[Double]("DIST_VAL")
+    def tRangeMinAgo = column[Int]("T_RANGE_MIN_AGO")
+    def seedNo = column[Int]("SEED_NO")
+    def grpTs = column[Long]("GRP_TS")
+
+    def * = (termNo.?, baseTerm, compTerm, distVal, tRangeMinAgo, seedNo, grpTs) <>
+      (TermDist.tupled, TermDist.unapply)
+  }
+
   val ldaTopicTable = TableQuery[DtLdaTopicsBinding]
-
   val latestGprTs = ldaTopicTable.map(_.grpTs).max
-
   def latestAllTopics = ldaTopicTable.filter(_.grpTs === latestGprTs).sortBy(_.topicNo)
 
+  // ----
+  val termDistTable = TableQuery[TermDistBinding]
+  val latestTdGrpTs = termDistTable.map(_.grpTs).max
+  val latestTdGrpTs1 = termDistTable.sortBy(_.termNo.desc).take(1).result
+
+  def termDists(grpTs: Long) = termDistTable.filter(_.grpTs === latestTdGrpTs).sortBy(_.baseTerm)
+
+  def getDistBaseTerm(grpTs: Long) = termDists(grpTs).groupBy(_.baseTerm).map{case(baseTerm, group) => baseTerm}
+
+  def getCompTerms(grpTs: Long, baseTerm: String, limit: Int) = termDists(grpTs).filter(_.baseTerm === baseTerm)
+    .sortBy(_.distVal.desc).take(limit).result
+
+//  def getComps = lat
 }

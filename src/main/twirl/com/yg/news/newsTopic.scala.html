@@ -37,7 +37,7 @@ var stratify = d3.stratify()
         .parentId(function(d) { return d.id.substring(0, d.id.lastIndexOf(".")); });
 
 var treemap = d3.treemap()
-        .size([width, height])
+        .size([800, 600])
         .paddingOuter(3)
         .paddingTop(19)
         .paddingInner(1)
