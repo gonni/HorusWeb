@@ -2,12 +2,14 @@ package com.yg.news
 
 import com.yg.conn._
 import com.yg.data.CrawledRepo.CrawlUnit
+import com.yg.data.DtRepo.TermDist
 import com.yg.data.NewsRepo.NewsClick
 import com.yg.data.{CrawlContentWrapOption, CrawlListWrapOption, CrawledRepo, DtRepo, NewsRepo}
 import org.scalatra._
 import org.json4s.{DefaultFormats, Formats}
 import org.scalatra.json._
 import org.slf4j.LoggerFactory
+import slick.jdbc.GetResult
 import slick.jdbc.MySQLProfile.api._
 
 import scala.collection.mutable
@@ -128,7 +130,14 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
 //    })
 
 
+
+
     WordLink(dNodes, dLink)
+  }
+
+  get("/news/termdist1") {
+    implicit val getTermDistResult = GetResult(r => TermDist(r.<<, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<))
+    db.run(sql"select * from TERM_DIST".as[TermDist])
   }
 
   case class WordLink(nodes: Array[Node], links: Array[Link])
