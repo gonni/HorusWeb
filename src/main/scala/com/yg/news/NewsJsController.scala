@@ -98,9 +98,6 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
 
     var i = 0;
     nodes.foreach(term => {
-//      if(setTerm.contains(term)) {
-//        println("Not Contain")
-//      }
       i = i + 1
       setTerm += term
       dNodes = dNodes :+ Node(term, i)
@@ -120,24 +117,18 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
 
     dNodes.foreach(println)
 
-
-
-//    setTerm.foreach(println)
-//    nodes.foreach(println)
-//    var i = 0
-//    val lstNodes = nodes.map(strNode => {
-//      Node(strNode, {(i += 1); i})
-//    })
-
-
-
-
     WordLink(dNodes, dLink)
   }
 
   get("/news/termdist1") {
-    implicit val getTermDistResult = GetResult(r => TermDist(r.<<, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<))
-    db.run(sql"select * from TERM_DIST".as[TermDist])
+    val grpTs = Await.result(db.run(DtRepo.latestTdGrpTs1.head), Duration.Inf).grpGs
+    println(s"Target grpTs: ${grpTs}")
+
+    val res = Await.result(db.run(DtRepo.getCompTermsFast(grpTs)), Duration.Inf)
+
+    val filteredRes = res.filter(_._4 < 6)
+
+    filteredRes
   }
 
   case class WordLink(nodes: Array[Node], links: Array[Link])

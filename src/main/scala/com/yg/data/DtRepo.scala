@@ -1,10 +1,6 @@
 package com.yg.data
 
-import slick.jdbc.GetResult
 import slick.jdbc.MySQLProfile.api._
-
-import java.sql.Timestamp
-import java.time.LocalDateTime
 
 object DtRepo {
   case class LdaTopic(
@@ -82,9 +78,17 @@ object DtRepo {
   def getCompTerms(grpTs: Long, baseTerm: String, limit: Int) = termDists(grpTs).filter(_.baseTerm === baseTerm)
     .sortBy(_.distVal.desc).take(limit).result
 
-  implicit val getTermDistResult = GetResult(r => TermDist(r.<<, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<))
 
-//  def getCompTermsFast =
-//    sql"""select * from TERM_DIST""".as[Seq[TermDist]]
+
+  def getCompTermsFast(grpTs: Long) = {
+//    implicit val getTermDistResult = GetResult(r => TermDist(r.<<, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<))
+
+    sql"""
+        select a.BASE_TERM, a.COMP_TERM, a.DIST_VAL,
+        ( select 1 + count(*) from (select * from TERM_DIST where GRP_TS = $grpTs) a1
+        where a1.BASE_TERM = a.BASE_TERM and a1.DIST_VAL > a.DIST_VAL) as RNK
+        from (select * from TERM_DIST where GRP_TS = $grpTs) a ;
+       """.as[(String, String, Double, Int)]
+  }
 
 }
