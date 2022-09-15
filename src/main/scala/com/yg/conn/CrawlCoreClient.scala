@@ -1,5 +1,6 @@
 package com.yg.conn
 
+import com.yg.RuntimeConfig
 import com.yg.data.{CrawlContentWrapOption, CrawlListWrapOption}
 import org.json4s.DefaultFormats
 import org.json4s.jackson.Serialization._
@@ -9,10 +10,12 @@ object CrawlCoreClient {
   val logger =  LoggerFactory.getLogger(getClass)
   implicit val formats: DefaultFormats = DefaultFormats
 
+  var horusCrawlHost = RuntimeConfig("horus.crawl")
+
   def crawlListUrl(crawlOption : CrawlListWrapOption) : String = {
     val jsBody = write(crawlOption)
     logger.info(s"ListPage body data to send -> ${jsBody}")
-    val response = CommonConn.writeDataAndRecv("http://localhost:8070/crawl/page/list", jsBody)
+    val response = CommonConn.writeDataAndRecv(horusCrawlHost + "/crawl/page/list", jsBody)
 
     logger.info(s"Response Body -> ${response}")
     response
@@ -21,33 +24,33 @@ object CrawlCoreClient {
   def crawlContentPage(crawlOption: CrawlContentWrapOption) = {
     val jsBody = write(crawlOption)
     logger.info(s"ContentPage body data to send -> ${jsBody}")
-    val response = CommonConn.writeDataAndRecv("http://localhost:8070/crawl/page/content", jsBody)
+    val response = CommonConn.writeDataAndRecv(horusCrawlHost + "/crawl/page/content", jsBody)
 
     logger.info(s"Response Body -> ${response}")
     response
   }
 
   def crawlJobStatus(seedNo: Int) = {
-    val strResponse = CommonConn.getData("http://localhost:8070/crawl/admin/status/all?seedNo=" + seedNo)
+    val strResponse = CommonConn.getData(horusCrawlHost + "/crawl/admin/status/all?seedNo=" + seedNo)
 //    val strResponse = CommonConn.getData("http://192.168.35.123:8070/crawl/admin/status/all?seedNo=" + seedNo)
     println("res => " + strResponse)
     read[Array[CrawlJobStatus]](strResponse)
   }
 
   def startCrawlJob(seedNo: Int) = {
-    val strResponse = CommonConn.getData("http://localhost:8070/crawl/rt/schedule?seedNo=" + seedNo)
+    val strResponse = CommonConn.getData(horusCrawlHost + "/crawl/rt/schedule?seedNo=" + seedNo)
     logger.info("Response message for startCrawl : {}", strResponse);
     strResponse
   }
 
   def stopCrawlJob(seedNo: Int) = {
-    val strResponse = CommonConn.getData("http://localhost:8070/crawl/rt/schedule/stop?seedNo=" + seedNo)
+    val strResponse = CommonConn.getData(horusCrawlHost + "/crawl/rt/schedule/stop?seedNo=" + seedNo)
     logger.info("Response message for stopCrawl : {}", strResponse)
     strResponse
   }
 
   def mabScoreJs(cntItems: Int) = {
-    val strResponse = CommonConn.getData("http://localhost:8070/mab/runtime/score/v2?cnt=" + cntItems)
+    val strResponse = CommonConn.getData(horusCrawlHost + "/mab/runtime/score/v2?cnt=" + cntItems)
     logger.info(s"Get response from MABscore ${strResponse}")
     read[Seq[MabScore]](strResponse)
 //    strResponse
