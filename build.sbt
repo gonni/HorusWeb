@@ -51,6 +51,5 @@ assemblyMergeStrategy in assembly := {
   case x => MergeStrategy.last
 }
 
-//resourceDirectory in Compile := {
-//    baseDirectory.value / "src/main/webapp"
-//}
+//resourceDirectory in Compile := baseDirectory.value / "src" / "main" / "webapp"
+
