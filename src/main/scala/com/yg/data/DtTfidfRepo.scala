@@ -32,5 +32,5 @@ object DtTfidfRepo {
       (TfIdf.tupled, TfIdf.unapply)
   }
 
-
+  val tfIdfTable = TableQuery[TfidfBinding]
 }

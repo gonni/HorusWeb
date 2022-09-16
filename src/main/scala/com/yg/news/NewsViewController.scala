@@ -71,19 +71,19 @@ trait NewsViewProcessing extends ScalatraServlet
   get("/topics") {
     logger.info("detected topic viewer ..")
 
-    com.yg.news.html.newsTopic.render()
+    layouts.html.dashboard.render("Topic Cell", com.yg.news.html.newsTopic.render())
   }
 
   get("/net") {
     logger.info("detected wordnet ..")
 
-    com.yg.news.html.wordnet.render()
+    layouts.html.dashboard.render("Term Net", com.yg.news.html.wordnet.render())
   }
 
   get("/link") {
     logger.info("detected wordlink ..")
 
-    com.yg.news.html.wordlink.render()
+    layouts.html.dashboard.render("Term Link 3D", com.yg.news.html.wordlink.render())
   }
 
 }

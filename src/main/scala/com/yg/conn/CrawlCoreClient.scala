@@ -85,7 +85,8 @@ case class CrawlJobStatus(
                          seedNo: Int,
                          consumer: Consumer,
                          cntJobProcessed: Int,
-                         cntJobFetched: Int
+                         cntJobFetched: Int,
+                         cntPendingJobs: Long
                          )
 
 case class Consumer(
