@@ -102,7 +102,7 @@ object InfluxClient {
   def main(args: Array[String]): Unit = {
     println("Active")
 
-    getTermCount("비", "-1h", "-1m", "1m").foreach(dpc => {
+    getTermCount("대통령", "-1h", "-1m", "5m").foreach(dpc => {
       println(new Date(dpc.ts) + " --> " + dpc.count)
     })
 

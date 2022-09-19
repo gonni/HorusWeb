@@ -10,7 +10,7 @@ trait TopicProcessing {
     val resLda = db.run(DtRepo.latestAllTopics.filter(_.seedNo === seedNo).result)
     resLda
 
-    db.run(DtRepo.termDistTable.)
+//    db.run(DtRepo.termDistTable.)
 
   }
 
