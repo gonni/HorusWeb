@@ -64,14 +64,17 @@ object DtRepo {
   val ldaTopicTable = TableQuery[DtLdaTopicsBinding]
   val latestGprTs = ldaTopicTable.map(_.grpTs).max
 
+  // ----- Functions for LDA -----
   def latestAllTopics = ldaTopicTable.filter(_.grpTs === latestGprTs).sortBy(_.topicNo)
 
-  // ----
+  // ----- Functions for TDM -----
   val termDistTable = TableQuery[TermDistBinding]
   val latestTdGrpTs = termDistTable.map(_.grpTs).max
-  val latestTdGrpTs1 = termDistTable.sortBy(_.termNo.desc).take(1).result
+  val latestTdGrpTs1 = termDistTable.sortBy(_.termNo.desc).map(_.grpTs).take(1).result.headOption
 
-  def termDists(grpTs: Long) = termDistTable.filter(_.grpTs === latestTdGrpTs).sortBy(_.baseTerm)
+  def termDists(grpTs: Long) = termDistTable.filter(_.grpTs === grpTs).sortBy(_.baseTerm)
+
+//  def allLatestTerms(seedNo: Int) = termDistTable.filter(_.grpTs === latestTdGrpTs1)
 
   def getDistBaseTerm(grpTs: Long) = termDists(grpTs).groupBy(_.baseTerm).map { case (baseTerm, group) => baseTerm }
 
