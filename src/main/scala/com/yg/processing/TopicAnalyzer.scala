@@ -19,7 +19,7 @@ trait TopicProcessing {
   }
 
   def w2vSimilarTerms(term: String, limit: Int) = {
-    val latestGrpVal = Await.result(db.run(DtRepo.latestTdGrpTs1), 10.seconds).get
+//    val latestGrpVal = Await.result(db.run(DtRepo.latestTdGrpTs1), 10.seconds).get
 
   }
 
