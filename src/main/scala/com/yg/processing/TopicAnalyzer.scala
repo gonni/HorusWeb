@@ -1,7 +1,7 @@
 package com.yg.processing
 
 import com.yg.RuntimeConfig
-import com.yg.data.DtRepo
+import com.yg.data.{DtRepo, TermScoreRepo}
 import slick.jdbc.MySQLProfile.api._
 
 import scala.concurrent.Await
@@ -10,11 +10,33 @@ import scala.concurrent.duration.DurationInt
 trait TopicProcessing {
   def db: Database
 
+  def loadStopWords(minScore: Double) = {
+    val res = db.run(TermScoreRepo.termScoreTable.filter(_.avgTfidf < minScore).map(_.token).result)
+    val stopwords = Await.result(res, 10.seconds)
+    stopwords.toSet
+  }
+
   def topicTermDics(seedNo: Int) = {
+
+    val stopWords = loadStopWords(1)
+
     val asynLdaResult = db.run(DtRepo.latestAllTopics.filter(_.seedNo === seedNo).result)
-    val res = Await.result(asynLdaResult, 10.seconds)
-    res.foreach(println)
+    val topics = Await.result(asynLdaResult, 10.seconds)
+//    topics.foreach(println)
     //TODO data convert
+    println("--------------")
+
+    val topicNos = topics.map(_.topicNo).distinct
+
+    topicNos.map(topicNo => {
+      println(s"=======${topicNo}========")
+      topics.filter(_.topicNo == topicNo)
+        .filter(topic => !stopWords.contains(topic.term))
+        .sortBy(- _.score)
+        .zipWithIndex.filter{case(topic, index) => {
+        index < 10
+      }}.foreach(println)
+    })
 
   }
 
@@ -47,6 +69,8 @@ object TopicAnalyzer {
       driver = "com.mysql.cj.jdbc.Driver")
 
     val ta = new TopicAnalyzer(db)
+    ta.loadStopWords(1)
+    println("======================================")
     ta.topicTermDics(1)
 
   }

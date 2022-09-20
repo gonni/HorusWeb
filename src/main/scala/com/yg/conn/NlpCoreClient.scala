@@ -1,5 +1,6 @@
 package com.yg.conn
 import akka.actor.ActorSystem
+import com.yg.RuntimeConfig
 import org.json4s.DefaultFormats
 import org.json4s.jackson.Serialization._
 import org.slf4j.LoggerFactory
@@ -11,7 +12,7 @@ object NlpCoreClient extends BaseConn {
   implicit val formats: DefaultFormats = DefaultFormats
 
   def getTopicScore(sentence: String) = {
-    postJsBody[TopicScoreRequest]("http://localhost:8070/nlp/topic/score",
+    postJsBody[TopicScoreRequest](RuntimeConfig("horus.crawl") + "/nlp/topic/score",
       TopicScoreRequest(sentence))
   }
 
