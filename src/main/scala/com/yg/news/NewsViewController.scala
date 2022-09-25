@@ -1,9 +1,11 @@
 package com.yg.news
 
+import com.yg.conn.InfluxClient.TermCount
 import com.yg.conn.{CrawlCoreClient, InfluxClient, MabScore}
 import com.yg.data.{CrawledRepo, NewsRepo}
 import com.yg.data.CrawledRepo.CrawlUnit
 import com.yg.data.NewsRepo.NewsClick
+import com.yg.processing.TopicAnalyzer
 import org.scalatra.forms.FormSupport
 import org.scalatra.i18n.I18nSupport
 import org.scalatra.{FutureSupport, ScalatraServlet}
@@ -65,6 +67,21 @@ trait NewsViewProcessing extends ScalatraServlet
     logger.info("highTerms -> " + highTerms.mkString(" | "))
 
     val mainPage = com.yg.news.html.newsTerm.render(highTerms)
+    layouts.html.dashboard.render("NewsStream", mainPage)
+  }
+
+  get("/topicMonitor") {
+    val clientIp = request.getRemoteAddr
+    logger.info(s"Requested recommended news ..${clientIp}")
+
+    val ta = new TopicAnalyzer(db)
+    val targetTerms = ta.topicTermDics(21).map(topic => {
+      topic.map(lda => {
+        lda._1.term
+      }).mkString("|")
+    })
+
+    val mainPage = com.yg.news.html.newsTerm.render(targetTerms.map(t => TermCount(t, 0)))
     layouts.html.dashboard.render("NewsStream", mainPage)
   }
 

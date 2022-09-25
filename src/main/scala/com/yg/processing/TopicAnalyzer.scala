@@ -29,15 +29,14 @@ trait TopicProcessing {
     val topicNos = topics.map(_.topicNo).distinct
 
     topicNos.map(topicNo => {
-      println(s"=======${topicNo}========")
+//      println(s"=======${topicNo}========")
       topics.filter(_.topicNo == topicNo)
         .filter(topic => !stopWords.contains(topic.term))
         .sortBy(- _.score)
         .zipWithIndex.filter{case(topic, index) => {
         index < 10
-      }}.foreach(println)
+      }}
     })
-
   }
 
   def w2vSimilarTerms(term: String, limit: Int) = {
@@ -69,9 +68,13 @@ object TopicAnalyzer {
       driver = "com.mysql.cj.jdbc.Driver")
 
     val ta = new TopicAnalyzer(db)
-    ta.loadStopWords(1)
+    ta.loadStopWords(21).foreach(println)
     println("======================================")
-    ta.topicTermDics(1)
+    ta.topicTermDics(21).map(topic => {
+      topic.map(lda => {
+        lda._1.term
+      }).mkString("|")
+    }).foreach(println)
 
   }
 }

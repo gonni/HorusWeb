@@ -70,4 +70,78 @@ from(bucket: "tfStudySample")
   |> aggregateWindow(every: 1m, fn: sum, createEmpty: true)
   |> yield(name: "sum")
 
+###
 
+POST http://macmini:8086/api/v2/query?org=YG
+Authorization: Token lhb_6bgvAirOy1tb4fZ1FtWGR4VbTDDb0QEXCGJsRJcHJmO4RN1SYh4_ob-lnJUOLBKX4-SFFnVkv3H_up6UWQ==
+Accept: application/csv
+Content-Type: application/vnd.flux
+
+from(bucket: "tfStudySample")
+  |> range(start: -1h, stop: -1m)
+  |> filter(fn: (r) => r["_measurement"] == "term_tf")
+  |> filter(fn: (r) => r["_field"] == "tf")
+  |> filter(fn: (r) => (r["term"] == "대통령" or r["term"] == "윤" or r["term"] == "말"))
+  |> aggregateWindow(every: 5m, fn: sum, createEmpty: true)
+  |> yield(name: "sum")
+
+###
+
+POST http://macmini:8086/api/v2/query?org=YG
+Authorization: Token lhb_6bgvAirOy1tb4fZ1FtWGR4VbTDDb0QEXCGJsRJcHJmO4RN1SYh4_ob-lnJUOLBKX4-SFFnVkv3H_up6UWQ==
+Accept: application/csv
+Content-Type: application/vnd.flux
+
+from(bucket: "tfStudySample")
+  |> range(start: -1h, stop: -1m)
+  |> filter(fn: (r) => r["_measurement"] == "term_tf")
+  |> filter(fn: (r) => r["_field"] == "tf")
+  |> filter(fn: (r) => (r["term"] == "대통령" or r["term"] == "윤" or r["term"] == "말"))
+  |> aggregateWindow(every: 5m, fn: sum, createEmpty: true)
+  |> pivot(rowKey: ["_time"], columnKey: ["term"], valueColumn: "_value")
+
+###
+
+POST http://macmini:8086/api/v2/query?org=YG
+Authorization: Token lhb_6bgvAirOy1tb4fZ1FtWGR4VbTDDb0QEXCGJsRJcHJmO4RN1SYh4_ob-lnJUOLBKX4-SFFnVkv3H_up6UWQ==
+Accept: application/csv
+Content-Type: application/vnd.flux
+
+from(bucket: "tfStudySample")
+  |> range(start: -1h, stop: -1m)
+  |> filter(fn: (r) => r["_measurement"] == "term_tf")
+  |> filter(fn: (r) => r["_field"] == "tf")
+  |> filter(fn: (r) => r["term"] == "대통령")
+  |> aggregateWindow(every: 5m, fn: sum, createEmpty: true)
+  |> yield(name: "sum")
+
+###
+
+POST http://macmini:8086/api/v2/query?org=YG
+Authorization: Token lhb_6bgvAirOy1tb4fZ1FtWGR4VbTDDb0QEXCGJsRJcHJmO4RN1SYh4_ob-lnJUOLBKX4-SFFnVkv3H_up6UWQ==
+Accept: application/csv
+Content-Type: application/vnd.flux
+
+from(bucket: "tfStudySample")
+  |> range(start: -1h, stop: -1m)
+  |> filter(fn: (r) => r["_measurement"] == "term_tf")
+  |> filter(fn: (r) => r["_field"] == "tf")
+  |> filter(fn: (r) => (r["term"] == "대통령" or r["term"] == "윤" or r["term"] == "말"))
+  |> aggregateWindow(every: 5m, fn: sum, createEmpty: true)
+  |> group(columns: ["_time"], mode:"by")
+  |> sum(column: "_value")
+
+###
+POST http://macmini:8086/api/v2/query?org=YG
+Authorization: Token lhb_6bgvAirOy1tb4fZ1FtWGR4VbTDDb0QEXCGJsRJcHJmO4RN1SYh4_ob-lnJUOLBKX4-SFFnVkv3H_up6UWQ==
+Accept: application/csv
+Content-Type: application/vnd.flux
+
+from(bucket: "tfStudySample")
+  |> range(start: -1h, stop: -1m)
+  |> filter(fn: (r) => r["_measurement"] == "term_tf")
+  |> filter(fn: (r) => r["_field"] == "tf")
+  |> filter(fn: (r) => (r["term"] == "대통령" or r["term"] == "윤" or r["term"] == "말"))
+  |> aggregateWindow(every: 5m, fn: sum, createEmpty: true)
+  |> group(columns: ["_time"], mode:"by")
+  |> sum(column: "_value")

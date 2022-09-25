@@ -41,6 +41,32 @@ trait NewsWebDataProcessing extends ScalatraServlet with FutureSupport {
     response
   }
 
+  get("/api/termCount2") {
+    val term = params("term").trim
+    val start = params("start").toLong
+    val stop = params("stop").toLong
+    val step = params("step").trim
+
+    val tsStart = tsPattern.format(new Date(start))
+    val tsStop = tsPattern.format(new Date(stop))
+
+    logger.info(s"start/stop = ${tsStart}/${tsStop}")
+    logger.info(s"Request Statistics for ${term}/${start}/${stop}/${step}")
+
+    val res = if(term.contains("|")) {
+      logger.info("detected multi terms")
+      val terms = term.split("|").toSeq
+      InfluxClient.getTermsCountSum(terms, (start / 1000).toString, (stop / 1000).toString, "1m")
+    } else {
+      InfluxClient.getTermCount(term, (start / 1000).toString, (stop / 1000).toString, "1m")
+    }
+
+    logger.info(term + " count size : " + res.size)
+    val csvData = res.map(dpc => dpc.ts + "," + dpc.count).mkString("\n")
+    val response = "Date,Hits\n" + csvData
+    response
+  }
+
   get("/api/topic") {
     logger.info("detected topic data")
     val res : Future[Seq[LdaTopic]] = db.run(DtRepo.latestAllTopics.result)
