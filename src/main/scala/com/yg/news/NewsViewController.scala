@@ -71,11 +71,12 @@ trait NewsViewProcessing extends ScalatraServlet
   }
 
   get("/topicMonitor") {
+    val seedNo = params("seedNo").toInt
     val clientIp = request.getRemoteAddr
     logger.info(s"Requested recommended news ..${clientIp}")
 
     val ta = new TopicAnalyzer(db)
-    val targetTerms = ta.topicTermDics(21).map(topic => {
+    val targetTerms = ta.topicTermDics(seedNo).map(topic => {
       topic.map(lda => {
         lda._1.term
       }).mkString("|")

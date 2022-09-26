@@ -30,7 +30,7 @@
     let isRotationActive = true;
     const Graph = ForceGraph3D()
     (document.getElementById('3d-graph'))
-            .jsonUrl('/news/api/news/termdist')
+            .jsonUrl('/news/api/news/topic3d')
             .nodeAutoColorBy('group')
             .cameraPosition({ z: distance })
             .nodeThreeObject(node => {

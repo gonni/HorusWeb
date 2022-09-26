@@ -68,9 +68,9 @@ object TopicAnalyzer {
       driver = "com.mysql.cj.jdbc.Driver")
 
     val ta = new TopicAnalyzer(db)
-    ta.loadStopWords(21).foreach(println)
+    ta.loadStopWords(1).foreach(println)
     println("======================================")
-    ta.topicTermDics(21).map(topic => {
+    ta.topicTermDics(1).map(topic => {
       topic.map(lda => {
         lda._1.term
       }).mkString("|")

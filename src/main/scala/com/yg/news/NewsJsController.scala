@@ -5,6 +5,7 @@ import com.yg.data.CrawledRepo.CrawlUnit
 import com.yg.data.DtRepo.TermDist
 import com.yg.data.NewsRepo.NewsClick
 import com.yg.data.{CrawlContentWrapOption, CrawlListWrapOption, CrawledRepo, DtRepo, NewsRepo}
+import com.yg.processing.TopicAnalyzer
 import org.scalatra._
 import org.json4s.{DefaultFormats, Formats}
 import org.scalatra.json._
@@ -120,6 +121,34 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
     WordLink(dNodes, dLink)
   }
 
+  get("/news/topic3d") {
+//    val seedId = params("seedId").toInt
+    val ta = new TopicAnalyzer(db)
+    val ldaTopics = ta.topicTermDics(1)
+
+    val setTerm = mutable.Set[String]()
+    var dNodes = Array[Node](Node("NEWS", 1000))
+    var dLink = Array[Link]()
+    var i = 0;
+    var baseTerm = "NA"
+
+    ldaTopics.foreach(topicGrp => {
+      i += 1
+      baseTerm = topicGrp.head._1.term
+      dLink = dLink :+ Link(baseTerm, "NEWS", 3)
+      // processing terms in same group
+      topicGrp.foreach(topic => {
+        setTerm += topic._1.term  // add term to Set
+        dNodes = dNodes :+ Node(topic._1.term, i) // add term:grp to nodes
+//        dLink = dLink :+ Link(topic._1.term, baseTerm, (topic._1.score * 10000).toInt)
+        dLink = dLink :+ Link(topic._1.term, baseTerm, 3)
+      })
+    })
+
+    WordLink(dNodes, dLink)
+  }
+
+  //deprecated
   get("/news/termdist1") {
     val grpTs = Await.result(db.run(DtRepo.latestTdGrpTs1.head), Duration.Inf).grpGs
     println(s"Target grpTs: ${grpTs}")
