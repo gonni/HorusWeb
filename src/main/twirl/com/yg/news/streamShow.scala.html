@@ -1,0 +1,144 @@
+@import com.yg.conn.InfluxClient.TermCount
+@(highTerms: Seq[TermCount])
+
+<div>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700">
+    <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+
+    <h3>Realtime TermCount Rank Top30</h3>
+    <div id="top1term"></div>
+    <div id="top10term"></div>
+
+</div>
+
+<script src="/assets/js/d3.v2.js"></script>
+<script src="/assets/js/cubism.v1.js"></script>
+<script src="/assets/js/highlight.min.js"></script>
+<script>
+        var serverDelayTime = 0; //System.currentTimeMillis() - startDate.getTime()
+
+        var context = cubism.context()
+                .serverDelay(serverDelayTime)
+                .clientDelay(0)
+                .step(60000)
+                .size(960);
+
+        function random(name) {
+            var value = 0,
+                    values = [],
+                    i = 0,
+                    last;
+            return context.metric(function(start, stop, step, callback) {
+                console.log(start + "/" + stop + "/" + step);
+
+                start = +start, stop = +stop;
+                if (isNaN(last)) last = start;
+                while (last < stop) {
+                    last += step;
+                    value = Math.max(-10, Math.min(10, value + .8 * Math.random() - .4 + .2 * Math.cos(i += .2)));
+                    values.push(value);
+                }
+                callback(null, values = values.slice((start - stop) / step));
+            }, name);
+        }
+
+        function loadTermCountData(term) {
+
+            var value = 0, values = [], i = 0, last;
+            return context.metric(function(start, stop, step, callback) {
+                start = +start, stop = +stop;
+                console.log(start + "/" + stop + "/" + step);
+                d3.csv('/news/data/api/termCount2?term='+ term + '&start=' + start + '&stop=' + stop + '&step=' + step, function (rows) {
+                    rows = rows.map(function (d) {
+                        return [d.Date, +d.Hits];
+                    });
+                    if (isNaN(last)) last = start;
+
+                    rows.forEach(function (data) {
+                        value = data[1];
+                        values.push(value);
+                    });
+
+                    callback(null, values = values.slice((start-stop) / step))
+                });
+            }, term);
+        }
+
+</script>
+<script>
+        var context = cubism.context()
+                .serverDelay(0)
+                .clientDelay(0)
+                .step(60000)
+                .size(1000);
+
+        var foo = random("foo"), bar = random("bar");
+        /**
+         d3.select("#example1").call(function(div) {
+
+        div.append("div")
+                .attr("class", "axis")
+                .call(context.axis().orient("top"));
+
+        div.selectAll(".horizon")
+                .data([foo, bar, foo.add(bar), foo.subtract(bar)])
+                .enter().append("div")
+                .attr("class", "horizon")
+                .call(context.horizon().extent([-20, 20]));
+
+        div.append("div")
+                .attr("class", "rule")
+                .call(context.rule());
+
+    });
+         **/
+
+        d3.select("#top10term").call(function(div) {
+            let arr = []
+            @for(highTerm <- highTerms) {
+            arr.push(loadTermCountData("@highTerm.term"))
+            }
+            console.log("arr => " + arr)
+
+            div.append("div")
+                    .attr("class", "axis")
+                    .call(context.axis().orient("top"));
+
+            div.selectAll(".horizon")
+                    // .data([loadTermCountData("서울"), loadTermCountData("비"), loadTermCountData("폭우"), loadTermCountData("대통령"), loadTermCountData("증가")])
+                    .data(arr)
+                    .enter().append("div")
+                    .attr("class", "horizon")
+                    .call(context.horizon()
+                            .height(50)
+                            .mode("mirror")
+                            .colors(["#e55989","#D4F8D4FF","#BBFABBFF","#A2F8A2FF","#88F688FF","#6DF66DFF","#42AD42FF", "#228C22FF", "#0D690DFF", "#E55989FF"])
+                            .extent([0, 180]));
+
+            div.append("div")
+                    .attr("class", "rule")
+                    .call(context.rule());
+
+        });
+
+        d3.select("#top1term").call(function(div) {
+
+            div.datum(loadTermCountData("속보")) ;
+
+            div.append("div")
+                    .attr("class", "horizon")
+                    .call(context.horizon()
+                            .height(50)
+                            .mode("mirror")
+                            .colors(["#04FB04","#3182bd","#6baed6","#bdd7e7","#bae4b3","#74c476","#31a354","#FB0404"])
+                            .title("속보")
+                            .extent([0, 3]));
+        });
+
+
+        // On mousemove, reposition the chart values to match the rule.
+        context.on("focus", function(i) {
+            d3.selectAll(".value").style("right", i == null ? null : context.size() - i + "px");
+        });
+
+</script>
