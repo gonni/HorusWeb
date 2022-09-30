@@ -106,6 +106,12 @@ trait NewsViewProcessing extends ScalatraServlet
     layouts.html.dashboard.render("Term Link 3D", com.yg.news.html.wordlink.render())
   }
 
+  get("/link2") {
+    logger.info("detected wordlink2 ..")
+
+    layouts.html.dashboard.render("Term Link 3D", com.yg.news.html.multiWordLink.render())
+  }
+
 }
 case class MergedUnit (crawlUnit: CrawlUnit, mabScore: MabScore)
 

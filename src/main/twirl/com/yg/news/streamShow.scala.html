@@ -1,11 +1,12 @@
 @import com.yg.conn.InfluxClient.TermCount
 @(highTerms: Seq[TermCount])
+<body>
+<div id="body" bgcolor="black">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700">
+<link rel="stylesheet" type="text/css" href="/assets/css/style.css">
 
 <div>
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700">
-    <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
-
-    <h3>Realtime TermCount Rank Top30</h3>
+    <h3>Realtime Topic Top10</h3>
     <div id="top1term"></div>
     <div id="top10term"></div>
 
@@ -21,7 +22,7 @@
                 .serverDelay(serverDelayTime)
                 .clientDelay(0)
                 .step(60000)
-                .size(960);
+                .size(1000);
 
         function random(name) {
             var value = 0,
@@ -72,27 +73,6 @@
                 .step(60000)
                 .size(1000);
 
-        var foo = random("foo"), bar = random("bar");
-        /**
-         d3.select("#example1").call(function(div) {
-
-        div.append("div")
-                .attr("class", "axis")
-                .call(context.axis().orient("top"));
-
-        div.selectAll(".horizon")
-                .data([foo, bar, foo.add(bar), foo.subtract(bar)])
-                .enter().append("div")
-                .attr("class", "horizon")
-                .call(context.horizon().extent([-20, 20]));
-
-        div.append("div")
-                .attr("class", "rule")
-                .call(context.rule());
-
-    });
-         **/
-
         d3.select("#top10term").call(function(div) {
             let arr = []
             @for(highTerm <- highTerms) {
@@ -142,3 +122,5 @@
         });
 
 </script>
+</div>
+</body>

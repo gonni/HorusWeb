@@ -1,7 +1,7 @@
 
 <head>
-    <style> body { margin: 0; } </style>
-    <!--
+    <style> body { margin: 0; background-color: #0a58ca} </style>
+        <!--
     <script src="//unpkg.com/three"></script>
     <script src="//unpkg.com/three-spritetext"></script>
     -->
@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    <div id="3d-graph"></div>
+    <div id="3d-graph" style="background-color: #0dcaf0"></div>
 
     <script>
     // Random tree
@@ -37,9 +37,11 @@
             .cameraPosition({ z: distance })
             .nodeThreeObject(node => {
                 const sprite = new SpriteText(node.id);
-                sprite.material.depthWrite = false; // make sprite background transparent
+                sprite.material.depthWrite = true; // make sprite background transparent
                 sprite.color = node.color;
-                sprite.textHeight = 8;
+                sprite.material.transparent = true;
+                sprite.material.opacity = 0.5;
+                sprite.textHeight = 10;
                 return sprite;
             });
 
@@ -59,4 +61,5 @@
         }
     }, 30);
   </script>
+
 </body>

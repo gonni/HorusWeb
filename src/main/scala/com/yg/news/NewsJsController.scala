@@ -136,11 +136,44 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
       i += 1
       baseTerm = topicGrp.head._1.term
       dLink = dLink :+ Link(baseTerm, "NEWS", 3)
+
       // processing terms in same group
       topicGrp.foreach(topic => {
         setTerm += topic._1.term  // add term to Set
         dNodes = dNodes :+ Node(topic._1.term, i) // add term:grp to nodes
 //        dLink = dLink :+ Link(topic._1.term, baseTerm, (topic._1.score * 10000).toInt)
+        dLink = dLink :+ Link(topic._1.term, baseTerm, 3)
+      })
+    })
+
+    WordLink(dNodes, dLink)
+  }
+
+  get("/news/multiTopic3d") {
+
+    val ta = new TopicAnalyzer(db)
+    val ldaTopics = ta.topicTermDics(1)
+
+    val setTerm = mutable.Set[String]()
+    var dNodes = Array[Node](Node("NEWS", 1000))
+    var dLink = Array[Link]()
+    var i = 0;
+    var baseTerm = "NA"
+
+    ldaTopics.foreach(topicGrp => {
+      i += 1
+      baseTerm = topicGrp.head._1.term
+      dLink = dLink :+ Link(baseTerm, "NEWS", 3)
+
+      // processing terms in same group
+      topicGrp.foreach(topic => {
+        if(!setTerm.contains(topic._1.term)) {
+          setTerm += topic._1.term // add term to Set
+          dNodes = dNodes :+ Node(topic._1.term, i) // add term:grp to nodes
+        } else {
+          logger.info("Dup Term :" + topic._1.term)
+        }
+        //        dLink = dLink :+ Link(topic._1.term, baseTerm, (topic._1.score * 10000).toInt)
         dLink = dLink :+ Link(topic._1.term, baseTerm, 3)
       })
     })
