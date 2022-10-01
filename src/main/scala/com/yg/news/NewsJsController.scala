@@ -152,7 +152,7 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
   get("/news/multiTopic3d") {
 
     val ta = new TopicAnalyzer(db)
-    val ldaTopics = ta.topicTermDics(1)
+    val ldaTopics = ta.topicTermDics(21)
 
     val setTerm = mutable.Set[String]()
     var dNodes = Array[Node](Node("NEWS", 1000))

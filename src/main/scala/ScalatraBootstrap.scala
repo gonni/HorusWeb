@@ -10,6 +10,7 @@ import com.yg.auth.AuthDemoController
 import com.yg.cwl.{CrawlAdminDataController, CrawlAdminJsApiController, CrawlAdminViewController, CrawlConfController, ReportViewController}
 import com.yg.data.deprecated.HorusCrawlData
 import com.yg.news.{NewsDataApiController, NewsJsController, NewsViewController}
+import com.yg.processing.LiveStreamingShowController
 import com.yg.scentry._
 
 //import slick.jdbc.H2Profile.api._
@@ -47,6 +48,7 @@ class ScalatraBootstrap extends LifeCycle {
     context.mount(new CrawlAdminDataController, "/admin/config/*")
     context.mount(new ReportViewController(db), "/v/report")
     context.mount(new HorusViewController(db), "/horus/*")  // db connection
+    context.mount(new LiveStreamingShowController(db), "/live/*")
 
   }
 

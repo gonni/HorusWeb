@@ -33,6 +33,8 @@
     const Graph = ForceGraph3D()
     (document.getElementById('3d-graph'))
             .jsonUrl('/news/api/news/multiTopic3d')
+            .width(500)
+            .height(500)
             .nodeAutoColorBy('group')
             .cameraPosition({ z: distance })
             .nodeThreeObject(node => {
