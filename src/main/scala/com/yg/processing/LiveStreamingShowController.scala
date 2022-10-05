@@ -56,6 +56,11 @@ trait LiveStreamingShowProcessing extends ScalatraServlet
 //    layouts.html.showbd.render("TopicView", mainPage)
     mainPage
   }
+
+  get("/termCloud") {
+    com.yg.news.html.wordCloud.render()
+  }
+
 }
 
 class LiveStreamingShowController(val db: Database) extends ScalatraServlet
