@@ -121,6 +121,17 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
     WordLink(dNodes, dLink)
   }
 
+  case class WordCloud(text: String, size: Int)
+  get("/news/cloud") {
+    val ta = new TopicAnalyzer(db)
+    val ldaTopics = ta.topicTermDics(1)
+
+    val res = ldaTopics.map(topicGrp => {
+      WordCloud(topicGrp.head._1.term, (topicGrp.head._1.score * 10000).toInt)
+    })
+    res
+  }
+
   get("/news/topic3d") {
 //    val seedId = params("seedId").toInt
     val ta = new TopicAnalyzer(db)

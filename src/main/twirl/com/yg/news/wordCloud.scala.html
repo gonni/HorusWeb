@@ -87,7 +87,7 @@ var words = [
 
 //Prepare one of the sample sentences by removing punctuation,
 // creating an array of words and computing a random size attribute.
-function getWords(i) {
+function getWords(vis, i) {
     // let wordsData = words[i]
     //         .replace(/[!\.,:;\?]/g, '')
     //         .split(' ')
@@ -99,10 +99,23 @@ function getWords(i) {
     //     console.log("unit ->"  + d.text + ":" + d.size)
     // })
 
-    let wordsData = [{text: 'a', size: 100}, {text: 'b', size: 20},
-        {text: 'c', size: 30}, {text: 'd', size: 50}, {text: 'e', size: 60}]
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", '/news/api/news/cloud')
+    xhr.onload = () => {
+        console.log("res code => " + xhr.status)
+        if(xhr.status === 200 || xhr.status === 201) {
+            let msg = xhr.response
+            let jsRes = JSON.parse(msg)
+            console.log('response -> ' + jsRes)
+            vis.update(jsRes)
+        }
+    }
+    xhr.send()
 
-    return wordsData ;
+    // let wordsData = [{text: 'a', size: 100}, {text: 'b', size: 20},
+    //     {text: 'c', size: 30}, {text: 'd', size: 50}, {text: 'e', size: 60}]
+
+    // return wordsData ;
 }
 
 //This method tells the word cloud to redraw with a new set of words.
@@ -111,7 +124,8 @@ function getWords(i) {
 function showNewWords(vis, i) {
     i = i || 0;
 
-    vis.update(getWords(i ++ % words.length))
+    // vis.update(getWords(i ++ % words.length))
+    getWords(vis, i++)
     setTimeout(function() { showNewWords(vis, i + 1)}, 2000)
 }
 
