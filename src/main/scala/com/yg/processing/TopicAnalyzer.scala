@@ -16,7 +16,7 @@ trait TopicProcessing {
     stopwords.toSet
   }
 
-  def topicTermDics(seedNo: Int) = {
+  def topicTermDics(seedNo: Int, limit: Int) = {
 
     val stopWords = loadStopWords(1)
 
@@ -34,7 +34,7 @@ trait TopicProcessing {
         .filter(topic => !stopWords.contains(topic.term))
         .sortBy(- _.score)
         .zipWithIndex.filter{case(topic, index) => {
-        index < 10
+        index < limit
       }}
     })
   }
@@ -70,7 +70,7 @@ object TopicAnalyzer {
     val ta = new TopicAnalyzer(db)
     ta.loadStopWords(1).foreach(println)
     println("======================================")
-    ta.topicTermDics(1).map(topic => {
+    ta.topicTermDics(1, 10).map(topic => {
       topic.map(lda => {
         lda._1.term
       }).mkString("|")

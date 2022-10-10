@@ -76,7 +76,7 @@ trait NewsViewProcessing extends ScalatraServlet
     logger.info(s"Requested recommended news ..${clientIp}")
 
     val ta = new TopicAnalyzer(db)
-    val targetTerms = ta.topicTermDics(seedNo).map(topic => {
+    val targetTerms = ta.topicTermDics(seedNo, 7).map(topic => {
       topic.map(lda => {
         lda._1.term
       }).mkString("|")
@@ -106,10 +106,9 @@ trait NewsViewProcessing extends ScalatraServlet
     layouts.html.dashboard.render("Term Link 3D", com.yg.news.html.wordlink.render())
   }
 
-  get("/link2") {
-    logger.info("detected wordlink2 ..")
-
-    layouts.html.dashboard.render("Term Link 3D", com.yg.news.html.multiWordLink.render())
+  get("/multiLink") {
+    logger.info("detected multiLink ..")
+    com.yg.news.html.multiWordLink.render()
   }
 
 }

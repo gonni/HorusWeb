@@ -124,8 +124,8 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
   case class WordCloud(text: String, size: Int)
   get("/news/cloud") {
     val ta = new TopicAnalyzer(db)
-    val ldaTopics = ta.topicTermDics(1)
-
+    val ldaTopics = ta.topicTermDics(21, 10)
+    ldaTopics.foreach(println)
     val res = ldaTopics.map(topicGrp => {
       WordCloud(topicGrp.head._1.term, (topicGrp.head._1.score * 10000).toInt)
     })
@@ -135,7 +135,7 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
   get("/news/topic3d") {
 //    val seedId = params("seedId").toInt
     val ta = new TopicAnalyzer(db)
-    val ldaTopics = ta.topicTermDics(1)
+    val ldaTopics = ta.topicTermDics(21, 10)
 
     val setTerm = mutable.Set[String]()
     var dNodes = Array[Node](Node("NEWS", 1000))
@@ -163,13 +163,30 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
   get("/news/multiTopic3d") {
 
     val ta = new TopicAnalyzer(db)
-    val ldaTopics = ta.topicTermDics(21)
+    val ldaTopics = ta.topicTermDics(21, 5)
 
     val setTerm = mutable.Set[String]()
     var dNodes = Array[Node](Node("NEWS", 1000))
+
     var dLink = Array[Link]()
     var i = 0;
     var baseTerm = "NA"
+
+    // --
+
+    dNodes = dNodes :+ Node("COIN", 1001)
+    dNodes = dNodes :+ Node("Repl", 1003)
+    dLink = dLink :+ Link("Repl", "COIN", 100)
+    dNodes = dNodes :+ Node("BTC", 1004)
+    dLink = dLink :+ Link("BTC", "COIN", 70)
+    dNodes = dNodes :+ Node("MVC", 1005)
+    dLink = dLink :+ Link("MVC", "COIN", 700)
+
+    dNodes = dNodes :+ Node("RA", 999)
+    dLink = dLink :+ Link("NEWS", "RA", 200)
+    dLink = dLink :+ Link("COIN", "RA", 500)
+
+    // --
 
     ldaTopics.foreach(topicGrp => {
       i += 1

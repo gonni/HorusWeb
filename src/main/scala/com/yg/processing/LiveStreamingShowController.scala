@@ -44,7 +44,7 @@ trait LiveStreamingShowProcessing extends ScalatraServlet
     logger.info(s"Requested recommended news ..${clientIp}")
 
     val ta = new TopicAnalyzer(db)
-    val targetTerms = ta.topicTermDics(seedNo).map(topic => {
+    val targetTerms = ta.topicTermDics(seedNo, 7).map(topic => {
       topic.map(lda => {
         lda._1.term
       }).mkString("|")
