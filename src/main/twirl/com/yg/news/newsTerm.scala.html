@@ -1,15 +1,16 @@
 @import com.yg.conn.InfluxClient.TermCount
 @(highTerms: Seq[TermCount])
 
-<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700">
-    <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+<div id="body">
 
-    <h3>Realtime TermCount Rank Top30</h3>
-    <div id="top1term"></div>
-    <div id="top10term"></div>
-    <div id="example1"></div>
-</main>
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700">
+<link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+
+<h3>Realtime TermCount Rank Top30</h3>
+<div id="top1term"></div>
+<div id="top10term"></div>
+<div id="example1"></div>
+
 
 <script src="/assets/js/d3.v2.js"></script>
 <script src="/assets/js/cubism.v1.js"></script>
@@ -142,3 +143,5 @@
     });
 
 </script>
+
+</div>

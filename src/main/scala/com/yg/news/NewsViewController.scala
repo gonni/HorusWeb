@@ -67,7 +67,7 @@ trait NewsViewProcessing extends ScalatraServlet
     logger.info("highTerms -> " + highTerms.mkString(" | "))
 
     val mainPage = com.yg.news.html.newsTerm.render(highTerms)
-    layouts.html.dashbd2.render("NewsStream", mainPage)
+    layouts.html.dashboard.render("NewsStream", mainPage)
   }
 
   get("/topicMonitor") {
@@ -85,7 +85,8 @@ trait NewsViewProcessing extends ScalatraServlet
 //    val mainPage = com.yg.news.html.newsTerm.render(targetTerms.map(t => TermCount(t, 0)))
 //    layouts.html.dashboard.render("NewsStream", mainPage)
     val mainPage = com.yg.news.html.streamShow.render(targetTerms.map(t => TermCount(t, 0)))
-    layouts.html.showbd.render("TopicView", mainPage)
+//    layouts.html.showbd.render("TopicView", mainPage)
+    layouts.html.dashboard.render("TopicView", mainPage)
   }
 
   get("/topics") {
