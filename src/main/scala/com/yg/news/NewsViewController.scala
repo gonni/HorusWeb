@@ -31,7 +31,7 @@ trait NewsViewProcessing extends ScalatraServlet
     val syncRes = Await.result(res, Duration.Inf)
 
     val newsPage =com.yg.news.html.newslist.render(syncRes)
-    layouts.html.dashbd2.render("News", newsPage)
+    layouts.html.dashboard.render("News", newsPage)
   }
 
   get("/pick") {

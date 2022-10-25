@@ -1,7 +1,7 @@
 @import com.yg.conn.InfluxClient.TermCount
 @(highTerms: Seq[TermCount])
 
-<div id="body">
+<div id="body" style="width: 1000px;">
 
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700">
 <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
@@ -9,8 +9,6 @@
 <h3>Realtime TermCount Rank Top30</h3>
 <div id="top1term"></div>
 <div id="top10term"></div>
-<div id="example1"></div>
-
 
 <script src="/assets/js/d3.v2.js"></script>
 <script src="/assets/js/cubism.v1.js"></script>

@@ -7,9 +7,9 @@ body {
     font-family: "Helvetica Neue", Helvetica, sans-serif;
 
     margin: auto;
-    margin-top: 0px;
-    margin-bottom: 4em;
-    width: 1000px;
+    /*margin-top: 0px;*/
+    /*margin-bottom: 4em;*/
+    /*width: 1000px;*/
 }
 
 
@@ -42,9 +42,9 @@ aside {
     width: 640px;
 }
 
-li {
-    width: 680px;
-}
+/*li {*/
+/*    width: 680px;*/
+/*}*/
 
 a {
     color: steelblue;
