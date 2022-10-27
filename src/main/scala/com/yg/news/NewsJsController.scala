@@ -123,8 +123,9 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
 
   case class WordCloud(text: String, size: Int)
   get("/news/cloud") {
+    val seedNo = params("seedNo").toInt
     val ta = new TopicAnalyzer(db)
-    val ldaTopics = ta.topicTermDics(21, 10)
+    val ldaTopics = ta.topicTermDics(seedNo, 10)
     ldaTopics.foreach(println)
     val res = ldaTopics.map(topicGrp => {
       WordCloud(topicGrp.head._1.term, (topicGrp.head._1.score * 10000).toInt)
@@ -133,9 +134,10 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
   }
 
   get("/news/topic3d") {
+    val seedNo = params("seedNo").toInt
 //    val seedId = params("seedId").toInt
     val ta = new TopicAnalyzer(db)
-    val ldaTopics = ta.topicTermDics(21, 10)
+    val ldaTopics = ta.topicTermDics(seedNo, 10)
 
     val setTerm = mutable.Set[String]()
     var dNodes = Array[Node](Node("NEWS", 1000))
@@ -161,7 +163,7 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
   }
 
   get("/news/multiTopic3d") {
-
+//    val seedNo = params("seedNo").toInt
     val ta = new TopicAnalyzer(db)
     val ldaTopics = ta.topicTermDics(21, 5)
 

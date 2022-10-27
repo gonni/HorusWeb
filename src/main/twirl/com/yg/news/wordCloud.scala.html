@@ -1,3 +1,4 @@
+@(seedNo: Long)
 <!DOCTYPE html>
 <meta charset="utf-8">
 <body>
@@ -100,7 +101,7 @@ function getWords(vis, i) {
     // })
 
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", '/news/api/news/cloud')
+    xhr.open("GET", '/news/api/news/cloud?seedNo=@seedNo')
     xhr.onload = () => {
         console.log("res code => " + xhr.status)
         if(xhr.status === 200 || xhr.status === 201) {

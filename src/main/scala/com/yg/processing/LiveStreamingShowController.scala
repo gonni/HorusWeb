@@ -58,11 +58,13 @@ trait LiveStreamingShowProcessing extends ScalatraServlet
   }
 
   get("/termCloud") {
-    com.yg.news.html.wordCloud.render()
+    val seedNo = params("seedNo").toInt
+    com.yg.news.html.wordCloud.render(seedNo)
   }
 
   get("/termCloud2") {
-    com.yg.news.html.wordCloud2.render()
+    val seedNo = params("seedNo").toInt
+    com.yg.news.html.wordCloud2.render(seedNo)
   }
 
 }
