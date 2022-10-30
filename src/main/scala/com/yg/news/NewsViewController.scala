@@ -62,11 +62,12 @@ trait NewsViewProcessing extends ScalatraServlet
 
   get("/termMonitor") {
     val clientIp = request.getRemoteAddr
+    val seedNo = params("seedNo").toLong
     logger.info(s"Requested recommended news ..${clientIp}")
     val highTerms = InfluxClient.getHighTerms("-1h", 30)
     logger.info("highTerms -> " + highTerms.mkString(" | "))
 
-    val mainPage = com.yg.news.html.newsTerm.render(highTerms)
+    val mainPage = com.yg.news.html.newsTerm.render(highTerms, seedNo)
     layouts.html.dashboard.render("NewsStream", mainPage)
   }
 
@@ -82,10 +83,11 @@ trait NewsViewProcessing extends ScalatraServlet
       }).mkString("|")
     })
 
-//    val mainPage = com.yg.news.html.newsTerm.render(targetTerms.map(t => TermCount(t, 0)))
-//    layouts.html.dashboard.render("NewsStream", mainPage)
+    targetTerms.foreach(topicStr => {
+      logger.info("TopicMonBase : " + topicStr)
+    })
+
     val mainPage = com.yg.news.html.streamShow.render(targetTerms.map(t => TermCount(t, 0)))
-//    layouts.html.showbd.render("TopicView", mainPage)
     layouts.html.dashboard.render("TopicView", mainPage)
   }
 

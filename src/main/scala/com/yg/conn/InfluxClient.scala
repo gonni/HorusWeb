@@ -63,13 +63,14 @@ object InfluxClient {
    * @param endDt -10m
    * @param windowSizeDt 1m
    */
-  def getTermCount(term: String, startDt: String, endDt: String, windowSizeDt: String) = {
+  def getTermCount(seedNo: Long, term: String, startDt: String, endDt: String, windowSizeDt: String) = {
     val query =
       s"""
         |from(bucket: "tfStudySample")
         |  |> range(start: ${startDt}, stop: ${endDt})
         |  |> filter(fn: (r) => r["_measurement"] == "term_tf")
         |  |> filter(fn: (r) => r["_field"] == "tf")
+        |  |> filter(fn: (r) => r["seedId"] == "${seedNo}")
         |  |> filter(fn: (r) => r["term"] == "${term}")
         |  |> aggregateWindow(every: ${windowSizeDt}, fn: sum, createEmpty: true)
         |  |> yield(name: "sum")
@@ -152,7 +153,7 @@ object InfluxClient {
 //    }).mkString(" or ")
 //    println("mk -> " + str)
 
-    getTermCount("대통령", "-1h", "-1m", "5m").foreach(dpc => {
+    getTermCount(21L, "대통령", "-1h", "-1m", "5m").foreach(dpc => {
       println(new Date(dpc.ts) + " --> " + dpc.count)
     })
 

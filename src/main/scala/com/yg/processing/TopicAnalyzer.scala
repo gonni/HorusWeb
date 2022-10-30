@@ -20,9 +20,13 @@ trait TopicProcessing {
 
     val stopWords = loadStopWords(1)
 
-    val asynLdaResult = db.run(DtRepo.latestAllTopics.filter(_.seedNo === seedNo).result)
+//    val asynLdaResult = db.run(DtRepo.latestAllTopics.filter(_.seedNo === seedNo).result)
+
+    val latestTs = Await.result(db.run(DtRepo.latestSeedGprTs(seedNo).result), 10.seconds)
+    println(s"lts for ${seedNo} :" + latestTs)
+    val asynLdaResult = db.run(DtRepo.latestSeedTopics(latestTs.get).result)
     val topics = Await.result(asynLdaResult, 10.seconds)
-//    topics.foreach(println)
+    topics.foreach(println)
     //TODO data convert
     println("--------------")
 
@@ -30,10 +34,12 @@ trait TopicProcessing {
 
     topicNos.map(topicNo => {
 //      println(s"=======${topicNo}========")
-      topics.filter(_.topicNo == topicNo)
+      topics
+        .filter(_.topicNo == topicNo)
         .filter(topic => !stopWords.contains(topic.term))
         .sortBy(- _.score)
         .zipWithIndex.filter{case(topic, index) => {
+        println(s"index:limit = ${index}:${limit}" )
         index < limit
       }}
     })

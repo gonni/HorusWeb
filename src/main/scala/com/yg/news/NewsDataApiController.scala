@@ -23,6 +23,7 @@ trait NewsWebDataProcessing extends ScalatraServlet with FutureSupport {
   def db: Database
 
   get("/api/termCount") {
+    val seedNo = params("seedNo").toLong
     val term = params("term").trim
     val start = params("start").toLong
     val stop = params("stop").toLong
@@ -34,7 +35,7 @@ trait NewsWebDataProcessing extends ScalatraServlet with FutureSupport {
     logger.info(s"start/stop = ${tsStart}/${tsStop}")
     logger.info(s"Request Statistics for ${term}/${start}/${stop}/${step}")
 
-    val res = InfluxClient.getTermCount(term, (start/1000).toString, (stop/1000).toString, "1m")
+    val res = InfluxClient.getTermCount(seedNo, term, (start/1000).toString, (stop/1000).toString, "1m")
     logger.info(term + " count size : " + res.size)
     val csvData = res.map(dpc => dpc.ts + "," + dpc.count).mkString("\n")
     val response = "Date,Hits\n" + csvData
@@ -42,6 +43,7 @@ trait NewsWebDataProcessing extends ScalatraServlet with FutureSupport {
   }
 
   get("/api/termCount2") {
+    val seedNo = params("seedNo").toLong
     val term = params("term").trim
     val start = params("start").toLong
     val stop = params("stop").toLong
@@ -50,7 +52,7 @@ trait NewsWebDataProcessing extends ScalatraServlet with FutureSupport {
     val tsStart = tsPattern.format(new Date(start))
     val tsStop = tsPattern.format(new Date(stop))
 
-    logger.info(s"start/stop = ${tsStart}/${tsStop}")
+    logger.info(s"start/stop = ${tsStart}/${tsStop} with seedNo#${seedNo}")
     logger.info(s"Request Statistics for ${term}/${start}/${stop}/${step}")
 
     val res = if(term.contains("|")) {
@@ -58,7 +60,7 @@ trait NewsWebDataProcessing extends ScalatraServlet with FutureSupport {
       val terms = term.split("|").toSeq
       InfluxClient.getTermsCountSum(terms, (start / 1000).toString, (stop / 1000).toString, "1m")
     } else {
-      InfluxClient.getTermCount(term, (start / 1000).toString, (stop / 1000).toString, "1m")
+      InfluxClient.getTermCount(seedNo, term, (start / 1000).toString, (stop / 1000).toString, "1m")
     }
 
     logger.info(term + " count size : " + res.size)

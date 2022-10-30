@@ -51,7 +51,7 @@
             return context.metric(function(start, stop, step, callback) {
                 start = +start, stop = +stop;
                 console.log(start + "/" + stop + "/" + step);
-                d3.csv('/news/data/api/termCount2?term='+ term + '&start=' + start + '&stop=' + stop + '&step=' + step, function (rows) {
+                d3.csv('/news/data/api/termCount2?seedNo=21&term='+ term + '&start=' + start + '&stop=' + stop + '&step=' + step, function (rows) {
                     rows = rows.map(function (d) {
                         return [d.Date, +d.Hits];
                     });

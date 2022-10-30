@@ -67,6 +67,11 @@ object DtRepo {
   // ----- Functions for LDA -----
   def latestAllTopics = ldaTopicTable.filter(_.grpTs === latestGprTs).sortBy(_.topicNo)
 
+  def latestSeedGprTs(seedNo: Int) = ldaTopicTable.filter(_.seedNo === seedNo).map(_.grpTs).max
+  def latestSeedTopics(maxGrp: Long) = ldaTopicTable.
+    filter(_.grpTs === maxGrp)
+    .sortBy(_.topicNo)
+
   // ----- Functions for TDM -----
   val termDistTable = TableQuery[TermDistBinding]
   val latestTdGrpTs = termDistTable.map(_.grpTs).max
