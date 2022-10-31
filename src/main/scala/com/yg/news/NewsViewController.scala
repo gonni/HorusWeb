@@ -111,7 +111,7 @@ trait NewsViewProcessing extends ScalatraServlet
 
   get("/multiLink") {
     logger.info("detected multiLink ..")
-    com.yg.news.html.multiWordLink.render()
+    layouts.html.dashboard.render("Term Link 3D", com.yg.news.html.multiWordLink.render())
   }
 
 }
