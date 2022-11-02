@@ -16,6 +16,10 @@ trait TopicProcessing {
     stopwords.toSet
   }
 
+  def multiTopicTermDics(limit: Int) = {
+    //TODOjett
+  }
+
   def topicTermDics(seedNo: Int, limit: Int) = {
 
     val stopWords = loadStopWords(1)
