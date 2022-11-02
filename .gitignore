@@ -78,3 +78,5 @@ project/metals.sbt
 
 src/main/resources/c3p0.properties
 **/c3p0.properties
+src/main/resources/application.conf
+**/application.conf

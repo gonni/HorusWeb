@@ -71,7 +71,11 @@ trait NewsWebDataProcessing extends ScalatraServlet with FutureSupport {
 
   get("/api/topic") {
     logger.info("detected topic data")
-    val res : Future[Seq[LdaTopic]] = db.run(DtRepo.latestAllTopics.result)
+//    val res : Future[Seq[LdaTopic]] = db.run(DtRepo.latestAllTopics.result)
+    val latestGrpF = db.run(DtRepo.latestSeedGprTs(21).result)
+    val latestGrp = Await.result(latestGrpF, Duration.Inf)
+    val res= db.run(DtRepo.latestSeedTopics(latestGrp.get).result)
+
     val topics = Await.result(res, Duration.Inf)
 //    println(topics)
 

@@ -3,6 +3,36 @@ package com.yg.data
 import slick.jdbc.MySQLProfile.api._
 
 object DtRepo {
+
+  class DtTopicTdm(tag: Tag)
+    extends Table[(Int, String, String, Double, Int, Long)](tag, "DT_TOPIC_TDM") {
+    def ttNo = column[Int]("TT_NO", O.PrimaryKey, O.AutoInc)
+    def baseTerm = column[String]("BASE_TERM")
+    def nearTerm = column[String]("NEAR_TERM")
+    def topicScore = column[Double]("TOPIC_SCORE")
+    def seedNo = column[Int]("SEED_NO")
+    def grpTs = column[Long]("GRP_TS")
+
+    def * = (ttNo, baseTerm, nearTerm, topicScore, seedNo, grpTs)
+  }
+
+  val dtTopicTdmTable = TableQuery[DtTopicTdm]
+
+  def getLatesetTtdmGrp(seedNo: Int) = {
+    dtTopicTdmTable
+      .filter(_.seedNo === seedNo)
+      .sortBy(_.seedNo.desc)
+      .take(1)
+      .result
+  }
+
+  def getTtdm(grpTs: Long) = {
+    dtTopicTdmTable
+      .filter(_.grpTs === grpTs)
+      .sortBy(_.topicScore.desc)
+      .result
+  }
+
   case class LdaTopic(
                        ldaNo: Option[Int],
                        topicNo: Int,
@@ -15,17 +45,11 @@ object DtRepo {
 
   class DtLdaTopicsBinding(tag: Tag) extends Table[LdaTopic](tag, "DT_LDA_TOPICS") {
     def ldaNo = column[Int]("LDA_NO", O.PrimaryKey, O.AutoInc)
-
     def topicNo = column[Int]("TOPIC_NO")
-
     def term = column[String]("TERM")
-
     def score = column[Double]("SCORE")
-
     def startMinAgo = column[Int]("START_MIN_AGO")
-
     def seedNo = column[Int]("SEED_NO")
-
     def grpTs = column[Long]("GRP_TS")
 
     def * = (ldaNo.?, topicNo, term, score, startMinAgo, seedNo, grpTs) <>
@@ -44,17 +68,11 @@ object DtRepo {
 
   class TermDistBinding(tag: Tag) extends Table[TermDist](tag, "TERM_DIST") {
     def termNo = column[Int]("TERM_NO", O.PrimaryKey, O.AutoInc)
-
     def baseTerm = column[String]("BASE_TERM")
-
     def compTerm = column[String]("COMP_TERM")
-
     def distVal = column[Double]("DIST_VAL")
-
     def tRangeMinAgo = column[Int]("T_RANGE_MIN_AGO")
-
     def seedNo = column[Int]("SEED_NO")
-
     def grpTs = column[Long]("GRP_TS")
 
     def * = (termNo.?, baseTerm, compTerm, distVal, tRangeMinAgo, seedNo, grpTs) <>

@@ -45,6 +45,17 @@ trait TopicProcessing {
     })
   }
 
+  def totalTermGraph(limit: Int) = {
+    val stopWords = loadStopWords(1)
+
+    val grpTs = Await.result(db.run(DtRepo.getLatesetTtdmGrp(1003)), 10.seconds)
+    val dataBody = Await.result(db.run(DtRepo.getTtdm(grpTs.headOption.get._6)), 10.seconds)
+    dataBody.foreach(println)
+
+
+
+  }
+
   def w2vSimilarTerms(term: String, limit: Int) = {
 //    val latestGrpVal = Await.result(db.run(DtRepo.latestTdGrpTs1), 10.seconds).get
 

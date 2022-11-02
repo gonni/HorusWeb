@@ -162,6 +162,12 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
     WordLink(dNodes, dLink)
   }
 
+  get("/news/multiSeedsTopic3d") {
+    println("Detected Multi ")
+    val ta = new TopicAnalyzer(db)
+    ta.totalTermGraph(10)
+  }
+
   get("/news/multiTopic3d") {
 //    val seedNo = params("seedNo").toInt
     val ta = new TopicAnalyzer(db)
