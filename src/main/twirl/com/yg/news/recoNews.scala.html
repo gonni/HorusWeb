@@ -11,7 +11,7 @@
 
     function getNewsDetails(crawlNo) {
         const xhr = new XMLHttpRequest();
-        xhr.open("GET", '/news/api/news/pick/details?newsId=' + crawlNo)
+        xhr.open("GET", '/news/api/js/pick/details?newsId=' + crawlNo)
         xhr.onload = () => {
             if(xhr.status === 200 || xhr.status === 201) {
                 let msg = xhr.response

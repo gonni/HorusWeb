@@ -6,7 +6,7 @@
 <script>
     function getNewsDetails(crawlNo) {
         const xhr = new XMLHttpRequest();
-        xhr.open("GET", '/news/api/news/details?newsId=' + crawlNo)
+        xhr.open("GET", '/news/api/js/details?newsId=' + crawlNo)
 
         xhr.onload = () => {
             if(xhr.status === 200 || xhr.status === 201) {
@@ -27,7 +27,7 @@
 
     function getNewsDetailsWithAnalysis(crawlNo) {
         const xhr = new XMLHttpRequest();
-        xhr.open("GET", '/news/api/news/analysis?newsId=' + crawlNo)
+        xhr.open("GET", '/news/api/js/analysis?newsId=' + crawlNo)
 
         xhr.onload = () => {
             if(xhr.status === 200 || xhr.status === 201) {

@@ -101,7 +101,7 @@ function getWords(vis, i) {
     // })
 
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", '/news/api/news/cloud?seedNo=@seedNo')
+    xhr.open("GET", '/news/api/js/cloud?seedNo=@seedNo')
     xhr.onload = () => {
         console.log("res code => " + xhr.status)
         if(xhr.status === 200 || xhr.status === 201) {

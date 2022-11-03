@@ -49,24 +49,39 @@ trait TopicProcessing {
     })
   }
 
-  def totalTermGraph(limit: Int) = {
-    val stopWords = loadStopWords(1)
+  def integratedTermGraph(targetSeeds: Seq[Int]) = {
+    targetSeeds.foreach(seedNo => {
+      val baseTerms = getOrderedTermCount(seedNo, 1.0)
 
-    val grpTs = Await.result(db.run(DtRepo.getLatesetTtdmGrp(1003)), 10.seconds)
+
+
+    })
+  }
+
+  private def getOrderedTermCount(seedNo: Int, minTopicScore: Double) = {
+    getRelationgData(seedNo)
+      .filter(_.topicScore > minTopicScore)
+      .flatMap(_.baseTerms)
+      .groupBy(i=>i).map(e => (e._1, e._2.length))
+      .toList.sortBy(_._2)(Ordering[Int].reverse)
+  }
+
+  private def getRelationgData(seedNo: Int, cleanLevel : Int = 1) = {
+    val stopWordsSet = loadStopWords(cleanLevel)
+
+    val grpTs = Await.result(db.run(DtRepo.getLatesetTtdmGrp(seedNo)), 10.seconds)
     val dataBody = Await.result(db.run(DtRepo.getTtdm(grpTs.headOption.get._6)), 10.seconds)
-    dataBody.foreach(println)
 
-
-
-  }
-
-  def w2vSimilarTerms(term: String, limit: Int) = {
-//    val latestGrpVal = Await.result(db.run(DtRepo.latestTdGrpTs1), 10.seconds).get
+    dataBody.map(row => DtmData(
+      row._2.split("\\|").toList.filter(word => !stopWordsSet.contains(word)),
+      row._3.split("\\|").toList.filter(word => !stopWordsSet.contains(word)), row._4))
 
   }
+
 
 }
 
+case class DtmData(baseTerms: List[String], relTerms: List[String], topicScore: Double)
 
 class TopicAnalyzer(val db: Database) extends TopicProcessing {
   protected implicit def executor = scala.concurrent.ExecutionContext.Implicits.global

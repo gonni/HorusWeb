@@ -27,7 +27,7 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
     contentType = formats("json")
   }
 
-  get("/news/details") {
+  get("/js/details") {
     val clientIp = request.getRemoteAddr
     val newsId = params("newsId").toInt
     logger.info(s"Detected API NewsDetails: ${newsId} from ${clientIp}")
@@ -41,7 +41,7 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
     newsData.getOrElse(CrawlUnit(crawlNo = newsId, status = Option("NotExist") ))
   }
 
-  get("/news/pick/details") {
+  get("/js/pick/details") {
     val clientIp = request.getRemoteAddr
     val newsId = params("newsId").toInt
     logger.info(s"Detected API NewsDetails: ${newsId} from ${clientIp}")
@@ -55,7 +55,7 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
     newsData.getOrElse(CrawlUnit(crawlNo = newsId, status = Option("NotExist") ))
   }
 
-  get("/news/analysis") {
+  get("/js/analysis") {
     val clientIp = request.getRemoteAddr
     val newsId = params("newsId").toInt
     val news: CrawlUnit = getNewsData(newsId, clientIp)
@@ -84,7 +84,7 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
     newsData.getOrElse(CrawlUnit(crawlNo = newsId, status = Option("NotExist") ))
   }
 
-  get("/news/termdist") {
+  get("/js/termdist") {
     logger.info("Detected Term-Dist data ..")
     val lt = Await.result(db.run(DtRepo.latestTdGrpTs1.head), Duration.Inf).grpGs
     println("Time Group => " + lt)
@@ -122,7 +122,7 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
   }
 
   case class WordCloud(text: String, size: Int)
-  get("/news/cloud") {
+  get("/js/cloud") {
     val seedNo = params("seedNo").toInt
     val ta = new TopicAnalyzer(db)
     val ldaTopics = ta.topicTermDics(seedNo, 10)
@@ -133,7 +133,7 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
     res
   }
 
-  get("/news/topic3d") {
+  get("/js/topic3d") {
     val seedNo = params("seedNo").toInt
 //    val seedId = params("seedId").toInt
     val ta = new TopicAnalyzer(db)
@@ -162,16 +162,20 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
     WordLink(dNodes, dLink)
   }
 
-  get("/news/multiSeedsTopic3d") {
+  get("/js/multiSeedsTopic3d") {
     println("Detected Multi ")
     val ta = new TopicAnalyzer(db)
-    ta.totalTermGraph(10)
+    ta.integratedTermGraph(Seq(1006, 1015))
+
+
+
+
   }
 
-  get("/news/multiTopic3d") {
+  get("/js/multiTopic3d") {
 //    val seedNo = params("seedNo").toInt
     val ta = new TopicAnalyzer(db)
-    val ldaTopics = ta.topicTermDics(21, 5)
+    val ldaTopics = ta.topicTermDics(1, 5)
 
     val setTerm = mutable.Set[String]()
     var dNodes = Array[Node](Node("NEWS", 1000))
@@ -182,17 +186,17 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
 
     // --
 
-    dNodes = dNodes :+ Node("COIN", 1001)
-    dNodes = dNodes :+ Node("Repl", 1003)
-    dLink = dLink :+ Link("Repl", "COIN", 100)
-    dNodes = dNodes :+ Node("BTC", 1004)
-    dLink = dLink :+ Link("BTC", "COIN", 70)
-    dNodes = dNodes :+ Node("MVC", 1005)
-    dLink = dLink :+ Link("MVC", "COIN", 700)
-
-    dNodes = dNodes :+ Node("RA", 999)
-    dLink = dLink :+ Link("NEWS", "RA", 200)
-    dLink = dLink :+ Link("COIN", "RA", 500)
+//    dNodes = dNodes :+ Node("COIN", 1001)
+//    dNodes = dNodes :+ Node("Repl", 1003)
+//    dLink = dLink :+ Link("Repl", "COIN", 100)
+//    dNodes = dNodes :+ Node("BTC", 1004)
+//    dLink = dLink :+ Link("BTC", "COIN", 70)
+//    dNodes = dNodes :+ Node("MVC", 1005)
+//    dLink = dLink :+ Link("MVC", "COIN", 700)
+//
+//    dNodes = dNodes :+ Node("RA", 999)
+//    dLink = dLink :+ Link("NEWS", "RA", 200)
+//    dLink = dLink :+ Link("COIN", "RA", 500)
 
     // --
 
@@ -205,7 +209,7 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
       topicGrp.foreach(topic => {
         if(!setTerm.contains(topic._1.term)) {
           setTerm += topic._1.term // add term to Set
-          dNodes = dNodes :+ Node(topic._1.term, i) // add term:grp to nodes
+          dNodes = dNodes :+ Node(topic._1.term, i, (Math.random() * 30).toInt) // add term:grp to nodes
         } else {
           logger.info("Dup Term :" + topic._1.term)
         }
@@ -218,7 +222,7 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
   }
 
   //deprecated
-  get("/news/termdist1") {
+  get("/js/termdist1") {
     val grpTs = Await.result(db.run(DtRepo.latestTdGrpTs1.head), Duration.Inf).grpGs
     println(s"Target grpTs: ${grpTs}")
 
@@ -230,7 +234,7 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
   }
 
   case class WordLink(nodes: Array[Node], links: Array[Link])
-  case class Node(id: String, group: Int)
+  case class Node(id: String, group: Int, weight: Int = 12)
   case class Link(source: String, target: String, value: Int)
 }
 
