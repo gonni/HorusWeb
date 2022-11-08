@@ -209,7 +209,7 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
       topicGrp.foreach(topic => {
         if(!setTerm.contains(topic._1.term)) {
           setTerm += topic._1.term // add term to Set
-          dNodes = dNodes :+ Node(topic._1.term, i, (Math.random() * 30).toInt) // add term:grp to nodes
+          dNodes = dNodes :+ Node(topic._1.term, i, (Math.random() * 20).toInt) // add term:grp to nodes
         } else {
           logger.info("Dup Term :" + topic._1.term)
         }

@@ -17,7 +17,7 @@ trait TopicProcessing {
   }
 
   def multiTopicTermDics(limit: Int) = {
-    //TODOjett
+    //TODO
   }
 
   def topicTermDics(seedNo: Int, limit: Int) = {
