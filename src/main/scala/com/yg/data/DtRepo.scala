@@ -21,7 +21,7 @@ object DtRepo {
   def getLatesetTtdmGrp(seedNo: Int) = {
     dtTopicTdmTable
       .filter(_.seedNo === seedNo)
-      .sortBy(_.seedNo.desc)
+      .sortBy(_.ttNo.desc)
       .take(1)
       .result
   }

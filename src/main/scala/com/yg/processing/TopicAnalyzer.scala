@@ -28,6 +28,7 @@ trait TopicProcessing {
 
     val latestTs = Await.result(db.run(DtRepo.latestSeedGprTs(seedNo).result), 10.seconds)
     println(s"lts for ${seedNo} :" + latestTs)
+
     val asynLdaResult = db.run(DtRepo.latestSeedTopics(latestTs.get).result)
     val topics = Await.result(asynLdaResult, 10.seconds)
     topics.foreach(println)
@@ -51,14 +52,15 @@ trait TopicProcessing {
 
   def integratedTermGraph(targetSeeds: Seq[Int]) = {
     targetSeeds.foreach(seedNo => {
-      val baseTerms = getOrderedTermCount(seedNo, 1.0)
+      val baseTerms = getOrderedTermCount(seedNo, 0.5)
+      baseTerms.foreach(println)
 
 
 
     })
   }
 
-  private def getOrderedTermCount(seedNo: Int, minTopicScore: Double) = {
+  def getOrderedTermCount(seedNo: Int, minTopicScore: Double) = {
     getRelationgData(seedNo)
       .filter(_.topicScore > minTopicScore)
       .flatMap(_.baseTerms)
@@ -66,10 +68,11 @@ trait TopicProcessing {
       .toList.sortBy(_._2)(Ordering[Int].reverse)
   }
 
-  private def getRelationgData(seedNo: Int, cleanLevel : Int = 1) = {
+  def getRelationgData(seedNo: Int, cleanLevel : Int = 1) = {
     val stopWordsSet = loadStopWords(cleanLevel)
 
     val grpTs = Await.result(db.run(DtRepo.getLatesetTtdmGrp(seedNo)), 10.seconds)
+    println("Latest GrpTs =" + grpTs)
     val dataBody = Await.result(db.run(DtRepo.getTtdm(grpTs.headOption.get._6)), 10.seconds)
 
     dataBody.map(row => DtmData(
@@ -104,13 +107,17 @@ object TopicAnalyzer {
       driver = "com.mysql.cj.jdbc.Driver")
 
     val ta = new TopicAnalyzer(db)
-    ta.loadStopWords(1).foreach(println)
-    println("======================================")
-    ta.topicTermDics(1, 10).map(topic => {
-      topic.map(lda => {
-        lda._1.term
-      }).mkString("|")
-    }).foreach(println)
+//    ta.loadStopWords(1).foreach(println)
+//    println("======================================")
+//    ta.topicTermDics(1, 10).map(topic => {
+//      topic.map(lda => {
+//        lda._1.term
+//      }).mkString("|")
+//    }).foreach(println)
 
+    ta.getRelationgData(21).foreach(println)
+    println("-----------------------------")
+    println("size =>" + ta.getOrderedTermCount(21, 0.03).size)
+    ta.getOrderedTermCount(21, 0.05).foreach(println)
   }
 }
