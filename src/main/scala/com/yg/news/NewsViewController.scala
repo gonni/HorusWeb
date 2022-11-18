@@ -55,7 +55,6 @@ trait NewsViewProcessing extends ScalatraServlet
       }
     })).filter(r => r != ()).collect {case a: MergedUnit => a}
 
-//    val newsPage =com.yg.news.html.recoNews.render(syncRes, mergedUnit)
     val newsPage =com.yg.news.html.recoNews.render(mergedUnit)
     layouts.html.dashboard.render("Pick 5", newsPage)
   }

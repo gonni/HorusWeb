@@ -52,7 +52,7 @@ trait TopicProcessing {
 
   def integratedTermGraph(targetSeeds: Seq[Int]) = {
     targetSeeds.foreach(seedNo => {
-      val baseTerms = getOrderedTermCount(seedNo, 0.5)
+      val baseTerms = getOrderedTc(seedNo, 0.03)(_.baseTerms)
       baseTerms.foreach(println)
 
 
@@ -60,15 +60,28 @@ trait TopicProcessing {
     })
   }
 
-  def getOrderedTermCount(seedNo: Int, minTopicScore: Double) = {
-    getRelationgData(seedNo)
+  def getTopCountTerms(seeds: Seq[Int]) = {
+    val topTerms = seeds.map(seed => {
+      getOrderedTc(seed, 0.001)(i => i.baseTerms ++ i.relTerms).filter(_._2 > 0).map(_._1)
+    })
+    topTerms.foreach(println)
+
+    topTerms.flatMap(_.toSeq)
+      .groupBy(i=>i).map(e=> (e._1, e._2.length))
+      .toList.sortBy(_._2)(Ordering[Int].reverse)
+      .foreach(println)
+  }
+
+  def getOrderedTc[B](seedNo: Int, minTopicScore: Double)(fm: DtmData => IterableOnce[B]) = {
+    getLdaTdmSummaryData(seedNo)
       .filter(_.topicScore > minTopicScore)
-      .flatMap(_.baseTerms)
+      .flatMap(fm)
       .groupBy(i=>i).map(e => (e._1, e._2.length))
       .toList.sortBy(_._2)(Ordering[Int].reverse)
   }
 
-  def getRelationgData(seedNo: Int, cleanLevel : Int = 1) = {
+  // DtmData
+  def getLdaTdmSummaryData(seedNo: Int, cleanLevel : Int = 1) = {
     val stopWordsSet = loadStopWords(cleanLevel)
 
     val grpTs = Await.result(db.run(DtRepo.getLatesetTtdmGrp(seedNo)), 10.seconds)
@@ -80,8 +93,6 @@ trait TopicProcessing {
       row._3.split("\\|").toList.filter(word => !stopWordsSet.contains(word)), row._4))
 
   }
-
-
 }
 
 case class DtmData(baseTerms: List[String], relTerms: List[String], topicScore: Double)
@@ -115,9 +126,19 @@ object TopicAnalyzer {
 //      }).mkString("|")
 //    }).foreach(println)
 
-    ta.getRelationgData(21).foreach(println)
+//    ta.getLdaTdmSummaryData(1).foreach(println)
     println("-----------------------------")
-    println("size =>" + ta.getOrderedTermCount(21, 0.03).size)
-    ta.getOrderedTermCount(21, 0.05).foreach(println)
+//    println("size =>" + ta.getOrderedTermCount(21, 0.03).size)
+//    ta.getOrderedTermCount(1, 0.05).foreach(println)
+//    println(ta.getOrderedTermCount(1, 0.001).length)
+
+//    println(ta.getOrderedTc(1, 0.001)(_.relTerms).length)
+//    ta.getOrderedTc(1, 0.001)(_.baseTerms).foreach(println)
+//    println("------------------------")
+//    val a =ta.getOrderedTc(1, 0.001)(i => i.baseTerms ++ i.relTerms)
+//
+//    println(a.length)
+//    a.foreach(println)
+    ta.getTopCountTerms(Seq(1,2))
   }
 }

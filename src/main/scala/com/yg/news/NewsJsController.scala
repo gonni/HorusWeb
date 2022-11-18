@@ -166,7 +166,7 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
   get("/js/multiSeedsTopic3d") {
     println("Detected Multi ")
     val ta = new TopicAnalyzer(db)
-    ta.integratedTermGraph(Seq(21))
+    ta.integratedTermGraph(Seq(1))
 
     "TBD"
   }
@@ -222,8 +222,7 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
     WordLink(dNodes, dLink)
   }
 
-  //deprecated
-  get("/js/termdist1") {
+ get("/js/termdist1") {
     val grpTs = Await.result(db.run(DtRepo.latestTdGrpTs1.head), Duration.Inf).grpGs
     println(s"Target grpTs: ${grpTs}")
 
