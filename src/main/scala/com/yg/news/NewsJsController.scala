@@ -166,7 +166,7 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
   get("/js/multiSeedsTopic3d") {
     println("Detected Multi ")
     val ta = new TopicAnalyzer(db)
-    ta.integratedTermGraph(Seq(1))
+    ta.integratedTermGraph(Seq(21))
 
     "TBD"
   }

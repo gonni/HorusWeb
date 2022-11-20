@@ -62,7 +62,7 @@ trait TopicProcessing {
 
   def getTopCountTerms(seeds: Seq[Int]) = {
     val topTerms = seeds.map(seed => {
-      getOrderedTc(seed, 0.001)(i => i.baseTerms ++ i.relTerms).filter(_._2 > 0).map(_._1)
+      getOrderedTc(seed, 0.001)(i => i.baseTerms ++ i.relTerms).filter(_._2 > 1).map(_._1)
     })
     topTerms.foreach(println)
 
@@ -118,27 +118,18 @@ object TopicAnalyzer {
       driver = "com.mysql.cj.jdbc.Driver")
 
     val ta = new TopicAnalyzer(db)
-//    ta.loadStopWords(1).foreach(println)
-//    println("======================================")
-//    ta.topicTermDics(1, 10).map(topic => {
-//      topic.map(lda => {
-//        lda._1.term
-//      }).mkString("|")
-//    }).foreach(println)
 
-//    ta.getLdaTdmSummaryData(1).foreach(println)
     println("-----------------------------")
-//    println("size =>" + ta.getOrderedTermCount(21, 0.03).size)
-//    ta.getOrderedTermCount(1, 0.05).foreach(println)
-//    println(ta.getOrderedTermCount(1, 0.001).length)
+    ta.getLdaTdmSummaryData(21).foreach(println)
 
-//    println(ta.getOrderedTc(1, 0.001)(_.relTerms).length)
-//    ta.getOrderedTc(1, 0.001)(_.baseTerms).foreach(println)
-//    println("------------------------")
-//    val a =ta.getOrderedTc(1, 0.001)(i => i.baseTerms ++ i.relTerms)
-//
-//    println(a.length)
-//    a.foreach(println)
-    ta.getTopCountTerms(Seq(1,2))
+    val a = ta.getOrderedTc(21, 0.001)(i => i.baseTerms ++ i.relTerms).take(10)
+    a.foreach(println)
+
+    ta.getLdaTdmSummaryData(23).foreach(println)
+    ta.getOrderedTc(23, 0.001)(i => i.baseTerms ++ i.relTerms).take(10).foreach(println)
+
+    ta.getLdaTdmSummaryData(25).foreach(println)
+    ta.getOrderedTc(25, 0.001)(i => i.baseTerms ++ i.relTerms).take(10).foreach(println)
+
   }
 }
