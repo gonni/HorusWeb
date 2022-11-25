@@ -1,9 +1,7 @@
 package com.yg.data
 
 import slick.jdbc.MySQLProfile.api._
-
 import java.sql.Timestamp
-import java.time.LocalDateTime
 
 object CrawledRepo {
   case class CrawlUnit(

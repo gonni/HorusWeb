@@ -166,7 +166,25 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
   get("/js/multiSeedsTopic3d") {
     println("Detected Multi ")
     val ta = new TopicAnalyzer(db)
-    ta.integratedTermGraph(Seq(21))
+    val md = ta.integratedTermGraph(Seq(1, 2), 3)
+
+    val nodes = md.flatMap(_._2).flatMap(_.map(_._1))
+
+    md.map(idLst => {
+      idLst._1
+      idLst._2.map(termScore => { // Vector
+        termScore.map(termScore => {
+          Node(termScore._1, ???)
+        })  // List
+      })
+
+    })
+
+
+//    md.map(iData => {
+//      iData.
+//    })
+
 
     "TBD"
   }
@@ -174,10 +192,8 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
   get("/js/multiTopic3d") {
 //    val seedNo = params("seedNo").toInt
     val ta = new TopicAnalyzer(db)
-//    val ts = System.currentTimeMillis()
-    val ldaTopics = ta.topicTermDics(21, 5)
-//    println("Delta :" + (System.currentTimeMillis() - ts))
 
+    val ldaTopics = ta.topicTermDics(1, 5)
     val setTerm = mutable.Set[String]()
     var dNodes = Array[Node](Node("NEWS", 1000))
 

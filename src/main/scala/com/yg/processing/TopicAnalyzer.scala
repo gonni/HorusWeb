@@ -50,14 +50,51 @@ trait TopicProcessing {
     })
   }
 
-  def integratedTermGraph(targetSeeds: Seq[Int]) = {
-    targetSeeds.foreach(seedNo => {
-      val baseTerms = getOrderedTc(seedNo, 0.03)(_.baseTerms)
-      baseTerms.foreach(println)
+  def integratedTermGraph(targetSeeds: Seq[Int], limit: Int) = {
+//    targetSeeds.foreach(seedNo => {
+//      getScoredTc(seedNo).foreach(println)
+//      println("-------------------------")
+//    })
+    targetSeeds.map(seedNo => {
+      val resData = getScoredTc(seedNo)
+//      resData.take(3)
+      //TODO need to add more biz logic
 
-
-
+      (seedNo, resData.take(limit))
     })
+  }
+
+  /**
+   * grpScore x listOrderScore x TF (cleaned with stopWords) x Future(TF by Influx)
+   */
+  def getScoredTc(seedNo: Int, minScore: Double = 0.03) = {
+//    val baseTerms = getOrderedTc(seedNo, 0.002)(_.baseTerms)
+    val mapTermCount = getOrderedTc(seedNo, minScore)(i => i.baseTerms ++ i.relTerms).toMap[String, Int]
+
+    val ldaData = getLdaTdmSummaryData(seedNo)
+    ldaData.map(ddu => {
+      val grpScore = ddu.topicScore
+
+      val baseSize = ddu.baseTerms.length
+      ddu.baseTerms.zipWithIndex.map{ case(elem, index) =>
+//        println(elem, index)
+//        println(elem, ((baseSize - index) / baseSize), grpScore)
+
+        val boosting = if(mapTermCount.contains(elem)) mapTermCount(elem) else 1
+        if(boosting > 1) println("Upper Boost : " + elem + "->" + boosting)
+        (elem, ((baseSize - index) * 100 / baseSize) * grpScore * 10 * boosting)
+
+      }
+    })
+  }
+
+
+  def getOrderedTc[B](seedNo: Int, minTopicScore: Double)(targetElement: DtmData => IterableOnce[B]) = {
+    getLdaTdmSummaryData(seedNo)
+      .filter(_.topicScore > minTopicScore)
+      .flatMap(targetElement)
+      .groupBy(i=>i).map(e => (e._1, e._2.length))
+      .toList.sortBy(_._2)(Ordering[Int].reverse)
   }
 
   def getTopCountTerms(seeds: Seq[Int]) = {
@@ -70,14 +107,6 @@ trait TopicProcessing {
       .groupBy(i=>i).map(e=> (e._1, e._2.length))
       .toList.sortBy(_._2)(Ordering[Int].reverse)
       .foreach(println)
-  }
-
-  def getOrderedTc[B](seedNo: Int, minTopicScore: Double)(fm: DtmData => IterableOnce[B]) = {
-    getLdaTdmSummaryData(seedNo)
-      .filter(_.topicScore > minTopicScore)
-      .flatMap(fm)
-      .groupBy(i=>i).map(e => (e._1, e._2.length))
-      .toList.sortBy(_._2)(Ordering[Int].reverse)
   }
 
   // DtmData
@@ -118,18 +147,35 @@ object TopicAnalyzer {
       driver = "com.mysql.cj.jdbc.Driver")
 
     val ta = new TopicAnalyzer(db)
-
     println("-----------------------------")
-    ta.getLdaTdmSummaryData(21).foreach(println)
 
-    val a = ta.getOrderedTc(21, 0.001)(i => i.baseTerms ++ i.relTerms).take(10)
-    a.foreach(println)
+//    ta.getLdaTdmSummaryData(21).foreach(println)
+//
+//    val a = ta.getOrderedTc(21, 0.001)(i => i.baseTerms ++ i.relTerms).take(10)
+//    a.foreach(println)
+//
+//    ta.getLdaTdmSummaryData(23).foreach(println)
+//    ta.getOrderedTc(23, 0.001)(i => i.baseTerms ++ i.relTerms).take(10).foreach(println)
+//
+//    ta.getLdaTdmSummaryData(25).foreach(println)
+//    ta.getOrderedTc(25, 0.001)(i => i.baseTerms ++ i.relTerms).take(10).foreach(println)
 
-    ta.getLdaTdmSummaryData(23).foreach(println)
-    ta.getOrderedTc(23, 0.001)(i => i.baseTerms ++ i.relTerms).take(10).foreach(println)
+//    ta.getScoredTc(1).foreach(println)
+    val x = ta.integratedTermGraph(Seq[Int](1, 2), 3)//.foreach(println)
+    x.map(idLst => {
+      idLst._1
+      idLst._2.map(termScore => { // Vector
+        termScore.map(a => {
+          //
+        })  // List
+      })
 
-    ta.getLdaTdmSummaryData(25).foreach(println)
-    ta.getOrderedTc(25, 0.001)(i => i.baseTerms ++ i.relTerms).take(10).foreach(println)
+    })
 
+
+//    println("-----------------------------")
+//    val lstTerms = ta.integratedTermGraph(Seq[Int](1, 2),3)
+//      .flatMap(_._2).flatMap(_.map(_._1))
+//    println(lstTerms.length + " -- distinct --> " + lstTerms.distinct.length)
   }
 }

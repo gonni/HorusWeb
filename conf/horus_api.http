@@ -1,0 +1,5 @@
+### DEV-API
+GET http://localhost:8090/news/api/js/multiSeedsTopic3d
+
+### OLD-API
+GET http://localhost:8090/news/api/js/multiTopic3d
