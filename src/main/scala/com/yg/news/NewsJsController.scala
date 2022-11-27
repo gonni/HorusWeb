@@ -162,38 +162,13 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
     WordLink(dNodes, dLink)
   }
 
-  // ALL NEW
-  get("/js/multiSeedsTopic3d") {
-    println("Detected Multi ")
-    val ta = new TopicAnalyzer(db)
-    val md = ta.integratedTermGraph(Seq(1, 2), 3)
 
-    val nodes = md.flatMap(_._2).flatMap(_.map(_._1))
-
-    md.map(idLst => {
-      idLst._1
-      idLst._2.map(termScore => { // Vector
-        termScore.map(termScore => {
-          Node(termScore._1, ???)
-        })  // List
-      })
-
-    })
-
-
-//    md.map(iData => {
-//      iData.
-//    })
-
-
-    "TBD"
-  }
 
   get("/js/multiTopic3d") {
 //    val seedNo = params("seedNo").toInt
     val ta = new TopicAnalyzer(db)
 
-    val ldaTopics = ta.topicTermDics(1, 5)
+    val ldaTopics = ta.topicTermDics(21, 5)
     val setTerm = mutable.Set[String]()
     var dNodes = Array[Node](Node("NEWS", 1000))
 
@@ -249,11 +224,16 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
     filteredRes
   }
 
-  case class WordLink(nodes: Array[Node], links: Array[Link])
-  case class Node(id: String, group: Int, weight: Int = 12)
-  case class Link(source: String, target: String, value: Int)
+
 }
 
-class NewsJsController(val db: Database) extends ScalatraServlet with FutureSupport with NewsDataProcessing {
+case class WordLink(nodes: Array[Node], links: Array[Link])
+case class Node(id: String, group: Int, weight: Int = 12)
+case class Link(source: String, target: String, value: Int)
+
+class NewsJsController(val db: Database) extends ScalatraServlet
+  with FutureSupport
+  with NewsDataProcessing
+  with AdvancedDataProcessing{
   protected implicit def executor = scala.concurrent.ExecutionContext.Implicits.global
 }

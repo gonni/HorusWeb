@@ -2,6 +2,7 @@ package com.yg.processing
 
 import com.yg.RuntimeConfig
 import com.yg.data.{DtRepo, TermScoreRepo}
+import com.yg.news.Node
 import slick.jdbc.MySQLProfile.api._
 
 import scala.concurrent.Await
@@ -81,13 +82,12 @@ trait TopicProcessing {
 //        println(elem, ((baseSize - index) / baseSize), grpScore)
 
         val boosting = if(mapTermCount.contains(elem)) mapTermCount(elem) else 1
-        if(boosting > 1) println("Upper Boost : " + elem + "->" + boosting)
-        (elem, ((baseSize - index) * 100 / baseSize) * grpScore * 10 * boosting)
+//        if(boosting > 1) println("Upper Boost : " + elem + "->" + boosting)
+        (elem, ((baseSize - index) * 30 / baseSize) * grpScore * 1 * boosting)
 
       }
     })
   }
-
 
   def getOrderedTc[B](seedNo: Int, minTopicScore: Double)(targetElement: DtmData => IterableOnce[B]) = {
     getLdaTdmSummaryData(seedNo)
@@ -114,7 +114,7 @@ trait TopicProcessing {
     val stopWordsSet = loadStopWords(cleanLevel)
 
     val grpTs = Await.result(db.run(DtRepo.getLatesetTtdmGrp(seedNo)), 10.seconds)
-    println("Latest GrpTs =" + grpTs)
+//    println("Latest GrpTs =" + grpTs)
     val dataBody = Await.result(db.run(DtRepo.getTtdm(grpTs.headOption.get._6)), 10.seconds)
 
     dataBody.map(row => DtmData(
@@ -147,7 +147,41 @@ object TopicAnalyzer {
       driver = "com.mysql.cj.jdbc.Driver")
 
     val ta = new TopicAnalyzer(db)
+    val md = ta.integratedTermGraph(Seq(21, 23), 3)
+
+    var nodes = md.flatMap(idLst => {
+      idLst._2.zipWithIndex.map { case (termScore, ig) => // Vector
+        termScore.zipWithIndex.map { case (a, i) =>
+          Node(a._1, (idLst._1 * 100 + ig), a._2.toInt)
+        } // List
+      }
+    }).flatMap(i => i).toArray
+
+
+    var links = md.flatMap(idLst => {
+      nodes = nodes :+ Node("Seed#" + idLst._1, 100)
+
+      idLst._2.zipWithIndex.map { case (termScore, ig) => // Vector
+        nodes = nodes :+ Node("T#" + ig, 50)
+        ("T#" + ig, "Seed#" + idLst._1, 10)
+
+        termScore.zipWithIndex.map { case (a, i) =>
+//          (a._1, a._2, idLst._1, ig ,i)
+          (a._1, "T#" + ig, a._2.toInt)
+        } // List
+      }
+    }).flatMap(i => i)
+
+//    md.flatMap(idList => {
+//      idList._2.zipWithIndex.map {case(termScore, ig) => {
+//        links = links :+ Link()
+//      }}
+//    })
+
+    nodes.foreach(println)
     println("-----------------------------")
+
+    links.foreach(println)
 
 //    ta.getLdaTdmSummaryData(21).foreach(println)
 //
@@ -161,17 +195,31 @@ object TopicAnalyzer {
 //    ta.getOrderedTc(25, 0.001)(i => i.baseTerms ++ i.relTerms).take(10).foreach(println)
 
 //    ta.getScoredTc(1).foreach(println)
-    val x = ta.integratedTermGraph(Seq[Int](1, 2), 3)//.foreach(println)
-    x.map(idLst => {
-      idLst._1
-      idLst._2.map(termScore => { // Vector
-        termScore.map(a => {
-          //
-        })  // List
-      })
 
-    })
+//    val x = ta.integratedTermGraph(Seq[Int](21, 23), 3)//.foreach(println)
+//    val x2= x.flatMap(idLst => {
+//      idLst._2.flatMap(termScore => { // Vector
+//        termScore.zipWithIndex.map{ case(a, i) => {
+//          (a._1, a._2, idLst._1, i.toInt)
+//        }}  // List
+//      })
+//    })
+//
+//    x2.foreach(println)
+//    println("-----------------------------")
+//
+//    val x3 = x.flatMap(idLst => {
+//      idLst._2.zipWithIndex.map { case(termScore, ig) => { // Vector
+//        termScore.zipWithIndex.map { case (a, i) => {
+//          (a._1, a._2, idLst._1, ig, i)
+//        }
+//        } // List
+//      }}
+//    })
+//
+//    x3.flatMap(i=>i).foreach(println)
 
+//    ta.topicTermDics(21, 5).foreach(println)
 
 //    println("-----------------------------")
 //    val lstTerms = ta.integratedTermGraph(Seq[Int](1, 2),3)
