@@ -29,6 +29,7 @@ trait LiveStreamingShowProcessing extends ScalatraServlet
     layouts.html.iStreamShow.render()
   }
 
+  // ** Deving **
   get("/topic3d") {
     logger.info("topic3d ..")
     com.yg.news.html.multiWordLink.render()

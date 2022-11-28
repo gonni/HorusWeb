@@ -52,38 +52,40 @@ trait TopicProcessing {
   }
 
   def integratedTermGraph(targetSeeds: Seq[Int], limit: Int) = {
-//    targetSeeds.foreach(seedNo => {
-//      getScoredTc(seedNo).foreach(println)
-//      println("-------------------------")
-//    })
     targetSeeds.map(seedNo => {
       val resData = getScoredTc(seedNo)
-//      resData.take(3)
-      //TODO need to add more biz logic
-
       (seedNo, resData.take(limit))
     })
+  }
+
+  def integratedTermGraphEx(targetSeeds: Seq[Int], limit: Int) = {
+    targetSeeds.zipWithIndex.map { case(seedNo, i) => {
+      val resData = getScoredTc(seedNo)
+      (seedNo, resData.take(limit))
+    }}
   }
 
   /**
    * grpScore x listOrderScore x TF (cleaned with stopWords) x Future(TF by Influx)
    */
   def getScoredTc(seedNo: Int, minScore: Double = 0.03) = {
-//    val baseTerms = getOrderedTc(seedNo, 0.002)(_.baseTerms)
+
+    // (String, Int) Order by value desc
     val mapTermCount = getOrderedTc(seedNo, minScore)(i => i.baseTerms ++ i.relTerms).toMap[String, Int]
 
     val ldaData = getLdaTdmSummaryData(seedNo)
     ldaData.map(ddu => {
       val grpScore = ddu.topicScore
+//      println("->" + ddu)
 
       val baseSize = ddu.baseTerms.length
       ddu.baseTerms.zipWithIndex.map{ case(elem, index) =>
 //        println(elem, index)
 //        println(elem, ((baseSize - index) / baseSize), grpScore)
 
-        val boosting = if(mapTermCount.contains(elem)) mapTermCount(elem) else 1
+        val boosting = if(mapTermCount.contains(elem)) 1 + 0.6 * mapTermCount(elem)  else 1
 //        if(boosting > 1) println("Upper Boost : " + elem + "->" + boosting)
-        (elem, ((baseSize - index) * 30 / baseSize) * grpScore * 1 * boosting)
+        (elem, ((baseSize - index) * 100 / baseSize) * grpScore * boosting)
 
       }
     })
