@@ -43,12 +43,28 @@ trait AdvancedDataProcessing extends ScalatraServlet {
           Node(a._1, (idLst._1 * 100 + ig), a._2.toInt)
         }
       }
-    }).flatMap(i => i).groupBy(_.id).view.mapValues(_.size)
+    }).flatMap(i => i)
+      .groupBy(_.id)
+      .view
+      .mapValues(_.size)
 
-    termCnt.foreach(println)
-//    md.filter(r => r.)
+    val resizedMd = md.map(r => (r._1, r._2.take(1))).foreach(println)
 
+    var nodes = md.map(r => (r._1, r._2.take(1)))
+      .flatMap(idLst => {
+        idLst._2.zipWithIndex.map { case (termScore, ig) => // Vector
+        termScore.zipWithIndex.map { case (a, i) => {
+          val boostingScore = termCnt.get(a._1).getOrElse(1)
+          println("Boosting Score => " + boostingScore)
+          Node(a._1, (idLst._1 * 100 + ig), a._2.toInt * boostingScore)
+        }
+        }
+      }
+    }).flatMap(i => i)
+      .toArray
+      .distinctBy(_.id)
 
+    nodes.foreach(println)
 
   }
 
@@ -109,7 +125,10 @@ object DevMain {
           Node(a._1, (idLst._1 * 100 + ig), a._2.toInt)
         }
       }
-    }).flatMap(i => i).groupBy(_.id).view.mapValues(_.size)
+    }).flatMap(i => i)
+      .groupBy(_.id)
+      .view
+      .mapValues(_.size)
 
     termCnt.foreach(println)
 
