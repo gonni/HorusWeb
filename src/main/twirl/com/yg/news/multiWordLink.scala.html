@@ -26,15 +26,15 @@
                     target: Math.round(Math.random() * (id-1))
                 }))
     };
-    const distance = 500;
+    const distance = 333;
 
 
     let isRotationActive = true;
     const Graph = ForceGraph3D()
     (document.getElementById('3d-graph'))
             .jsonUrl('/news/api/js/multiSeedsTopic3d')
-            .width(1000)
-            .height(1000)
+            .width(800)
+            .height(1200)
             .nodeAutoColorBy('group')
             .cameraPosition({ z: distance })
             .nodeThreeObject(node => {

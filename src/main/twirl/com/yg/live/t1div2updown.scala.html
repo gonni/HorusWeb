@@ -1,0 +1,40 @@
+<div style="height:50px; background-color: #090000">
+<table style="width: 1200px; border: 0px; padding: 0px; background-color: #1a1e21; ">
+    <tr style="color: #a13545">
+        <td><div id="clock1">NA</div></td>
+        <td>Next Update : in 2 min</td>
+    </tr>
+    <tr>
+        <td style="width: 1200px; height: 500px" colspan="2">
+            <iframe src="/live/topic3d" width="100%" height="100%" scrolling="no"></iframe>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <iframe src="/live/multiTopicMon?seedNo=1" width="1200" height="500" scrolling="no"></iframe>
+        </td>
+    </tr>
+</table>
+
+<script>
+    function currentTime() {
+        const date = new Date();
+        let hh = date.getHours();
+        let mm = date.getMinutes();
+        let ss = date.getSeconds();
+        let session = "M24";
+
+        hh = (hh < 10) ? "0" + hh : hh;
+        mm = (mm < 10) ? "0" + mm : mm;
+        ss = (ss < 10) ? "0" + ss : ss;
+
+        const time = hh + ":" + mm + ":" + ss + " " + session;
+        console.log("time ->" + document.getElementById("clock"))
+
+        document.getElementById("clock1").innerText = "Now: " + time;
+
+        setTimeout(() => currentTime(), 1000);
+    }
+    currentTime();
+</script>
+</div>

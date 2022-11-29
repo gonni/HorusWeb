@@ -58,12 +58,12 @@ trait TopicProcessing {
     })
   }
 
-  def integratedTermGraphEx(targetSeeds: Seq[Int], limit: Int) = {
-    targetSeeds.zipWithIndex.map { case(seedNo, i) => {
-      val resData = getScoredTc(seedNo)
-      (seedNo, resData.take(limit))
-    }}
-  }
+//  def integratedTermGraphEx(targetSeeds: Seq[Int], limit: Int) = {
+//    targetSeeds.zipWithIndex.map { case(seedNo, i) => {
+//      val resData = getScoredTc(seedNo)
+//      (seedNo, resData.take(limit))
+//    }}
+//  }
 
   /**
    * grpScore x listOrderScore x TF (cleaned with stopWords) x Future(TF by Influx)
@@ -83,9 +83,9 @@ trait TopicProcessing {
 //        println(elem, index)
 //        println(elem, ((baseSize - index) / baseSize), grpScore)
 
-        val boosting = if(mapTermCount.contains(elem)) 1 + 0.6 * mapTermCount(elem)  else 1
+        val boosting = if(mapTermCount.contains(elem)) 1 + 0.3 * mapTermCount(elem)  else 1
 //        if(boosting > 1) println("Upper Boost : " + elem + "->" + boosting)
-        (elem, ((baseSize - index) * 100 / baseSize) * grpScore * boosting)
+        (elem, ((baseSize - index) * 30 / baseSize) + 10 * grpScore * boosting)
 
       }
     })

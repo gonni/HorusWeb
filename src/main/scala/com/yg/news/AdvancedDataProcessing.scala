@@ -35,7 +35,7 @@ trait AdvancedDataProcessing extends ScalatraServlet {
 
   get("/js/v1/topic3d") {
     val ta = new TopicAnalyzer(db)
-    val md = ta.integratedTermGraphEx(Seq(1,2), 10)
+    val md = ta.integratedTermGraph(Seq(1,2), 10)
 
     val termCnt = md.flatMap(idLst => {
       idLst._2.zipWithIndex.map { case (termScore, ig) => // Vector
@@ -72,7 +72,8 @@ trait AdvancedDataProcessing extends ScalatraServlet {
   get("/js/multiSeedsTopic3d") {
     println("Detected Multi ")
     val ta = new TopicAnalyzer(db)
-    val md = ta.integratedTermGraph(Seq(1,2), 3)
+    // Seed Topic Top2,
+    val md = ta.integratedTermGraph(Seq(1,2), 2).map(r => (r._1, r._2.take(2)))
 
     var nodes = md.flatMap(idLst => {
       idLst._2.zipWithIndex.map { case (termScore, ig) => // Vector
@@ -131,8 +132,8 @@ object DevMain {
       .mapValues(_.size)
 
     termCnt.foreach(println)
-
     md.foreach(println)
+
     println("--------------------")
     md.map(r => (r._1, r._2.take(1))).foreach(println)
 
