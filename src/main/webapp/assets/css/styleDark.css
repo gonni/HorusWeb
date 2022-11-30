@@ -106,7 +106,7 @@ svg {
 
 .axis path, .axis line {
     fill: none;
-    stroke: #000;
+    stroke: #3f2b2b;
     shape-rendering: crispEdges;
 }
 
@@ -177,19 +177,19 @@ h1, h2 {
 }
 
 .axis line {
-    stroke: #000;
+    stroke: #504141;
     shape-rendering: crispEdges;
 }
 
 .horizon {
-    border-bottom: solid 1px #000;
+    border-bottom: solid 1px #7c6b6b;
     overflow: hidden;
     position: relative;
 }
 
 .horizon {
-    border-top: solid 1px #000;
-    border-bottom: solid 1px #000;
+    border-top: solid 1px #332121;
+    border-bottom: solid 1px #342727;
 }
 
 .horizon + .horizon {
@@ -206,7 +206,7 @@ h1, h2 {
     line-height: 30px;
     margin: 0 6px;
     position: absolute;
-    text-shadow: 0 1px 0 rgba(255,255,255,.5);
+    text-shadow: 0 0px 0 rgba(255,255,255,.5);
     white-space: nowrap;
 }
 
@@ -219,7 +219,7 @@ h1, h2 {
 }
 
 .line {
-    background: #000;
+    background: #a27272;
     opacity: .2;
     z-index: 2;
 }

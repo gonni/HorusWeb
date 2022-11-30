@@ -2,10 +2,240 @@
 @(highTerms: Seq[TermCount])
 <main class="ms-sm-auto px-md-4">
 
-    <div id="body" style="width: 1200px;">
+    <div id="body" style="width: 400px; color: #adb5bd">
 
         <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700">
-        <link rel="stylesheet" type="text/css" href="/assets/css/styleDark.css">
+        <!-- <link rel="stylesheet" type="text/css" href="/assets/css/styleDark.css"> -->
+        <style>
+
+                html {
+                    min-width: 400px;
+                }
+
+                body {
+                    font-family: "Helvetica Neue", Helvetica, sans-serif;
+
+                    margin: auto;
+                    /*margin-top: 0px;*/
+                    /*margin-bottom: 4em;*/
+                    /*width: 1000px;*/
+                }
+
+
+                #body {
+                    position: relative;
+                }
+
+                footer {
+                    font-size: small;
+                    margin-top: 8em;
+                }
+
+                aside {
+                    font-size: small;
+                    left: 780px;
+                    position: absolute;
+                    width: 180px;
+                    width: 180px;
+                }
+
+                #body > p, li > p {
+                    line-height: 1.5em;
+                }
+
+                #body > p {
+                    width: 720px;
+                    color: #b6d4fe;
+                }
+
+                #body > blockquote {
+                    width: 640px;
+                }
+
+                /*li {*/
+                /*    width: 680px;*/
+                /*}*/
+
+                a {
+                    color: steelblue;
+                }
+
+                a:not(:hover) {
+                    text-decoration: none;
+                }
+
+                pre, code, textarea {
+                    font-family: "Menlo", monospace;
+                }
+
+                code {
+                    line-height: 1em;
+                }
+
+                textarea {
+                    font-size: 100%;
+                }
+
+                #body > pre {
+                    border-left: solid 2px #ccc;
+                    padding-left: 18px;
+                    margin: 2em 0 2em -20px;
+                }
+
+                .html .value,
+                .javascript .string,
+                .javascript .regexp {
+                    color: #756bb1;
+                }
+
+                .html .tag,
+                .css .tag,
+                .javascript .keyword {
+                    color: #3182bd;
+                }
+
+                .comment {
+                    color: #636363;
+                }
+
+                .html .doctype,
+                .javascript .number {
+                    color: #31a354;
+                }
+
+                .html .attribute,
+                .css .attribute,
+                .javascript .class,
+                .javascript .special {
+                    color: #e6550d;
+                }
+
+                svg {
+                    font: 10px sans-serif;
+                }
+
+                .axis path, .axis line {
+                    fill: none;
+                    stroke: #3f2b2b;
+                    shape-rendering: crispEdges;
+                }
+
+                sup, sub {
+                    line-height: 0;
+                }
+
+                q:before,
+                blockquote:before {
+                    content: "“";
+                }
+
+                q:after,
+                blockquote:after {
+                    content: "”";
+                }
+
+                blockquote:before {
+                    position: absolute;
+                    left: 2em;
+                }
+
+                blockquote:after {
+                    position: absolute;
+                }
+
+                h1 {
+                    font-size: 96px;
+                    margin-top: .3em;
+                    margin-bottom: 0;
+                }
+
+                h1 + h2 {
+                    margin-top: 0;
+                }
+
+                h2 {
+                    font-weight: 400;
+                    font-size: 28px;
+                }
+
+                h1, h2 {
+                    font-family: "Yanone Kaffeesatz";
+                    text-rendering: optimizeLegibility;
+                }
+
+                #logo {
+                    width: 122px;
+                    height: 31px;
+                }
+
+                #fork {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                }
+
+                .axis {
+                    font: 10px sans-serif;
+                }
+
+                .axis text {
+                    -webkit-transition: fill-opacity 250ms linear;
+                }
+
+                .axis path {
+                    display: none;
+                }
+
+                .axis line {
+                    stroke: #504141;
+                    shape-rendering: crispEdges;
+                }
+
+                .horizon {
+                    border-bottom: solid 1px #7c6b6b;
+                    overflow: hidden;
+                    position: relative;
+                }
+
+                .horizon {
+                    border-top: solid 1px #332121;
+                    border-bottom: solid 1px #342727;
+                }
+
+                .horizon + .horizon {
+                    border-top: none;
+                }
+
+                .horizon canvas {
+                    display: block;
+                }
+
+                .horizon .title,
+                .horizon .value {
+                    bottom: 0;
+                    line-height: 30px;
+                    margin: 0 6px;
+                    position: absolute;
+                    text-shadow: 0 0px 0 rgba(255,255,255,.5);
+                    white-space: nowrap;
+                }
+
+                .horizon .title {
+                    left: 0;
+                }
+
+                .horizon .value {
+                    right: 0;
+                }
+
+                .line {
+                    background: #a27272;
+                    opacity: .2;
+                    z-index: 2;
+                }
+
+
+        </style>
 
         <div>
             <h3>Realtime Topic Top10</h3>
@@ -24,7 +254,7 @@
                 .serverDelay(serverDelayTime)
                 .clientDelay(0)
                 .step(60000)
-                .size(1200);
+                .size(400);
 
             function random(name) {
                 var value = 0,
@@ -73,7 +303,7 @@
                 .serverDelay(0)
                 .clientDelay(0)
                 .step(60000)
-                .size(1000);
+                .size(400);
 
             d3.select("#top10term").call(function(div) {
                 let arr = []

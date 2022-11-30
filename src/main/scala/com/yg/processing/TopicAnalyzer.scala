@@ -83,9 +83,9 @@ trait TopicProcessing {
 //        println(elem, index)
 //        println(elem, ((baseSize - index) / baseSize), grpScore)
 
-        val boosting = if(mapTermCount.contains(elem)) 1 + 0.3 * mapTermCount(elem)  else 1
+        val boosting = 1 //if(mapTermCount.contains(elem)) 1 + 0.3 * mapTermCount(elem)  else 1
 //        if(boosting > 1) println("Upper Boost : " + elem + "->" + boosting)
-        (elem, ((baseSize - index) * 30 / baseSize) + 10 * grpScore * boosting)
+        (elem, ((baseSize - index) * 10 / baseSize) + 20 * grpScore * boosting / 3)
 
       }
     })

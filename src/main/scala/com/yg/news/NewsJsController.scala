@@ -176,22 +176,6 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
     var i = 0;
     var baseTerm = "NA"
 
-    // --
-
-//    dNodes = dNodes :+ Node("COIN", 1001)
-//    dNodes = dNodes :+ Node("Repl", 1003)
-//    dLink = dLink :+ Link("Repl", "COIN", 100)
-//    dNodes = dNodes :+ Node("BTC", 1004)
-//    dLink = dLink :+ Link("BTC", "COIN", 70)
-//    dNodes = dNodes :+ Node("MVC", 1005)
-//    dLink = dLink :+ Link("MVC", "COIN", 700)
-//
-//    dNodes = dNodes :+ Node("RA", 999)
-//    dLink = dLink :+ Link("NEWS", "RA", 200)
-//    dLink = dLink :+ Link("COIN", "RA", 500)
-
-    // --
-
     ldaTopics.foreach(topicGrp => {
       i += 1
       baseTerm = topicGrp.head._1.term
