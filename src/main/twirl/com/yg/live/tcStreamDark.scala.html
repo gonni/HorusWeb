@@ -1,8 +1,8 @@
 @import com.yg.conn.InfluxClient.TermCount
 @(highTerms: Seq[TermCount])
-<main class="ms-sm-auto px-md-4">
+<main>
 
-    <div id="body" style="width: 400px; color: #adb5bd">
+    <div id="body" style="width: 400px; color: #e1f3f0">
 
         <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700">
         <!-- <link rel="stylesheet" type="text/css" href="/assets/css/styleDark.css"> -->
@@ -176,10 +176,12 @@
 
                 .axis {
                     font: 10px sans-serif;
+                    stroke: #e00b0b;
                 }
 
                 .axis text {
-                    -webkit-transition: fill-opacity 250ms linear;
+                    -webkit-transition: fill-opacity 250ms linear ;
+                    stroke: #e00b0b;
                 }
 
                 .axis path {
@@ -238,7 +240,7 @@
         </style>
 
         <div>
-            <h3>Realtime Topic Top10</h3>
+            <h3>Realtime Topic Top11</h3>
             <div id="top1term"></div>
             <div id="top10term" style="color: #adb5bd"></div>
 
@@ -247,57 +249,7 @@
         <script src="/assets/js/d3.v2.js"></script>
         <script src="/assets/js/cubism.v1.js"></script>
         <script src="/assets/js/highlight.min.js"></script>
-        <script>
-            var serverDelayTime = 0; //System.currentTimeMillis() - startDate.getTime()
 
-            var context = cubism.context()
-                .serverDelay(serverDelayTime)
-                .clientDelay(0)
-                .step(60000)
-                .size(400);
-
-            function random(name) {
-                var value = 0,
-                    values = [],
-                    i = 0,
-                    last;
-                return context.metric(function(start, stop, step, callback) {
-                    console.log(start + "/" + stop + "/" + step);
-
-                    start = +start, stop = +stop;
-                    if (isNaN(last)) last = start;
-                    while (last < stop) {
-                        last += step;
-                        value = Math.max(-10, Math.min(10, value + .8 * Math.random() - .4 + .2 * Math.cos(i += .2)));
-                        values.push(value);
-                    }
-                    callback(null, values = values.slice((start - stop) / step));
-                }, name);
-            }
-
-            function loadTermCountData(term) {
-
-                var value = 0, values = [], i = 0, last;
-                return context.metric(function(start, stop, step, callback) {
-                    start = +start, stop = +stop;
-                    console.log(start + "/" + stop + "/" + step);
-                    d3.csv('/news/data/api/termCount2?seedNo=21&term='+ term + '&start=' + start + '&stop=' + stop + '&step=' + step, function (rows) {
-                        rows = rows.map(function (d) {
-                            return [d.Date, +d.Hits];
-                        });
-                        if (isNaN(last)) last = start;
-
-                        rows.forEach(function (data) {
-                            value = data[1];
-                            values.push(value);
-                        });
-
-                        callback(null, values = values.slice((start-stop) / step))
-                    });
-                }, term);
-            }
-
-        </script>
         <script>
             var context = cubism.context()
                 .serverDelay(0)
@@ -324,8 +276,8 @@
                     .call(context.horizon()
                         .height(50)
                         .mode("mirror")
-                        .colors(["#e55989","#D4F8D4FF","#BBFABBFF","#A2F8A2FF","#88F688FF","#6DF66DFF","#42AD42FF", "#228C22FF", "#0D690DFF", "#E55989FF"])
-                        .extent([0, 180]));
+                        .colors(["#e55989","#708f70","#577557","#364436"])
+                        .extent([0, 50]));
 
                 div.append("div")
                     .attr("class", "rule")
@@ -342,10 +294,31 @@
                     .call(context.horizon()
                         .height(50)
                         .mode("mirror")
-                        .colors(["#04FB04","#3182bd","#6baed6","#bdd7e7","#bae4b3","#74c476","#31a354","#FB0404"])
+                        .colors(["#bae4b3","#74c476","#31a354","#FB0404"])
                         .title("속보")
                         .extent([0, 3]));
             });
+
+            function loadTermCountData(term) {
+                var value = 0, values = [], i = 0, last;
+                return context.metric(function(start, stop, step, callback) {
+                    start = +start, stop = +stop;
+                    console.log(start + "/" + stop + "/" + step);
+                    d3.csv('/news/data/api/termCount2?seedNo=21&term='+ term + '&start=' + start + '&stop=' + stop + '&step=' + step, function (rows) {
+                        rows = rows.map(function (d) {
+                            return [d.Date, +d.Hits];
+                        });
+                        if (isNaN(last)) last = start;
+
+                        rows.forEach(function (data) {
+                            value = data[1];
+                            values.push(value);
+                        });
+
+                        callback(null, values = values.slice((start-stop) / step))
+                    });
+                }, term);
+            }
 
 
             // On mousemove, reposition the chart values to match the rule.

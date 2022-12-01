@@ -62,7 +62,8 @@ trait LiveStreamingShowProcessing extends ScalatraServlet
 
   get("/topic3d") {
     logger.info("topic3d ..")
-    com.yg.news.html.multiWordLink.render()
+//    com.yg.news.html.multiWordLink.render()
+    com.yg.live.html.link3d.render()
   }
 
   // map to tcStreamDark.html
@@ -94,9 +95,6 @@ trait LiveStreamingShowProcessing extends ScalatraServlet
 
     layouts.html.dashboard.render("Horus :: RT Topic", com.yg.live.html.tpDiv2EastWest.render())
   }
-
-
-
 }
 
 class LiveStreamingShowController(val db: Database) extends ScalatraServlet

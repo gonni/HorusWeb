@@ -149,7 +149,7 @@ object TopicAnalyzer {
       driver = "com.mysql.cj.jdbc.Driver")
 
     val ta = new TopicAnalyzer(db)
-    val md = ta.integratedTermGraph(Seq(21, 23), 3)
+    val md = ta.integratedTermGraph(Seq(21, 25), 3)
 
     var nodes = md.flatMap(idLst => {
       idLst._2.zipWithIndex.map { case (termScore, ig) => // Vector
@@ -174,11 +174,6 @@ object TopicAnalyzer {
       }
     }).flatMap(i => i)
 
-//    md.flatMap(idList => {
-//      idList._2.zipWithIndex.map {case(termScore, ig) => {
-//        links = links :+ Link()
-//      }}
-//    })
 
     nodes.foreach(println)
     println("-----------------------------")
