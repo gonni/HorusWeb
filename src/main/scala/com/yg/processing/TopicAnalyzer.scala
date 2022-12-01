@@ -53,7 +53,7 @@ trait TopicProcessing {
 
   def integratedTermGraph(targetSeeds: Seq[Int], limit: Int) = {
     targetSeeds.map(seedNo => {
-      val resData = getScoredTc(seedNo)
+      val resData = getScoredTc(seedNo, 0.003)
       (seedNo, resData.take(limit))
     })
   }

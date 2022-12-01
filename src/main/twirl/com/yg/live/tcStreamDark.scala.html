@@ -176,12 +176,11 @@
 
                 .axis {
                     font: 10px sans-serif;
-                    stroke: #e00b0b;
                 }
 
                 .axis text {
                     -webkit-transition: fill-opacity 250ms linear ;
-                    stroke: #e00b0b;
+                    stroke: #faced7;
                 }
 
                 .axis path {
@@ -242,7 +241,7 @@
         <div>
             <h3>Realtime Topic Top11</h3>
             <div id="top1term"></div>
-            <div id="top10term" style="color: #adb5bd"></div>
+            <div id="top10term" style="color: rgba(248, 231, 163, 0.78)"></div>
 
         </div>
 
@@ -276,8 +275,8 @@
                     .call(context.horizon()
                         .height(50)
                         .mode("mirror")
-                        .colors(["#e55989","#708f70","#577557","#364436"])
-                        .extent([0, 50]));
+                        .colors(["#0cfd04","#980106"])
+                        .extent([0, 39]));
 
                 div.append("div")
                     .attr("class", "rule")
@@ -294,9 +293,9 @@
                     .call(context.horizon()
                         .height(50)
                         .mode("mirror")
-                        .colors(["#bae4b3","#74c476","#31a354","#FB0404"])
+                        .colors(["#f8022f","#f1ee02","#3910ef","#02331d"])
                         .title("속보")
-                        .extent([0, 3]));
+                        .extent([0, 5]));
             });
 
             function loadTermCountData(term) {
