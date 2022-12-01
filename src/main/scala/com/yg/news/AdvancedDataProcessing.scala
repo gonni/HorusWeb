@@ -72,9 +72,9 @@ trait AdvancedDataProcessing extends ScalatraServlet {
   get("/js/multiSeedsTopic3d") {
     println("Detected Multi ")
     val ta = new TopicAnalyzer(db)
-    // Seed Topic Top2,
-    val md = ta.integratedTermGraph(Seq(21,23,25), 5).map(r => (r._1, r._2.take(2)))
-
+    // Seed Topic Top2, 3 topic per seed
+//    val md = ta.integratedTermGraph(Seq(21), 2) //.map(r => (r._1, r._2.take(3)))
+    val md = ta.mergedTermGraph(Seq(21,23,25), 2, 3)
     var nodes = md.flatMap(idLst => {
       idLst._2.zipWithIndex.map { case (termScore, ig) => // Vector
         termScore.zipWithIndex.map { case (a, i) =>

@@ -58,6 +58,14 @@ trait TopicProcessing {
     })
   }
 
+//  integratedTermGraph(Seq(21), 2).map(a => {
+//    a._2.map(_.take(3)).foreach(println)
+//  })
+
+  def mergedTermGraph(targetSeeds: Seq[Int], termsPerTopic: Int, topicsPerSeed: Int) = {
+    integratedTermGraph(targetSeeds, termsPerTopic).map(r => (r._1, r._2.map(_.take(topicsPerSeed))))
+  }
+
 //  def integratedTermGraphEx(targetSeeds: Seq[Int], limit: Int) = {
 //    targetSeeds.zipWithIndex.map { case(seedNo, i) => {
 //      val resData = getScoredTc(seedNo)
@@ -149,36 +157,51 @@ object TopicAnalyzer {
       driver = "com.mysql.cj.jdbc.Driver")
 
     val ta = new TopicAnalyzer(db)
-    val md = ta.integratedTermGraph(Seq(21, 25), 3)
+    ta.mergedTermGraph(Seq(21), 3, 2).foreach(println)
+//    val md = ta.integratedTermGraph(Seq(21), 3)
+//    md.map(a => {
+//      a._2.foreach(println)
+//    })
 
-    var nodes = md.flatMap(idLst => {
-      idLst._2.zipWithIndex.map { case (termScore, ig) => // Vector
-        termScore.zipWithIndex.map { case (a, i) =>
-          Node(a._1, (idLst._1 * 100 + ig), a._2.toInt)
-        } // List
-      }
-    }).flatMap(i => i).toArray
+//    def integratedTermGraph(targetSeeds: Seq[Int], limit: Int) = {
+//      targetSeeds.map(seedNo => {
+//        val resData = ta.getScoredTc(seedNo, 0.003)
+//        (seedNo, resData.take(limit))
+//      })
+//    }
+//
+//    integratedTermGraph(Seq(21), 2).map(a => {
+//      a._2.map(_.take(3)).foreach(println)
+//    })
 
-
-    var links = md.flatMap(idLst => {
-      nodes = nodes :+ Node("Seed#" + idLst._1, 100)
-
-      idLst._2.zipWithIndex.map { case (termScore, ig) => // Vector
-        nodes = nodes :+ Node("T#" + ig, 50)
-        ("T#" + ig, "Seed#" + idLst._1, 10)
-
-        termScore.zipWithIndex.map { case (a, i) =>
-//          (a._1, a._2, idLst._1, ig ,i)
-          (a._1, "T#" + ig, a._2.toInt)
-        } // List
-      }
-    }).flatMap(i => i)
-
-
-    nodes.foreach(println)
-    println("-----------------------------")
-
-    links.foreach(println)
+//    var nodes = md.flatMap(idLst => {
+//      idLst._2.zipWithIndex.map { case (termScore, ig) => // Vector
+//        termScore.zipWithIndex.map { case (a, i) =>
+//          Node(a._1, (idLst._1 * 100 + ig), a._2.toInt)
+//        } // List
+//      }
+//    }).flatMap(i => i).toArray
+//
+//
+//    var links = md.flatMap(idLst => {
+//      nodes = nodes :+ Node("Seed#" + idLst._1, 100)
+//
+//      idLst._2.zipWithIndex.map { case (termScore, ig) => // Vector
+//        nodes = nodes :+ Node("T#" + ig, 50)
+//        ("T#" + ig, "Seed#" + idLst._1, 10)
+//
+//        termScore.zipWithIndex.map { case (a, i) =>
+////          (a._1, a._2, idLst._1, ig ,i)
+//          (a._1, "T#" + ig, a._2.toInt)
+//        } // List
+//      }
+//    }).flatMap(i => i)
+//
+//
+//    nodes.foreach(println)
+//    println("-----------------------------")
+//
+//    links.foreach(println)
 
 //    ta.getLdaTdmSummaryData(21).foreach(println)
 //
