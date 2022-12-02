@@ -239,9 +239,12 @@
         </style>
 
         <div>
-            <h3>Realtime Topic Top11</h3>
-            <div id="top1term"></div>
-            <div id="top10term" style="color: rgba(248, 231, 163, 0.78)"></div>
+            <h3>News Topic</h3>
+            <div id="hotCnt"></div>
+            <div id="newsTopic" style="color: rgba(248, 231, 163, 0.78)"></div>
+            <h3>BBS Topic</h3>
+            <h3>Coin Topic</h3>
+            <h3>상승의 기운</h3>
 
         </div>
 
@@ -256,7 +259,7 @@
                 .step(60000)
                 .size(400);
 
-            d3.select("#top10term").call(function(div) {
+            d3.select("#newsTopic").call(function(div) {
                 let arr = []
             @for(highTerm <- highTerms) {
                     arr.push(loadTermCountData("@highTerm.term"))
@@ -284,7 +287,7 @@
 
             });
 
-            d3.select("#top1term").call(function(div) {
+            d3.select("#hotCnt").call(function(div) {
 
                 div.datum(loadTermCountData("속보")) ;
 
@@ -318,7 +321,6 @@
                     });
                 }, term);
             }
-
 
             // On mousemove, reposition the chart values to match the rule.
             context.on("focus", function(i) {

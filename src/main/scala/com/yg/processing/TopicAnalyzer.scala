@@ -17,10 +17,6 @@ trait TopicProcessing {
     stopwords.toSet
   }
 
-  def multiTopicTermDics(limit: Int) = {
-    //TODO
-  }
-
   def topicTermDics(seedNo: Int, limit: Int) = {
 
     val stopWords = loadStopWords(1)
@@ -32,9 +28,9 @@ trait TopicProcessing {
 
     val asynLdaResult = db.run(DtRepo.latestSeedTopics(latestTs.get).result)
     val topics = Await.result(asynLdaResult, 10.seconds)
-    topics.foreach(println)
+//    topics.foreach(println)
     //TODO data convert
-    println("--------------")
+//    println("--------------")
 
     val topicNos = topics.map(_.topicNo).distinct
 
@@ -44,10 +40,7 @@ trait TopicProcessing {
         .filter(_.topicNo == topicNo)
         .filter(topic => !stopWords.contains(topic.term))
         .sortBy(- _.score)
-        .zipWithIndex.filter{case(topic, index) => {
-        println(s"index:limit = ${index}:${limit}" )
-        index < limit
-      }}
+        .zipWithIndex.filter{ case(topic, index) =>  index < limit }
     })
   }
 
@@ -157,7 +150,13 @@ object TopicAnalyzer {
       driver = "com.mysql.cj.jdbc.Driver")
 
     val ta = new TopicAnalyzer(db)
-    ta.mergedTermGraph(Seq(21), 3, 2).foreach(println)
+    ta.topicTermDics(21, 7).map(v => {
+      (v.map(_._1.term).mkString("|"), v.map(_._1.score).reduce((a1,a2) => a1 + a2))
+    }).foreach(println)
+
+
+
+//    ta.mergedTermGraph(Seq(21), 3, 2).foreach(println)
 //    val md = ta.integratedTermGraph(Seq(21), 3)
 //    md.map(a => {
 //      a._2.foreach(println)

@@ -62,7 +62,6 @@ trait LiveStreamingShowProcessing extends ScalatraServlet
 
   get("/topic3d") {
     logger.info("topic3d ..")
-//    com.yg.news.html.multiWordLink.render()
     com.yg.live.html.link3d.render()
   }
 
@@ -77,7 +76,7 @@ trait LiveStreamingShowProcessing extends ScalatraServlet
       topic.map(lda => {
         lda._1.term
       }).mkString("|")
-    })
+    }).take(5)
 
     com.yg.live.html.tcStreamDark.render(targetTerms.map(t => TermCount(t, 0)))
   }
@@ -85,7 +84,7 @@ trait LiveStreamingShowProcessing extends ScalatraServlet
   // map to t1div2updown.html
   get("/m") {
     logger.info("Detected Main page ..")
-//    layouts.html.dashboard.render("Horus :: RT Topic", com.yg.live.html.liveMain.render())
+//    layouts.html.dashboard.render("Horus :: RT Topic", com.yg.live.hㅇㅇtml.liveMain.render())
     layouts.html.dashboard.render("Horus :: RT Topic", com.yg.live.html.t1div2updown.render())
   }
 
