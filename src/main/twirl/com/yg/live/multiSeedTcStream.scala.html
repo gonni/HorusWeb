@@ -1,11 +1,11 @@
-@import com.yg.conn.InfluxClient.TermCount
-@(highTerms: Seq[TermCount])
+@import com.yg.processing.TermsScore
+@(news: Seq[TermsScore], bbs: Seq[TermsScore], coin: Seq[TermsScore])
 <main>
 
     <div id="body" style="width: 400px; color: #e1f3f0">
 
         <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700">
-        <!-- <link rel="stylesheet" type="text/css" href="/assets/css/styleDark.css"> -->
+            <!-- <link rel="stylesheet" type="text/css" href="/assets/css/styleDark.css"> -->
         <style>
 
                 html {
@@ -235,7 +235,6 @@
                     z-index: 2;
                 }
 
-
         </style>
 
         <div>
@@ -243,7 +242,9 @@
             <div id="hotCnt"></div>
             <div id="newsTopic" style="color: rgba(248, 231, 163, 0.78)"></div>
             <h4>BBS Topic</h4>
+            <div id="bbsTopic" style="color: rgba(163, 241, 248, 0.78)"></div>
             <h4>Coin Topic</h4>
+            <div id="coinTopic" style="color: rgba(163, 164, 248, 0.78)"></div>
             <h4>상승의 기운</h4>
 
         </div>
@@ -253,79 +254,115 @@
         <script src="/assets/js/highlight.min.js"></script>
 
         <script>
-            var context = cubism.context()
-                .serverDelay(0)
-                .clientDelay(0)
-                .step(60000)
-                .size(400);
+                var context = cubism.context()
+                        .serverDelay(0)
+                        .clientDelay(0)
+                        .step(60000)
+                        .size(400);
 
-            d3.select("#newsTopic").call(function(div) {
-                let arr = []
-            @for(highTerm <- highTerms) {
-                    arr.push(loadTermCountData("@highTerm.term"))
+                d3.select("#newsTopic").call(function(div) {
+                    let arr = []
+                    @for(gterm <- news) {
+                    arr.push(loadTermCountData("@gterm.terms"))
+                    }
+                    console.log("arr => " + arr)
+
+                    div.append("div")
+                            .attr("class", "axis")
+                            .call(context.axis().orient("top"));
+
+                    div.selectAll(".horizon")
+                            .data(arr)
+                            .enter().append("div")
+                            .attr("class", "horizon")
+                            .call(context.horizon()
+                                    .height(50)
+                                    .mode("mirror")
+                                    .colors(["#0cfd04","#980106"])
+                                    .extent([0, 39]));
+
+                    div.append("div")
+                            .attr("class", "rule")
+                            .call(context.rule());
+
+                });
+
+                let arrBbs = []
+                @for(gterm <- bbs) {
+                    arrBbs.push(loadTermCountData("@gterm.terms"))
                 }
-                console.log("arr => " + arr)
+                bindData("#bbsTopic", ["#0cfd04","#0b73dc"], arrBbs)
 
-                div.append("div")
-                    .attr("class", "axis")
-                    .call(context.axis().orient("top"));
+                let arrCoins = []
+                @for(gterm <- coin) {
+                    arrCoins.push(loadTermCountData("@gterm.terms"))
+                }
+                bindData("#coinTopic", ["#0cfd04","#460191"], arrCoins)
 
-                div.selectAll(".horizon")
-                    // .data([loadTermCountData("서울"), loadTermCountData("비"), loadTermCountData("폭우"), loadTermCountData("대통령"), loadTermCountData("증가")])
-                    .data(arr)
-                    .enter().append("div")
-                    .attr("class", "horizon")
-                    .call(context.horizon()
-                        .height(50)
-                        .mode("mirror")
-                        .colors(["#0cfd04","#980106"])
-                        .extent([0, 39]));
+                function bindData(divName, colors, arr) {
+                    d3.select(divName).call(function(div) {
+                        console.log("arr => " + arr)
 
-                div.append("div")
-                    .attr("class", "rule")
-                    .call(context.rule());
+                        div.append("div")
+                                .attr("class", "axis")
+                                .call(context.axis().orient("top"));
 
-            });
+                        div.selectAll(".horizon")
+                                .data(arr)
+                                .enter().append("div")
+                                .attr("class", "horizon")
+                                .call(context.horizon()
+                                        .height(50)
+                                        .mode("mirror")
+                                        .colors(colors)
+                                        .extent([0, 39]));
 
-            d3.select("#hotCnt").call(function(div) {
+                        div.append("div")
+                                .attr("class", "rule")
+                                .call(context.rule());
 
-                div.datum(loadTermCountData("속보")) ;
-
-                div.append("div")
-                    .attr("class", "horizon")
-                    .call(context.horizon()
-                        .height(50)
-                        .mode("mirror")
-                        .colors(["#f8022f","#f1ee02","#3910ef","#02331d"])
-                        .title("속보")
-                        .extent([0, 5]));
-            });
-
-            function loadTermCountData(term) {
-                var value = 0, values = [], i = 0, last;
-                return context.metric(function(start, stop, step, callback) {
-                    start = +start, stop = +stop;
-                    console.log(start + "/" + stop + "/" + step);
-                    d3.csv('/news/data/api/termCount2?seedNo=21&term='+ term + '&start=' + start + '&stop=' + stop + '&step=' + step, function (rows) {
-                        rows = rows.map(function (d) {
-                            return [d.Date, +d.Hits];
-                        });
-                        if (isNaN(last)) last = start;
-
-                        rows.forEach(function (data) {
-                            value = data[1];
-                            values.push(value);
-                        });
-
-                        callback(null, values = values.slice((start-stop) / step))
                     });
-                }, term);
-            }
+                }
 
-            // On mousemove, reposition the chart values to match the rule.
-            context.on("focus", function(i) {
-                d3.selectAll(".value").style("right", i == null ? null : context.size() - i + "px");
-            });
+                d3.select("#hotCnt").call(function(div) {
+
+                    div.datum(loadTermCountData("속보")) ;
+
+                    div.append("div")
+                            .attr("class", "horizon")
+                            .call(context.horizon()
+                                    .height(50)
+                                    .mode("mirror")
+                                    .colors(["#f8022f","#f1ee02","#3910ef","#02331d"])
+                                    .title("속보")
+                                    .extent([0, 5]));
+                });
+
+                function loadTermCountData(term) {
+                    var value = 0, values = [], i = 0, last;
+                    return context.metric(function(start, stop, step, callback) {
+                        start = +start, stop = +stop;
+                        console.log(start + "/" + stop + "/" + step);
+                        d3.csv('/news/data/api/termCount2?seedNo=21&term='+ term + '&start=' + start + '&stop=' + stop + '&step=' + step, function (rows) {
+                            rows = rows.map(function (d) {
+                                return [d.Date, +d.Hits];
+                            });
+                            if (isNaN(last)) last = start;
+
+                            rows.forEach(function (data) {
+                                value = data[1];
+                                values.push(value);
+                            });
+
+                            callback(null, values = values.slice((start-stop) / step))
+                        });
+                    }, term);
+                }
+
+                // On mousemove, reposition the chart values to match the rule.
+                context.on("focus", function(i) {
+                    d3.selectAll(".value").style("right", i == null ? null : context.size() - i + "px");
+                });
 
         </script>
     </div>

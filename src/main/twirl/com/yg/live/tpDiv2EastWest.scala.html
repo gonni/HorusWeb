@@ -1,38 +1,76 @@
+<style>
+#myProgress {
+    width: 100%;
+    background-color: #383737;
+}
+
+#myBar {
+    width: 1%;
+    height: 3px;
+    background-color: #485d54;
+}
+</style>
+
 <div style="height:50px; background-color: #090000">
     <table style="width: 1200px; border: 1px; padding: 0px; background-color: #0d0d1f; " border="1">
-        <tr style="color: #a13545">
-            <td><div id="clock1" style="width: 150px">NA</div></td>
-            <td>Next Update : in 2 min</td>
+        <tr style="color: rgba(3, 229, 40, 0.78)">
+            <td colspan="2">
+                <div id="myProgress"><div id="myBar"></div></div>
+                <div id="clock1" style="width: 500px">NA</div>
+            </td>
         </tr>
         <tr>
             <td style="width: 800px; height: 1000px">
                 <iframe src="/live/topic3d" width="800" height="1000" scrolling="no"></iframe>
             </td>
             <td style="width: 400px; height: 1000px">
-                <iframe src="/live/multiTopicMon?seedNo=21" width="400" height="1000" scrolling="no"></iframe>
+                <iframe src="/live/multiTopicMonMulti" width="400" height="1000" scrolling="no"></iframe>
             </td>
         </tr>
     </table>
 
     <script>
-    function currentTime() {
-        const date = new Date();
-        let hh = date.getHours();
-        let mm = date.getMinutes();
-        let ss = date.getSeconds();
-        let session = "M24";
 
-        hh = (hh < 10) ? "0" + hh : hh;
-        mm = (mm < 10) ? "0" + mm : mm;
-        ss = (ss < 10) ? "0" + ss : ss;
+        var i = 0;
+        function move() {
+            if (i == 0) {
+                i = 1;
+                var elem = document.getElementById("myBar");
+                var width = 1;
+                var id = setInterval(frame, 1200);
+                function frame() {
+                    if (width >= 100) {
+                        clearInterval(id);
+                        window.location.reload();
+                        i = 0;
+                    } else {
+                        width++;
+                        elem.style.width = width + "%";
+                    }
+                }
+            }
+        }
+        move();
 
-        const time = hh + ":" + mm + ":" + ss + " " + session;
-        console.log("time ->" + document.getElementById("clock"))
+        function currentTime() {
+            const date = new Date();
 
-        document.getElementById("clock1").innerText = "Now: " + time;
+            let hh = date.getHours();
+            let mm = date.getMinutes();
+            let ss = date.getSeconds();
 
-        setTimeout(() => currentTime(), 1000);
-    }
-    currentTime();
+            hh = (hh < 10) ? "0" + hh : hh;
+            mm = (mm < 10) ? "0" + mm : mm;
+            ss = (ss < 10) ? "0" + ss : ss;
+
+            const time = hh + ":" + mm + ":" + ss ;
+            console.log("time ->" + document.getElementById("clock"))
+
+            document.getElementById("clock1").innerText =
+                    date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + time + " (Update every 2 minutes)"
+
+            setTimeout(() => currentTime(), 1000);
+        }
+        currentTime();
     </script>
 </div>

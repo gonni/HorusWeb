@@ -81,6 +81,20 @@ trait LiveStreamingShowProcessing extends ScalatraServlet
     com.yg.live.html.tcStreamDark.render(targetTerms.map(t => TermCount(t, 0)))
   }
 
+  // map to tcStreamDark.html
+  get("/multiTopicMonMulti") {
+    val clientIp = request.getRemoteAddr
+    logger.info(s"Requested recommended news ..${clientIp}")
+
+    val ta = new TopicAnalyzer(db)
+    val news = ta.topicTermDicsWithScore(21, 7, 5).map(t=> TermsScore(t._1, t._2))
+    val bbs = ta.topicTermDicsWithScore(23, 7, 3).map(t=> TermsScore(t._1, t._2))
+    val coin = ta.topicTermDicsWithScore(25, 7, 3).map(t=> TermsScore(t._1, t._2))
+
+//    com.yg.live.html.tcStreamDark.render(targetTerms.map(t => TermCount(t, 0)))
+    com.yg.live.html.multiSeedTcStream(news, bbs, coin)
+  }
+
   // map to t1div2updown.html
   get("/m") {
     logger.info("Detected Main page ..")
@@ -95,6 +109,8 @@ trait LiveStreamingShowProcessing extends ScalatraServlet
     layouts.html.dashboard.render("Horus :: RT Topic", com.yg.live.html.tpDiv2EastWest.render())
   }
 }
+
+case class TermsScore(terms: String, score: Double)
 
 class LiveStreamingShowController(val db: Database) extends ScalatraServlet
   with FutureSupport with LiveStreamingShowProcessing with StgStreamingShowProcessing {

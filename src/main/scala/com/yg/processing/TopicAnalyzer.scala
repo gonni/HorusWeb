@@ -17,6 +17,12 @@ trait TopicProcessing {
     stopwords.toSet
   }
 
+  def topicTermDicsWithScore(seedNo: Int, limit: Int, topN: Int) = {
+    topicTermDics(seedNo, limit).map(v => {
+      (v.map(_._1.term).mkString("|"), v.map(_._1.score).reduce((a1, a2) => a1 + a2))
+    }).sortBy(-_._2).take(topN)
+  }
+
   def topicTermDics(seedNo: Int, limit: Int) = {
 
     val stopWords = loadStopWords(1)
@@ -28,9 +34,6 @@ trait TopicProcessing {
 
     val asynLdaResult = db.run(DtRepo.latestSeedTopics(latestTs.get).result)
     val topics = Await.result(asynLdaResult, 10.seconds)
-//    topics.foreach(println)
-    //TODO data convert
-//    println("--------------")
 
     val topicNos = topics.map(_.topicNo).distinct
 
@@ -51,25 +54,24 @@ trait TopicProcessing {
     })
   }
 
-//  integratedTermGraph(Seq(21), 2).map(a => {
-//    a._2.map(_.take(3)).foreach(println)
-//  })
-
   def mergedTermGraph(targetSeeds: Seq[Int], termsPerTopic: Int, topicsPerSeed: Int) = {
-    integratedTermGraph(targetSeeds, termsPerTopic).map(r => (r._1, r._2.map(_.take(topicsPerSeed))))
+    integratedTermGraph(targetSeeds, topicsPerSeed).map(r => (r._1, r._2.map(_.take(termsPerTopic))))
   }
 
-//  def integratedTermGraphEx(targetSeeds: Seq[Int], limit: Int) = {
-//    targetSeeds.zipWithIndex.map { case(seedNo, i) => {
-//      val resData = getScoredTc(seedNo)
-//      (seedNo, resData.take(limit))
-//    }}
-//  }
+  def mergedTermGraphBoosted(targetSeeds: Seq[SeedBoost]) = {
+//    integratedTermGraph(targetSeeds, topicsPerSeed).map(r => (r._1, r._2.map(_.take(termsPerTopic))))
+    targetSeeds.map(sb => {
+      val resData = getScoredTc(sb.seedId, 0.003, sb.boost)
+      (sb.seedId, resData.take(sb.topicCnt))
+//    }).map(r => (r._1, r._2.map(_.take(termsPerTopic))))
+    }).map(r => (r._1, r._2.map(_.take(targetSeeds.filter(a => a.seedId == r._1)
+      .headOption.getOrElse(SeedBoost(0,0,3,0)).maxTermsPerTopic))))
+  }
 
   /**
    * grpScore x listOrderScore x TF (cleaned with stopWords) x Future(TF by Influx)
    */
-  def getScoredTc(seedNo: Int, minScore: Double = 0.03) = {
+  def getScoredTc(seedNo: Int, minScore: Double = 0.03, seedBoost: Double = 1.0) = {
 
     // (String, Int) Order by value desc
     val mapTermCount = getOrderedTc(seedNo, minScore)(i => i.baseTerms ++ i.relTerms).toMap[String, Int]
@@ -84,9 +86,9 @@ trait TopicProcessing {
 //        println(elem, index)
 //        println(elem, ((baseSize - index) / baseSize), grpScore)
 
-        val boosting = 1 //if(mapTermCount.contains(elem)) 1 + 0.3 * mapTermCount(elem)  else 1
+        val tcBoosting = if(mapTermCount.contains(elem)) 1 + 0.1 * mapTermCount(elem)  else 1
 //        if(boosting > 1) println("Upper Boost : " + elem + "->" + boosting)
-        (elem, ((baseSize - index) * 10 / baseSize) + 20 * grpScore * boosting / 3)
+        (elem, ((baseSize - index) * 10 / baseSize) + 30 * grpScore * tcBoosting * seedBoost / 2)
 
       }
     })
@@ -127,6 +129,7 @@ trait TopicProcessing {
   }
 }
 
+case class SeedBoost(seedId: Int, topicCnt: Int, maxTermsPerTopic:Int, boost: Double)
 case class DtmData(baseTerms: List[String], relTerms: List[String], topicScore: Double)
 
 class TopicAnalyzer(val db: Database) extends TopicProcessing {
@@ -150,10 +153,20 @@ object TopicAnalyzer {
       driver = "com.mysql.cj.jdbc.Driver")
 
     val ta = new TopicAnalyzer(db)
-    ta.topicTermDics(21, 7).map(v => {
-      (v.map(_._1.term).mkString("|"), v.map(_._1.score).reduce((a1,a2) => a1 + a2))
-    }).foreach(println)
+//    ta.topicTermDics(21, 7).map(v => {
+//      (v.map(_._1.term).mkString("|"), v.map(_._1.score).reduce((a1,a2) => a1 + a2))
+//    }).foreach(println)
+//
+//    println("--------------------------------------")
+//    ta.topicTermDicsWithScore(21, 7, 3).foreach(println)
 
+//    ta.mergedTermGraph(Seq(21,23,25), 3, 3).foreach(println)
+    println("--------------------------------------")
+    ta.mergedTermGraphBoosted(
+      Seq(SeedBoost(21,5,3,1.7),
+        SeedBoost(23,1,2,0.5),
+        SeedBoost(25,1,3,0.3)))
+      .foreach(println)
 
 
 //    ta.mergedTermGraph(Seq(21), 3, 2).foreach(println)

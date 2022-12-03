@@ -15,7 +15,6 @@ import slick.jdbc.MySQLProfile.api._
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 
-
 trait NewsViewProcessing extends ScalatraServlet
   with FormSupport with I18nSupport with FutureSupport {
   val logger = LoggerFactory.getLogger(getClass)
