@@ -26,15 +26,15 @@
                     target: Math.round(Math.random() * (id-1))
                 }))
     };
-    const distance = 300;
+    const distance = 256;
 
 
     let isRotationActive = true;
     const Graph = ForceGraph3D()
     (document.getElementById('3d-graph'))
             .jsonUrl('/news/api/js/multiSeedsTopic3d')
-            .width(800)
-            .height(1000)
+            .width(1540)
+            .height(950)
             .nodeAutoColorBy('group')
             .cameraPosition({ z: distance })
             .nodeThreeObject(node => {
@@ -48,7 +48,7 @@
             });
 
     // Spread nodes a little wider
-    Graph.d3Force('charge').strength(-10);
+    Graph.d3Force('charge').strength(-15);
 
     // Set Animated
     // camera orbit
