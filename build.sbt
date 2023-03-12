@@ -39,6 +39,9 @@ lazy val hello = (project in file("."))
     )
   )
 
+libraryDependencies += "dev.zio" %% "zio" % "2.0.6"
+libraryDependencies += "dev.zio" %% "zio-streams" % "2.0.6"
+
 enablePlugins(SbtTwirl)
 enablePlugins(JettyPlugin)
 
@@ -52,4 +55,3 @@ assemblyMergeStrategy in assembly := {
 }
 
 //resourceDirectory in Compile := baseDirectory.value / "src" / "main" / "webapp"
-

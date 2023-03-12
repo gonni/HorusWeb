@@ -145,3 +145,42 @@ from(bucket: "tfStudySample")
   |> aggregateWindow(every: 5m, fn: sum, createEmpty: true)
   |> group(columns: ["_time"], mode:"by")
   |> sum(column: "_value")
+
+### Create Remote
+POST http://studio:38086/api/v2/remotes
+Authorization: Token _VIqWr_c4Is6w7Lrpiw-Z_BC8vRg8e4nStlAWPYRVn1VrJkSV3LZWwX0cecY_IrgBiCkgngQwvXZRMpRRm_4wA==
+Content-Type: application/json
+
+{
+  "allowInsecureTLS": false,
+  "description": "Replication for AWS",
+  "name": "HorusSync",
+  "orgID": "b935e83f0c7dd94d",
+  "remoteAPIToken": "r62gjCAsY2rWKrcGKxUf5eOFMUbZvuHSV497_ycxV6ceNOdcZJ3vXQsRHAEmDdF-QyK1dpylpic-GjZeCAD0mQ==",
+  "remoteOrgID": "b466c4e3cc29963e",
+  "remoteURL": "http://ec2-3-36-57-157.ap-northeast-2.compute.amazonaws.com:8086"
+}
+
+### Get Remote
+GET http://studio:38086/api/v2/remotes?orgID=b935e83f0c7dd94d
+Authorization: Token _VIqWr_c4Is6w7Lrpiw-Z_BC8vRg8e4nStlAWPYRVn1VrJkSV3LZWwX0cecY_IrgBiCkgngQwvXZRMpRRm_4wA==
+
+### Create Replication Stream
+POST http://studio:38086/api/v2/replications
+Authorization: Token _VIqWr_c4Is6w7Lrpiw-Z_BC8vRg8e4nStlAWPYRVn1VrJkSV3LZWwX0cecY_IrgBiCkgngQwvXZRMpRRm_4wA==
+Content-Type: application/json
+
+{
+  "dropNonRetryableData": false,
+  "localBucketID": "e5af2fea14152e70",
+  "maxAgeSeconds": 64800,
+  "maxQueueSizeBytes": 33554470,
+  "name": "Horus from local to AWS",
+  "orgID": "b935e83f0c7dd94d",
+  "remoteBucketName": "tfStudySample",
+  "remoteID": "0ae00bb8ab678000"
+}
+
+### Get Replication
+GET http://studio:38086/api/v2/replications?orgID=b935e83f0c7dd94d
+Authorization: Token _VIqWr_c4Is6w7Lrpiw-Z_BC8vRg8e4nStlAWPYRVn1VrJkSV3LZWwX0cecY_IrgBiCkgngQwvXZRMpRRm_4wA==
