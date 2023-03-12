@@ -10,5 +10,8 @@ COPY src/main/webapp/assets/data /app/src/main/webapp/assets/data
 COPY src/main/webapp/assets/js /app/src/main/webapp/assets/js
 WORKDIR /app
 COPY target/scala-2.13/horus_view.jar horus_view.jar
+ENV TZ=Asia/Seoul
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apk add --update tzdata
 ENV JAVA_OPTS=""
 ENTRYPOINT ["java", "-cp", "horus_view.jar", "com.yg.JettyLaunchMain"]
