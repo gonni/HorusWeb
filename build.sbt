@@ -35,7 +35,25 @@ lazy val hello = (project in file("."))
       "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion,
       "com.influxdb" % "influxdb-client-scala_2.13" % "6.0.0",
       "org.json4s" %% "json4s-jackson" % "4.1.0-M1",
-      "com.typesafe" % "config" % "1.4.2"
+      "com.typesafe" % "config" % "1.4.2",
+      // ---- DL -----
+      "org.nd4j" % "nd4j-native" % "1.0.0-M2.1",
+      "org.datavec" % "datavec-api" % "1.0.0-M2.1",
+      "org.datavec" % "datavec-data-image" % "1.0.0-M2.1",
+      "org.datavec" % "datavec-local" % "1.0.0-M2.1",
+      "org.deeplearning4j" % "deeplearning4j-datasets" % "1.0.0-M2.1",
+      "org.deeplearning4j" % "resources" % "1.0.0-M2.1",
+      "org.deeplearning4j" % "deeplearning4j-ui" % "1.0.0-M2.1",
+      "org.deeplearning4j" % "deeplearning4j-zoo" % "1.0.0-M2.1",
+      "org.deeplearning4j" % "deeplearning4j-parallel-wrapper" % "1.0.0-M2.1",
+      "jfree" % "jfreechart" % "1.0.13",
+      "org.jfree" % "jcommon" % "1.0.23",
+      "org.apache.httpcomponents" % "httpclient" % "4.3.5",
+      "ch.qos.logback" % "logback-classic" % "1.1.7",
+      "org.bytedeco" % "javacv-platform" % "1.5.5",
+      "org.junit.jupiter" % "junit-jupiter-engine" % "5.8.0-M1",
+      "org.junit.jupiter" % "junit-jupiter-api" % "5.8.0-M1",
+      "com.opencsv" % "opencsv" % "3.10"
     )
   )
 
