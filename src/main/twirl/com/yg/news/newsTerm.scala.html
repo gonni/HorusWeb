@@ -1,12 +1,23 @@
 @import com.yg.conn.InfluxClient.TermCount
 @(highTerms: Seq[TermCount], seedNo: Long)
+
+<div class="card w-100 mb-3" style="background-color:lightgray;">
+    <div class="card-body">
+        <h2>실시간 단어 발생 빈도</h2>
+        <p class="card-text">
+            수집된 데이터를 실시간으로 분석하여 가장 많이 등장하는 단어의 발생 추이를 분석합니다.<br/>
+            10초 주기로 갱신됩니다.
+        </p>
+    </div>
+</div><br/>
+
 <main class="ms-sm-auto px-md-4">
 <div id="body" style="width: 1000px;">
 
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700">
 <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
 
-<h3>Realtime TermCount Rank Top30</h3>
+
 <div id="top1term"></div>
 <div id="top10term"></div>
 

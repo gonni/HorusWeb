@@ -1,5 +1,16 @@
 @import com.yg.conn.InfluxClient.TermCount
 @(highTerms: Seq[TermCount])
+
+<div class="card w-100 mb-3" style="background-color:lightgray;">
+    <div class="card-body">
+        <h2>실시간 상위 10위 이슈</h2>
+        <p class="card-text">
+            수집된 데이터를 실시간으로 분석하여 대표 10가지 이슈를 추출합니다.<br/>
+            LDA, TFIDF 등의 방법이 활용됩니다.
+        </p>
+    </div>
+</div><br/>
+
 <main class="ms-sm-auto px-md-4">
 
 <div id="body" style="width: 1000px;">
@@ -8,10 +19,8 @@
 <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
 
 <div>
-    <h3>Realtime Topic Top10</h3>
     <div id="top1term"></div>
     <div id="top10term"></div>
-
 </div>
 
 <script src="/assets/js/d3.v2.js"></script>

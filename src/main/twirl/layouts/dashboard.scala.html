@@ -33,21 +33,23 @@
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/news/hot?seedNo=1">Crawl</a>
+                            <a class="nav-link active" aria-current="page" href="/news/hot?seedNo=21">Crawl</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 DT
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/news/termMonitor?seedNo=21">TF Monitor</a></li>
-                                <li><a class="dropdown-item" href="/news/topicMonitor?seedNo=21">Topic Monitor</a></li>
-                                <li><a class="dropdown-item" href="/news/topics">Topic Cell</a></li>
+                                <li><a class="dropdown-item" href="/news/termMonitor?seedNo=21">TF Monitor :: 실시간 단어 빈도 분석</a></li>
+                                <li><a class="dropdown-item" href="/news/topicMonitor?seedNo=21">Topic Monitor :: 실시간 토픽TOP10 분석</a></li>
+                                <li><a class="dropdown-item" href="/news/topics">Topic Cell :: 실시간 토픽 강도 차트</a></li>
+                                <li><a class="dropdown-item" href="/news/link">Topic 3D :: 실시간 뉴스 토픽 3D 시각화 </a></li>
+                                <!--
                                 <li><a class="dropdown-item" href="/news/net">Topic 3D</a></li>
-                                <li><a class="dropdown-item" href="/news/link">Term Link</a></li>
                                 <li><a class="dropdown-item" href="/news/multiLink">Multi Link</a></li>
-                                <li><a class="dropdown-item" href="/live/termCloud?seedNo=1">Word Cloud</a></li>
-                                <li><a class="dropdown-item" href="/live/termCloud2?seedNo=1">Word Cloud2</a></li>
+                                <li><a class="dropdown-item" href="/live/termCloud?seedNo=21">Word Cloud</a></li>
+                                <li><a class="dropdown-item" href="/live/termCloud2?seedNo=21">Word Cloud2</a></li>
+                                -->
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
@@ -55,15 +57,14 @@
                                 AI
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/news/termMonitor?seedNo=21">LSTM KOSPI</a></li>
-                                <li><a class="dropdown-item" href="/news/termMonitor?seedNo=21">LSTM KOSDAQ</a></li>
+                                <li><a class="dropdown-item" href="/predict/kospiIndex">KOSPI 지수예측</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/live/m">Live</a>
+                            <a class="nav-link" href="/live/mv">LiveShow</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" disabled="true">
                                 Config
                             </a>
                             <ul class="dropdown-menu">
@@ -73,7 +74,7 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">About</a>
+                            <a class="nav-link" href="/about">About</a>
                         </li>
                     </ul>
                 </div>

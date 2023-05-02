@@ -21,9 +21,19 @@ tspan:last-child {
 
 </style>
 
+<div class="card w-100 mb-3" style="background-color:lightgray;">
+    <div class="card-body">
+        <h2>토픽 강도 셀</h2>
+        <p class="card-text">
+            수집된 데이터의 TOP10 이슈를 추출하고 이슈의 강도를 셀의 크기로 표시합니다.<br/>
+            LDA 등이 활용됩니다.
+        </p>
+    </div>
+</div><br/>
+
 <main class="ms-sm-auto px-md-4">
 <body >
-<svg width="1200" height="1060"></svg>
+<svg width="1280" height="900"></svg>
 <script src="//d3js.org/d3.v4.0.0-alpha.35.min.js"></script>
 <script>
 
@@ -40,7 +50,7 @@ var stratify = d3.stratify()
         .parentId(function(d) { return d.id.substring(0, d.id.lastIndexOf(".")); });
 
 var treemap = d3.treemap()
-        .size([1024, 800])
+        .size([1280, 900])
         .paddingOuter(3)
         .paddingTop(19)
         .paddingInner(1)

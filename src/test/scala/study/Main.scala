@@ -1,9 +1,10 @@
 package study
 import ExImplicit1._
 
-object Main extends App {
-//  Greeter.greet("Mamamu")
+object Main  {
+  def main(args: Array[String]): Unit = {
+    val dateSample = "2023.01.17"
+    dateSample.split("\\.").foreach(println)
 
-  for(i <- 0 to 0) println("Value ->" + i)
-
+  }
 }

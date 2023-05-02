@@ -1,0 +1,49 @@
+@(predictAll: String, futurePredict: String, actual: String, xValues: String)
+
+<div class="card w-100 mb-3" style="background-color:lightgray;">
+    <div class="card-body">
+        <h3>KOSPI 예측 <span class="badge bg-primary">D+3</span></h3>
+        <p class="card-text">
+            LSTM model을 기반으로 3일후의 Kospi Index 지수를 예측<br>
+            2003년부터 Kospi 종가, 총 거래금액, 총 거래량의 Train Data로 활용하여 model을 생성<br>
+            <a style="color:green;">Actual</a> | <a style="color:red;">Predicted</a> | <a style="color:purple;">Future</a>
+        </p>
+
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+    <canvas id="myChart" style="width:100%;max-width:800px"></canvas>
+
+    <script>
+            const xValues = [@Html(xValues)];
+
+            new Chart("myChart", {
+                type: "line",
+                data: {
+                    labels: xValues,
+                    datasets: [{
+                        data: [@predictAll],
+                        lineTension: 0,
+                        borderColor: "red",
+                        fill: false
+                    }, {
+                        data: [@actual],
+                        lineTension: 0,
+                        borderColor: "green",
+                        fill: false
+                    },{
+                        data: [@futurePredict],
+                        lineTension: 0,
+                        borderColor: "purple",
+                        fill: false
+                    }
+
+                    ]
+                },
+                options: {
+                    legend: {display: false}
+                }
+            });
+    </script>

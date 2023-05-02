@@ -1,6 +1,19 @@
 @import com.yg.data.CrawledRepo.CrawlUnit
 @(crawlUnits : Seq[CrawlUnit])
 
+<div class="card w-100 mb-3" style="background-color:lightgray;">
+    <div class="card-body">
+        <h2>Crawled Contents<span class="badge bg-primary">List</span></h2>
+        <p class="card-text">
+            뉴스, 커뮤니티 등에서 실시간 수집한 데이터를 표시합니다.<br/>
+            <a href="/news/hot?seedNo=21" style="color:green;">NEWS</a> |
+                <a href="/news/hot?seedNo=22" style="color:red;">BBS1</a> |
+                <a href="/news/hot?seedNo=23" style="color:purple;">BBS2</a> |
+                <a href="/news/hot?seedNo=25" style="color:darkblue;">BBS3</a>
+        </p>
+    </div>
+</div>
+
 <div>
 
 <script>

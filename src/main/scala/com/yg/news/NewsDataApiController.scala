@@ -86,7 +86,7 @@ trait NewsWebDataProcessing extends ScalatraServlet with FutureSupport {
         tempTopicNo = e.topicNo
         sb.append("flare.topic" + e.topicNo + ",\n")
       }
-      sb.append("flare.topic" + e.topicNo + "." + e.term + "," + (e.score * 10000).toInt + "\n")
+      sb.append("flare.topic" + e.topicNo + "." + e.term.replaceAll("\\.", "dot_") + "," + (e.score * 10000).toInt + "\n")
     }
 
     println("Body->\n" + sb)
