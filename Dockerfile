@@ -8,6 +8,10 @@ COPY src/main/webapp/assets/css /app/src/main/webapp/assets/css
 COPY src/main/webapp/assets/cssc /app/src/main/webapp/assets/cssc
 COPY src/main/webapp/assets/data /app/src/main/webapp/assets/data
 COPY src/main/webapp/assets/js /app/src/main/webapp/assets/js
+RUN mkdir -p /app/datafile
+RUN mkdir -p /app/model
+COPY datafile/kospi_with_investor.csv /app/datafile
+COPY model/Kospi3x3Ep100.mdl /app/model
 WORKDIR /app
 COPY target/scala-2.13/horus_view.jar horus_view.jar
 ENV TZ=Asia/Seoul
