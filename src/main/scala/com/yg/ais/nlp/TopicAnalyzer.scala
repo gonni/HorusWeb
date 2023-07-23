@@ -1,0 +1,89 @@
+package com.yg.ais.nlp
+
+import com.yg.RuntimeConfig
+import com.yg.data.DtRepo
+import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL
+import kr.co.shineware.nlp.komoran.core.Komoran
+import org.slf4j.LoggerFactory
+import slick.jdbc.MySQLProfile.api._
+
+import scala.jdk.CollectionConverters._
+
+//import scala.collection.IterableOnce.iterableOnceExtensionMethods
+import scala.collection.IterableOnce._
+import scala.collection.Map
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
+
+class TopicAnalyzer (val db: Database) {
+  val logger = LoggerFactory.getLogger(getClass)
+  protected implicit def executor = scala.concurrent.ExecutionContext.Implicits.global
+
+  val tdm: Map[String, Map[String, Double]] = Await.result(loadTdm(), Duration.Inf)
+  val komoran =  new Komoran(DEFAULT_MODEL.LIGHT)
+
+  private def loadTdm() = {
+    for {
+      latestTs <- db.run(DtRepo.TermDistFunction.getLatestGrpTs(21))
+      data <- db.run(DtRepo.TermDistFunction.getTermDist(latestTs.head.grpGs))
+    } yield data
+      .groupBy(_.baseTerm)
+      .map {
+        case (key, value) => {
+          val mapped = value.map(v => {
+            (v.compTerm, v.distVal)
+          }).toMap[String, Double]
+          (key, mapped)
+        }
+      }.toMap[String, Map[String, Double]]
+  }
+
+  def allTopicScore(sentence: String) = {
+    println("tdm ..")
+
+    tdm.foreach(println)
+  }
+
+  def getTopicScore(topic: String, sentence: String) = {
+    val tokens = komoran.analyze(sentence).getTokenList.asScala.map(_.getMorph).toList
+    tdm.get(topic)
+  }
+
+}
+
+object TopicAnalyzer {
+  def main(args: Array[String]): Unit = {
+    println("Active System ..")
+
+    val db = Database.forURL(url = RuntimeConfig("mysql.url"),
+      user = RuntimeConfig("mysql.user"),
+      password = RuntimeConfig("mysql.password"),
+      driver = "com.mysql.cj.jdbc.Driver")
+
+    val test = new TopicAnalyzer(db)
+
+    test.allTopicScore("AA")
+//    val result = Await.result(test.loadTdm(), Duration.Inf)
+//    result.foreach(row => {
+//      println(row)
+//    })
+//    println("result length ->" + result.length)
+//
+//    val res1 = result.groupBy(_.baseTerm)
+//    println("--->" + res1)
+//
+//    val mapp = res1.map{
+//      case (key, value) => {
+//        val mapped = value.map(v => {
+//          (v.compTerm, v.distVal)
+//        }).toMap[String, Double]
+//        (key, mapped)
+//      }
+//    }.toMap[String, Map[String, Double]]
+//
+//    mapp.foreach(println)
+
+    println("Completed ..")
+  }
+}
+

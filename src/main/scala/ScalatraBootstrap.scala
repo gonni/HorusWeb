@@ -33,6 +33,11 @@ class ScalatraBootstrap extends LifeCycle {
     println(RuntimeConfig())
     println("-------------------------------------------")
 
+    println(s"os.name = ${System.getProperty("os.name")}, os.arch=${System.getProperty("os.arch")}")
+    println("-------------------------------------------")
+    println(System.getProperties)
+    println("-------------------------------------------")
+
 //    val db = Database.forDataSource(cpds, None)
     val db = Database.forURL(url = RuntimeConfig("mysql.url"),
       user = RuntimeConfig("mysql.user"),
@@ -53,6 +58,7 @@ class ScalatraBootstrap extends LifeCycle {
     context.mount(new LiveStreamingShowController(db), "/live/*")
     context.mount(new KospiViewControllerImpl(db), "/predict/*")
     context.mount(new CommonRedirectController, "/")
+
 
   }
 

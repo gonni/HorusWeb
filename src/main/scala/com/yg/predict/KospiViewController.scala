@@ -1,6 +1,5 @@
 package com.yg.predict
 
-import com.yg.ai.stock.predict.PredictService
 import com.yg.data.KospiRepo
 import org.scalatra.{FutureSupport, ScalatraServlet}
 import org.slf4j.LoggerFactory
@@ -9,8 +8,8 @@ import slick.jdbc.MySQLProfile.api._
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.jdk.CollectionConverters._
-
 import com.yg.ai.stock.kospidata._
+import com.yg.ai.stock.predict.PredictService
 
 trait KospiViewController extends ScalatraServlet with FutureSupport {
   val logger = LoggerFactory.getLogger(getClass)

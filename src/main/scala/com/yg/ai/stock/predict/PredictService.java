@@ -1,11 +1,8 @@
 package com.yg.ai.stock.predict;
 
-import com.google.protobuf.Message;
-import com.mysql.cj.x.protobuf.MysqlxExpr;
 import com.yg.ai.stock.kospidata.KospiIndexCategory;
 import com.yg.ai.stock.kospidata.KospiPartDsIterator;
 import com.yg.ai.stock.kospidata.PartKospiData;
-import com.yg.ai.stock.model.RecurrentNets;
 import javafx.util.Pair;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -16,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class PredictService {

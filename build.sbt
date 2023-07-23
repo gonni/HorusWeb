@@ -1,9 +1,12 @@
-val ScalatraVersion = "2.7.0"
+val ScalatraVersion = "2.8.0"
 val akkaVersion = "2.5.26"
 val akkaHttpVersion = "10.1.11"
 
 ThisBuild / scalaVersion := "2.13.4"
 ThisBuild / organization := "com.yg"
+
+classpathTypes += "maven-plugin"
+resolvers += "jitpack" at "https://jitpack.io"
 
 lazy val hello = (project in file("."))
   .settings(
@@ -36,11 +39,15 @@ lazy val hello = (project in file("."))
       "com.influxdb" % "influxdb-client-scala_2.13" % "6.0.0",
       "org.json4s" %% "json4s-jackson" % "4.1.0-M1",
       "com.typesafe" % "config" % "1.4.2",
-      // ---- DL -----
-      "org.nd4j" % "nd4j-native" % "1.0.0-M2.1",
+      // ---- DL M1-----
+      "org.nd4j" % "nd4j-native-platform" % "1.0.0-M2.1",
+//      "org.nd4j" % "nd4j-native" % "1.0.0-M2.1" % "macosx-arm64",
+//      "org.bytedeco" % "openblas" % "0.3.21-1.5.8" % "macosx-arm64",
+      // ---------------
       "org.datavec" % "datavec-api" % "1.0.0-M2.1",
       "org.datavec" % "datavec-data-image" % "1.0.0-M2.1",
       "org.datavec" % "datavec-local" % "1.0.0-M2.1",
+      "org.deeplearning4j" % "deeplearning4j-core" % "1.0.0-M2.1",
       "org.deeplearning4j" % "deeplearning4j-datasets" % "1.0.0-M2.1",
       "org.deeplearning4j" % "resources" % "1.0.0-M2.1",
       "org.deeplearning4j" % "deeplearning4j-ui" % "1.0.0-M2.1",
@@ -58,19 +65,21 @@ lazy val hello = (project in file("."))
     )
   )
 
-libraryDependencies += "dev.zio" %% "zio" % "2.0.6"
-libraryDependencies += "dev.zio" %% "zio-streams" % "2.0.6"
+libraryDependencies += "com.github.shin285" % "KOMORAN" % "3.3.9"
+dependencyOverrides += "org.scala-lang.modules" %% "scala-parser-combinators" % "2.0.0"
+//libraryDependencies += "dev.zio" %% "zio" % "2.0.6"
+//libraryDependencies += "dev.zio" %% "zio-streams" % "2.0.6"
 
 enablePlugins(SbtTwirl)
 enablePlugins(JettyPlugin)
 
-containerPort in Jetty := 8090
+containerPort in Jetty := 18090
 
 assemblyMergeStrategy in assembly := {
-  case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+  case PathList("META-INF", "MANIFEST.MF") => MergeStrategy.discard
   case PathList("reference.conf") => MergeStrategy.concat
   case PathList("application.conf") => MergeStrategy.concat
-  case x => MergeStrategy.last
+  case x => MergeStrategy.first
 }
 
 //resourceDirectory in Compile := baseDirectory.value / "src" / "main" / "webapp"

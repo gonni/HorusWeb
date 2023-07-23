@@ -9,7 +9,7 @@ object JettyLaunchMain {
   def main(args: Array[String]): Unit = {
     println("Active Horus-web ..")
 
-    val port = if(System.getenv("PORT") != null) System.getenv("PORT").toInt else 8090
+    val port = if(System.getenv("PORT") != null) System.getenv("PORT").toInt else 18090
 
     val server = new Server(port)
     val context = new WebAppContext()

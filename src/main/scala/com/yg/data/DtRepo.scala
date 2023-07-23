@@ -91,11 +91,17 @@ object DtRepo {
     .sortBy(_.topicNo)
 
   // ----- Functions for TDM -----
+
   val termDistTable = TableQuery[TermDistBinding]
   val latestTdGrpTs = termDistTable.map(_.grpTs).max
 //  val latestTdGrpTs1 = termDistTable.sortBy(_.termNo.desc).map(_.grpTs).take(1).result.headOption
   val latestTdGrpTs1 = termDistTable.sortBy(_.termNo.desc).take(1).result
-
+  object TermDistFunction {
+    def getLatestGrpTs(targetSeedNo: Int) =
+      termDistTable.filter(_.seedNo === targetSeedNo).sortBy(_.termNo.desc).take(1).result
+    def getTermDist(targetTs: Long) =
+      termDistTable.filter(_.grpTs === targetTs).result
+  }
   def termDists(grpTs: Long) = termDistTable.filter(_.grpTs === grpTs).sortBy(_.baseTerm)
 
 //  def allLatestTerms(seedNo: Int) = termDistTable.filter(_.grpTs === latestTdGrpTs1)
