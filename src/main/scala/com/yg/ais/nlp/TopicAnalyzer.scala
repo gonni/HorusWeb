@@ -38,15 +38,22 @@ class TopicAnalyzer (val db: Database) {
       }.toMap[String, Map[String, Double]]
   }
 
-  def allTopicScore(sentence: String) = {
-    println("tdm ..")
-
-    tdm.foreach(println)
+  def allTopicScore(sentence: String): Map[String, Double] = {
+    tdm.keySet.map(key => {
+      (key, getTopicScore(key, sentence).getOrElse(0))
+    }).toMap
   }
 
   def getTopicScore(topic: String, sentence: String) = {
     val tokens = komoran.analyze(sentence).getTokenList.asScala.map(_.getMorph).toList
-    tdm.get(topic)
+//    val termScore: Option[Map[String, Double]] = tdm.get(topic)
+
+    for {
+      termScoreMap <- tdm.get(topic)
+    } yield tokens.map(token => {
+      termScoreMap.getOrElse(token, 0)
+    }).sum
+
   }
 
 }
