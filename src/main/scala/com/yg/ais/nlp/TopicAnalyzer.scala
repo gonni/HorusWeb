@@ -40,7 +40,7 @@ class TopicAnalyzer (val db: Database) {
 
   def allTopicScore(sentence: String): Map[String, Double] = {
     tdm.keySet.map(key => {
-      (key, getTopicScore(key, sentence).getOrElse(0))
+      (key, getTopicScore(key, sentence).getOrElse(0.0))
     }).toMap
   }
 
@@ -51,9 +51,8 @@ class TopicAnalyzer (val db: Database) {
     for {
       termScoreMap <- tdm.get(topic)
     } yield tokens.map(token => {
-      termScoreMap.getOrElse(token, 0)
+      termScoreMap.getOrElse(token, 0.0)
     }).sum
-
   }
 
 }
@@ -62,14 +61,9 @@ object TopicAnalyzer {
   def main(args: Array[String]): Unit = {
     println("Active System ..")
 
-    val db = Database.forURL(url = RuntimeConfig("mysql.url"),
-      user = RuntimeConfig("mysql.user"),
-      password = RuntimeConfig("mysql.password"),
-      driver = "com.mysql.cj.jdbc.Driver")
+//    val test = new TopicAnalyzer(db)
+//    test.allTopicScore("한국 보증 화재 투입 대응 작가 채권은 주택 가격 하락을 불렀다.").foreach(println)
 
-    val test = new TopicAnalyzer(db)
-
-    test.allTopicScore("AA")
 //    val result = Await.result(test.loadTdm(), Duration.Inf)
 //    result.foreach(row => {
 //      println(row)
