@@ -15,7 +15,7 @@ import scala.collection.Map
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
-class TopicAnalyzer (val db: Database) {
+class TopicTermAnalyzer (val db: Database) {
   val logger = LoggerFactory.getLogger(getClass)
   protected implicit def executor = scala.concurrent.ExecutionContext.Implicits.global
 
@@ -44,7 +44,7 @@ class TopicAnalyzer (val db: Database) {
     }).toMap
   }
 
-  def getTopicScore(topic: String, sentence: String) = {
+  private def getTopicScore(topic: String, sentence: String) = {
     val tokens = komoran.analyze(sentence).getTokenList.asScala.map(_.getMorph).toList
 //    val termScore: Option[Map[String, Double]] = tdm.get(topic)
 
@@ -57,7 +57,7 @@ class TopicAnalyzer (val db: Database) {
 
 }
 
-object TopicAnalyzer {
+object TopicTermAnalyzer {
   def main(args: Array[String]): Unit = {
     println("Active System ..")
 

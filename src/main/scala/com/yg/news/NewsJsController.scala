@@ -1,5 +1,6 @@
 package com.yg.news
 
+import com.yg.ais.nlp.TopicTermAnalyzer
 import com.yg.conn._
 import com.yg.data.CrawledRepo.CrawlUnit
 import com.yg.data.DtRepo.TermDist
@@ -20,7 +21,7 @@ import scala.concurrent.duration.{Duration, DurationInt}
 trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with FutureSupport {
   val logger =  LoggerFactory.getLogger(getClass)
   override protected implicit def jsonFormats: Formats = DefaultFormats.withBigDecimal
-
+  val topicTermAnalyzer  = new TopicTermAnalyzer(db)
   def db: Database
 
   before() {
@@ -65,8 +66,14 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
       topicResult.termScores.filter(_.score > 0.0).sortWith(_.score > _.score)
     }
 
+    def getTopicScoreSelf(sentence: Option[String]): List[TopicScore] = {
+      this.topicTermAnalyzer.allTopicScore(sentence.getOrElse("NA"))
+        .map(v => TopicScore(v._1, v._2)).toList
+    }
+
 //    AnalyzedNews(news, getTopicScores(news.anchorText), getTopicScores(news.pageText).filter(_.score > 2.3))
-    AnalyzedNews(news, List[TopicScore](), List[TopicScore]())
+//    AnalyzedNews(news, List[TopicScore](), List[TopicScore]())
+    AnalyzedNews(news, getTopicScoreSelf(news.anchorText), getTopicScoreSelf(news.pageText).filter(_.score > 2.3))
   }
 
   case class AnalyzedNews(newsData: CrawlUnit,
