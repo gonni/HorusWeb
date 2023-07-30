@@ -24,8 +24,10 @@ class TopicTermAnalyzer (val db: Database) {
 
   private def loadTdm() = {
     for {
-      latestTs <- db.run(DtRepo.TermDistFunction.getLatestGrpTs(21))
-      data <- db.run(DtRepo.TermDistFunction.getTermDist(latestTs.head.grpGs))
+//      latestTs <- db.run(DtRepo.TermDistFunction.getLatestGrpTs(21))
+//      data <- db.run(DtRepo.TermDistFunction.getTermDist(latestTs.head.grpGs))
+      latestTs <- db.run(DtRepo.CommonTermDist.ApiFunction.getLatestGrpTs(21))
+      data <- db.run(DtRepo.CommonTermDist.ApiFunction.getTermDist(latestTs.head.grpGs))
     } yield data
       .groupBy(_.baseTerm)
       .map {

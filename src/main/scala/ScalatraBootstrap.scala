@@ -59,6 +59,8 @@ class ScalatraBootstrap extends LifeCycle {
     context.mount(new KospiViewControllerImpl(db), "/predict/*")
     context.mount(new CommonRedirectController, "/")
 
+//    context.setResourceBase("src/main/webapp")
+//    context.resource("src/main/webapp")
 
   }
 

@@ -111,11 +111,7 @@ object DtRepo {
   def getCompTerms(grpTs: Long, baseTerm: String, limit: Int) = termDists(grpTs).filter(_.baseTerm === baseTerm)
     .sortBy(_.distVal.desc).take(limit).result
 
-
-
   def getCompTermsFast(grpTs: Long) = {
-//    implicit val getTermDistResult = GetResult(r => TermDist(r.<<, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<))
-
     sql"""
         select a.BASE_TERM, a.COMP_TERM, a.DIST_VAL,
         ( select 1 + count(*) from (select * from TERM_DIST where GRP_TS = $grpTs) a1
@@ -124,4 +120,29 @@ object DtRepo {
        """.as[(String, String, Double, Int)]
   }
 
+  // Common Term Dist -----
+  object CommonTermDist {
+    class CommonTermDistBinding(tag: Tag) extends Table[TermDist](tag, "dt_common_term_dist") {
+      def termNo = column[Int]("TERM_NO", O.PrimaryKey, O.AutoInc)
+      def baseTerm = column[String]("BASE_TERM")
+      def compTerm = column[String]("COMP_TERM")
+      def distVal = column[Double]("DIST_VAL")
+      def tRangeMinAgo = column[Int]("T_RANGE_MIN_AGO")
+      def seedNo = column[Int]("SEED_NO")
+      def grpTs = column[Long]("GRP_TS")
+      def * = (termNo.?, baseTerm, compTerm, distVal, tRangeMinAgo, seedNo, grpTs) <>
+        (TermDist.tupled, TermDist.unapply)
+    }
+
+    val commonTermDistTable = TableQuery[CommonTermDistBinding]
+
+    object ApiFunction {
+      def getLatestGrpTs(targetSeedNo: Int) =
+        commonTermDistTable.filter(_.seedNo === targetSeedNo).sortBy(_.termNo.desc).take(1).result
+
+      def getTermDist(targetTs: Long) =
+        commonTermDistTable.filter(_.grpTs === targetTs).result
+    }
+
+  }
 }

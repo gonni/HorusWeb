@@ -25,7 +25,7 @@ trait TopicProcessing {
 
   def topicTermDics(seedNo: Int, limit: Int) = {
 
-    val stopWords = loadStopWords(1)
+    val stopWords = loadStopWords(-10)
 
 //    val asynLdaResult = db.run(DtRepo.latestAllTopics.filter(_.seedNo === seedNo).result)
 

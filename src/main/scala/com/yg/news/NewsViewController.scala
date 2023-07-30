@@ -58,17 +58,23 @@ trait NewsViewProcessing extends ScalatraServlet
     layouts.html.dashboard.render("Pick 5", newsPage)
   }
 
+  // TODO need to add removing stop words
   get("/termMonitor") {
     val clientIp = request.getRemoteAddr
     val seedNo = params("seedNo").toLong
     logger.info(s"Requested recommended news ..${clientIp}")
     val highTerms = InfluxClient.getHighTerms("-1h", 30)
-    logger.info("highTerms -> " + highTerms.mkString(" | "))
+    val ta = new TopicAnalyzer(db)
+    val stopWords = ta.loadStopWords(-10)
+    val stopRemoved = highTerms.filter(ht => {!stopWords.contains(ht.term)})
 
-    val mainPage = com.yg.news.html.newsTerm.render(highTerms, seedNo)
+    logger.info("highTerms -> " + stopRemoved.mkString(" | "))
+
+    val mainPage = com.yg.news.html.newsTerm.render(stopRemoved, seedNo)
     layouts.html.dashboard.render("NewsStream", mainPage)
   }
 
+  // TODO need to add removing stop words
   get("/topicMonitor") {
     val seedNo = params("seedNo").toInt
     val clientIp = request.getRemoteAddr
