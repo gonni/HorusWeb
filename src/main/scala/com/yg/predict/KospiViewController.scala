@@ -19,7 +19,7 @@ trait KospiViewController extends ScalatraServlet with FutureSupport {
   get("/kospiIndex") {
     logger.info("detected kospi predict")
 
-    val testData = Await.result(db.run(KospiRepo.findLatest(70).sortBy(_.targetDt.asc).result), Duration.Inf)
+    val testData = Await.result(db.run(KospiRepo.findLatest(60).sortBy(_.targetDt.asc).result), Duration.Inf)
 
     val javaTestData = testData.map(row => new PartKospiData(row.targetDt, row.indexValue.get, row.totalEa.get, row.totalVolume.get))
     javaTestData.foreach(println)
@@ -35,6 +35,8 @@ trait KospiViewController extends ScalatraServlet with FutureSupport {
         ""
       }
     })
+    println("-----1-----")
+    xValues.foreach(println)
 
     val latestDay = testData(testData.size - 1).targetDt.split("\\.")
     val xValues2 = xValues.take(xValues.size -4) ++ Seq("'" + latestDay(1) + "/" + latestDay(2)+"'","","","'D+3'")

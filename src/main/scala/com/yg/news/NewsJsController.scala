@@ -75,7 +75,7 @@ trait NewsDataProcessing extends ScalatraServlet with JacksonJsonSupport with Fu
 //    AnalyzedNews(news, getTopicScores(news.anchorText), getTopicScores(news.pageText).filter(_.score > 2.3))
 //    AnalyzedNews(news, List[TopicScore](), List[TopicScore]())
     AnalyzedNews(news, getTopicScoreSelf(news.anchorText).filter(_.score > 0.1).sortBy(_.score)(Ordering[Double].reverse),
-      getTopicScoreSelf(news.pageText).filter(_.score > 2.3).sortBy(_.score)(Ordering[Double].reverse))
+      getTopicScoreSelf(news.pageText).filter(_.score > 1.3).sortBy(_.score)(Ordering[Double].reverse))
   }
 
   case class AnalyzedNews(newsData: CrawlUnit,

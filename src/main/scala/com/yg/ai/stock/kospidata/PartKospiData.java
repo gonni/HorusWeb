@@ -45,4 +45,9 @@ public class PartKospiData {
         this.totalVolume = totalVolume;
     }
 
+    @Override
+    public String toString() {
+        return this.date + "/" + this.indexValue + "/" + this.totalEa + "/" + this.totalVolume ;
+    }
+
 }
