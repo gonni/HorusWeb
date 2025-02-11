@@ -14,6 +14,7 @@ import com.yg.news.{NewsDataApiController, NewsJsController, NewsViewController}
 import com.yg.processing.LiveStreamingShowController
 import com.yg.scentry._
 import com.yg.system.CommonRedirectController
+import com.yg.stock.ClosingPriceViewController
 
 //import slick.jdbc.H2Profile.api._
 import slick.jdbc.MySQLProfile.api._
@@ -43,6 +44,11 @@ class ScalatraBootstrap extends LifeCycle {
       user = RuntimeConfig("mysql.user"),
       password = RuntimeConfig("mysql.password"),
       driver = "com.mysql.cj.jdbc.Driver")
+    
+    val stockDb = Database.forURL(url = RuntimeConfig("stocksql.url"),
+      user = RuntimeConfig("stocksql.user"),
+      password = RuntimeConfig("stocksql.password"),
+      driver = "com.mysql.cj.jdbc.Driver")
 
     context.mount(new NewsDataApiController(db), "/news/data/*")
     context.mount(new HttpSampleController(), "/hell/*")
@@ -56,6 +62,7 @@ class ScalatraBootstrap extends LifeCycle {
     context.mount(new ReportViewController(db), "/v/report")
     context.mount(new HorusViewController(db), "/horus/*")  // db connection
     context.mount(new LiveStreamingShowController(db), "/live/*")
+    context.mount(new ClosingPriceViewController(stockDb), "/stock/*")
     // context.mount(new KospiViewControllerImpl(db), "/predict/*")
     context.mount(new CommonRedirectController, "/")
 

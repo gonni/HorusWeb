@@ -1,0 +1,45 @@
+@import com.yg.data.StockRepo.EndPriceAnalyzeResult
+@(endPriceAnalyzeResults: Seq[EndPriceAnalyzeResult])
+
+
+
+<main class="ms-sm-auto px-md-4">
+  <div class="card w-100 mb-3" style="background-color:lightgray;">
+    <div class="card-body">
+        <h2>종가매매 종목추출 및 검증<span class="badge bg-primary">V</span></h2>
+        <p class="card-text">
+            매일 15:10 종가매매 후보 종목들이 추출됩니다.<br/>
+            매일 09:10 전일 추천 종목의 적중여부가 업데이트 됩니다.<br/>
+        </p>
+    </div>
+  </div>
+    <br>
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">날짜</th>
+                    <th scope="col">종목</th>
+                    <th scope="col">적중도</th>
+                    <th scope="col">기준가</th>
+                    <th scope="col">다음날10분</th>
+                    <th scope="col">다음날5일</th>
+                    <th scope="col">갱신일</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(result <- endPriceAnalyzeResults) {
+                    <tr>
+                        <td>@result.targetDt</td>
+                        <td>@result.itemCode</td>
+                        <td>@result.matchScore</td>
+                        <td>@result.basePrice</td>
+                        <td>@result.nextDayHigh5m</td>
+                        <td>@result.afterDayHigh5d</td>
+                        <td>@result.updDt</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</main>
