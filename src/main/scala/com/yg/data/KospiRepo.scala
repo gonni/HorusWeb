@@ -1,6 +1,7 @@
 package com.yg.data
 
 import slick.jdbc.MySQLProfile.api._
+import java.sql.Timestamp
 
 object KospiRepo {
 
@@ -46,8 +47,10 @@ object KospiRepo {
       bank, etcBank, pensionFund) <> (KospiData.tupled, KospiData.unapply)
   }
 
+  
+
   val kospiQuery = TableQuery[CrawlKospiMapping]
 
   def findLatest(topN: Int) = kospiQuery.sortBy(_.targetDt.desc).drop(0).take(topN)
-
+  
 }

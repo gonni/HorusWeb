@@ -15,6 +15,7 @@ object StockRepo {
     memo: String
   )
 
+
   class EnpriceAnalyzeResultSchema(tag: Tag) extends Table[EndPriceAnalyzeResult](tag, None, "STOCK_END_PRICE_ANALYZE_RESULT") {
     def targetDt = column[String]("TARGET_DT")
     def itemCode = column[String]("ITEM_CODE")
@@ -29,7 +30,26 @@ object StockRepo {
       (EndPriceAnalyzeResult.tupled, EndPriceAnalyzeResult.unapply)
   }
 
+  case class StockInfo(itemCode: String, itemName: String, latestSynced: Option[Timestamp], crawlStatus: Option[Int])
+
+  class StockInfoMapping(tag: Tag) extends Table[StockInfo](tag, None, "STOCK_INFO") {
+    def itemCode = column[String]("ITEM_CODE", O.PrimaryKey)
+    def itemName = column[String]("ITEM_NAME")
+    def latestSynced = column[Option[Timestamp]]("LATEST_SYNCED")
+    def crawlStatus = column[Option[Int]]("CRAWL_STATUS")
+
+    override def * = (itemCode, itemName, latestSynced, crawlStatus) <> (StockInfo.tupled, StockInfo.unapply)
+  }
+
   val endPriceAnalyzeResultQuery = TableQuery[EnpriceAnalyzeResultSchema]
 
+  val stockInfoQuery = TableQuery[StockInfoMapping]
+
   def selectAll() = endPriceAnalyzeResultQuery
+
+  def selelctAllwithItemName() = {
+    for {
+      (e, s) <- endPriceAnalyzeResultQuery join stockInfoQuery on (_.itemCode === _.itemCode)
+    } yield ((e.targetDt, e.itemCode, s.itemName, e.matchScore, e.basePrice, e.nextDayHigh5m, e.afterDayHigh5d, e.updDt, e.memo))
+  }.sortBy(_._1.desc)
 }
