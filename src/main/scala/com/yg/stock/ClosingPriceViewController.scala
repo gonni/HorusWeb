@@ -40,7 +40,6 @@ trait ClosingPriceViewControl extends ScalatraServlet with FormSupport with I18n
   }
 }
 
-
 case class EndPriceAnalyzeResultWithItemName (
   targetDt: String,
   itemCode: String,

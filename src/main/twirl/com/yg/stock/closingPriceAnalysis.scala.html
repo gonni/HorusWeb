@@ -8,8 +8,9 @@
     <div class="card-body">
         <h2>종가매매 종목추출 및 검증<span class="badge bg-primary">V</span></h2>
         <p class="card-text">
-            매일 15:10 종가매매 후보 종목들이 추출됩니다.<br/>
-            매일 09:10 전일 추천 종목의 적중여부가 업데이트 됩니다.<br/>
+            - 매일 15:10 종가매매 후보 종목들이 추출됩니다.<br/>
+            - 다음날 09:10 전일 추천 종목의 적중여부가 업데이트 됩니다.<br/>
+            - 추출 5일 이후 추천 종목의 적중여부가 업데이트 됩니다.<br/>
         </p>
     </div>
   </div>
@@ -24,18 +25,27 @@
                     <th scope="col">기준가</th>
                     <th scope="col">다음날10분</th>
                     <th scope="col">다음날5일</th>
+                    <th scope="col">평가</th>
                     <th scope="col">갱신일</th>
                 </tr>
             </thead>
             <tbody>
                 @for(result <- endPriceAnalyzeResults) {
+                  
                     <tr>
                         <td>@result.targetDt</td>
-                        <td><a href="@{result.itemCode}">@result.itemName</a></td>
+                        <td><a target="_blank" href="https://finance.naver.com/item/main.naver?code=@{result.itemCode}">@result.itemName</a></td>
                         <td>@result.matchScore</td>
                         <td>@result.basePrice</td>
                         <td><font color="@{if(result.basePrice < result.nextDayHigh5m)  "#FF0000" else  "#00FF00"}">@result.nextDayHigh5m</font></td>
                         <td>@result.afterDayHigh5d</td>
+                        <td>@{
+                          if(result.basePrice == 0) "Error" 
+                            else if(result.nextDayHigh5m == 0) "Pending Verification"  
+                            else if (result.basePrice < result.nextDayHigh5m) "적중" 
+                            else "미적중"
+                        }
+                        </td>
                         <td>@result.updDt</td>
                     </tr>
                 }
