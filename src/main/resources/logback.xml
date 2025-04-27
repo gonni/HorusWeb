@@ -10,7 +10,7 @@
   <appender name="TEXT_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>logs/cpa_view.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-      <fileNamePattern>logs/cpa_view_%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <fileNamePattern>logs/horusweb_%d{yyyy-MM-dd}.%i.log</fileNamePattern>
       <maxFileSize>100MB</maxFileSize>
       <maxHistory>7</maxHistory>
       <totalSizeCap>1GB</totalSizeCap>
@@ -20,9 +20,32 @@
       <pattern>%d %-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
     </encoder>
   </appender>
+  <!-- 
+  <appender name="KAFKA" class="net.logstash.logback.appender.LoggingEventKafkaAppender">
+    <topic>dev-logs</topic>
+    <producerConfig>
+        <entry key="bootstrap.servers" value="localhost:9092"/>
+        <entry key="acks" value="1"/>
+        <entry key="key.serializer" value="org.apache.kafka.common.serialization.StringSerializer"/>
+        <entry key="value.serializer" value="org.apache.kafka.common.serialization.StringSerializer"/>
+    </producerConfig>
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+  </appender> -->
+
+  <appender name="kafkaAppender" class="com.github.danielwegener.logback.kafka.KafkaAppender">
+      <encoder class="com.github.danielwegener.logback.kafka.encoding.LayoutKafkaMessageEncoder">
+          <layout class="ch.qos.logback.classic.PatternLayout">
+              <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+              <!--                <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
+          </layout>
+      </encoder>
+      <topic>dev-logs</topic>
+      <producerConfig>bootstrap.servers=localhost:9092</producerConfig>
+  </appender>
 
   <root level="INFO">
     <appender-ref ref="STDOUT" />
     <appender-ref ref="TEXT_FILE" />
+    <appender-ref ref="kafkaAppender" />
   </root>
 </configuration>

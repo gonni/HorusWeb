@@ -39,20 +39,6 @@ lazy val hello = (project in file("."))
       "com.influxdb" % "influxdb-client-scala_2.13" % "6.0.0",
       "org.json4s" %% "json4s-jackson" % "4.1.0-M1",
       "com.typesafe" % "config" % "1.4.2",
-      // ---- DL M1-----
-//       "org.nd4j" % "nd4j-native-platform" % "1.0.0-M2.1",
-// //      "org.nd4j" % "nd4j-native" % "1.0.0-M2.1" % "macosx-arm64",
-// //      "org.bytedeco" % "openblas" % "0.3.21-1.5.8" % "macosx-arm64",
-//       // ---------------
-//       "org.datavec" % "datavec-api" % "1.0.0-M2.1",
-//       "org.datavec" % "datavec-data-image" % "1.0.0-M2.1",
-//       "org.datavec" % "datavec-local" % "1.0.0-M2.1",
-//       "org.deeplearning4j" % "deeplearning4j-core" % "1.0.0-M2.1",
-//       "org.deeplearning4j" % "deeplearning4j-datasets" % "1.0.0-M2.1",
-//       "org.deeplearning4j" % "resources" % "1.0.0-M2.1",
-//       "org.deeplearning4j" % "deeplearning4j-ui" % "1.0.0-M2.1",
-//       "org.deeplearning4j" % "deeplearning4j-zoo" % "1.0.0-M2.1",
-//       "org.deeplearning4j" % "deeplearning4j-parallel-wrapper" % "1.0.0-M2.1",
       "jfree" % "jfreechart" % "1.0.13",
       "org.jfree" % "jcommon" % "1.0.23",
       "org.apache.httpcomponents" % "httpclient" % "4.3.5",
@@ -69,6 +55,10 @@ libraryDependencies += "com.github.shin285" % "KOMORAN" % "3.3.9"
 dependencyOverrides += "org.scala-lang.modules" %% "scala-parser-combinators" % "2.0.0"
 //libraryDependencies += "dev.zio" %% "zio" % "2.0.6"
 //libraryDependencies += "dev.zio" %% "zio-streams" % "2.0.6"
+libraryDependencies += "net.logstash.logback" % "logstash-logback-encoder" % "5.2"
+libraryDependencies += "com.github.danielwegener" % "logback-kafka-appender" % "0.1.0"
+// https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
+//libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.5.18"
 
 enablePlugins(SbtTwirl)
 enablePlugins(JettyPlugin)
