@@ -9,7 +9,7 @@ import com.yg.processing.TopicAnalyzer
 import org.scalatra.forms.FormSupport
 import org.scalatra.i18n.I18nSupport
 import org.scalatra.{FutureSupport, ScalatraServlet}
-import org.slf4j.LoggerFactory
+import org.slf4j.{LoggerFactory, MDC}
 import slick.jdbc.MySQLProfile.api._
 
 import scala.concurrent.duration.Duration
@@ -24,8 +24,11 @@ trait NewsViewProcessing extends ScalatraServlet
   // latest newslist list
   get("/hot") {
     val seedNo = params("seedNo").toInt
+    MDC.put("seedNo", String.valueOf(seedNo))
+    MDC.put("userId", request.getRemoteAddr)
     logger.info(" -> Request Hot-News {}", seedNo)
-
+    MDC.clear()
+    
     val res : Future[Seq[CrawlUnit]] = db.run[Seq[CrawlUnit]](CrawledRepo.findAll(seedNo).result)
     val syncRes = Await.result(res, Duration.Inf)
 

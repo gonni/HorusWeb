@@ -33,14 +33,22 @@
   </appender> -->
 
   <appender name="kafkaAppender" class="com.github.danielwegener.logback.kafka.KafkaAppender">
+      <!--
       <encoder class="com.github.danielwegener.logback.kafka.encoding.LayoutKafkaMessageEncoder">
           <layout class="ch.qos.logback.classic.PatternLayout">
               <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
-              <!--                <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
           </layout>
       </encoder>
+      -->
+      <encoder class="com.github.danielwegener.logback.kafka.encoding.LayoutKafkaMessageEncoder">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+          <pattern>{"@timestamp":"%d{ISO8601}","seedNo":"%X{seedNo}", "level":"%level","thread":"%thread","logger":"%logger{36}","message":"%msg"}</pattern>
+        </layout>
+      </encoder>
       <topic>dev-logs</topic>
-      <producerConfig>bootstrap.servers=localhost:9092</producerConfig>
+      <producerConfig>
+        bootstrap.servers=localhost:9092
+      </producerConfig>
   </appender>
 
   <root level="INFO">
